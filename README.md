@@ -3,6 +3,9 @@ RoguelikeDev Does The Complete Roguelike Tutorial 2022
 
 Schedule Summary
 
+## Week 0- Tues June 21th
+Bolerplate code
+
 ## Week 1- Tues June 28th
 Parts 0 & 1
 
