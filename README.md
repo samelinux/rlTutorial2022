@@ -4,13 +4,10 @@ RoguelikeDev Does The Complete Roguelike Tutorial 2022
 Schedule Summary
 
 ## Week 0- Tues June 21th
-Bolerplate code
+Bolerplate code (tag: https://github.com/samelinux/rlTutorial2022/releases/tag/week0)
 
 #### keyboard.c/h
 This file contains some functions to easly setup, reset and use the keyboard.
-- keyboardSetup set the keyboard in non-canonical mode and remove typed character echo
-- keyboardRestore restore the initial keyboard configuration
-- keyboardRead return just one character of the user input
 
 #### macro.h
 This fail contains just some macro that could be usefull in the future
@@ -22,9 +19,7 @@ This file contains the main function of the program and for now it's just a plac
 This file contains a rough implementation of 2d positions structure and functions, we will expand this during the tutorial ... or we can scrapp it if not usefull
 
 #### random.c/h
-This file contains a straight copy and paste of a Lehmer random number generation function from wikipedia and some utility. We will mostly only use two functions:
-- randomSetup setup the random number generator seed from the actual timestamp
-- randomDice return a random number based on the dice number of faces
+This file contains a straight copy and paste of a Lehmer random number generation function from wikipedia and some utility. We will mostly only use two functions randomSetup and randomDice
 
 #### screen.c/h
 This file contains a rough and semplified ncurses implementation with way less functions but way easier to understand. It is base on ansi escape codes which is a fancy way to say "codes to instruct the terminal on how to draw things". With this you can print character and string anywhere on the terminal using foreground and background colors ... i think this will be enough for the tutorial, but we can expand this if we need to.
@@ -34,8 +29,6 @@ This file contains some code to help people which are less familiar with C debug
 
 #### time.c/h
 This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm. I'm not 100% sure we will need this, but if costs nothing to have it laying around.
-
-link: https://github.com/samelinux/rlTutorial2022/releases/tag/week0
 
 ## Week 1- Tues June 28th
 Parts 0 & 1
