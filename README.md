@@ -6,6 +6,8 @@ Schedule Summary
 ## Week 0- Tues June 21th
 Bolerplate code
 
+link: https://github.com/samelinux/rlTutorial2022/releases/tag/week0
+
 ## Week 1- Tues June 28th
 Parts 0 & 1
 
