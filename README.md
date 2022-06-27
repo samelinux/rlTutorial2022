@@ -3,7 +3,7 @@ RoguelikeDev Does The Complete Roguelike Tutorial 2022. [Link](https://www.reddi
 
 - - -
 ## Week 0- Tues June 21th
-Bolerplate code [tag](https://github.com/samelinux/rlTutorial2022/releases/tag/week0)
+Bolerplate code. Here you can find the partial source: [tag](https://github.com/samelinux/rlTutorial2022/releases/tag/week0)
 
 - [keyboard.c](keyboard.c)
 
