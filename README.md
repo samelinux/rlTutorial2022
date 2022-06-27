@@ -1,5 +1,5 @@
 # rlTutorial2022
-RoguelikeDev Does The Complete Roguelike Tutorial 2022 (https://www.reddit.com/r/roguelikedev/comments/vhfsda/roguelikedev_does_the_complete_roguelike_tutorial/)
+RoguelikeDev Does The Complete Roguelike Tutorial 2022. [Link](https://www.reddit.com/r/roguelikedev/comments/vhfsda/roguelikedev_does_the_complete_roguelike_tutorial/)
 
 - - -
 ## Week 0- Tues June 21th
