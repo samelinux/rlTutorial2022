@@ -82,7 +82,7 @@ struct player_t
 };
 typedef struct player_t player_t;
 ```
-  For now we just need his coordinates, but we will add property to the player structure as we go on.
+    For now we just need his coordinates, but we will add property to the player structure as we go on.
 
 - Player input handling
 
