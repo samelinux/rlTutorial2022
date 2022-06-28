@@ -68,7 +68,60 @@ Part 0 - Setting Up
    
    ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/3a43ec5a247e7e739a9fb36c2311e7a461d58729/images/part0_001.png "Part 0 screenshot")
 
-Part 1 - Drawing the ‘@’ symbol and moving it around
+Part 1 - Drawing the '@' symbol and moving it around
+You can find the code from Week 1, Part 1 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week1part1).
+
+- Player structure
+
+  We start by creating a structure to represent the player and give it a name:
+```c
+struct player_t
+{
+ int x;
+ int y;
+};
+typedef struct player_t player_t;
+```
+  For now we just need his coordinates, but we will add property to the player structure as we go on.
+
+- Player input handling
+
+  Next we need a way to work with a player: initialize it and modify it base on the game and the player state. For this purpose we have created two functions:
+```c
+void playerInit(player_t* player);
+void playerHandleInput(player_t* player,char input);
+```
+  For now playerInit just set the player coordinates to 0, but later we will add more properties initializations (like hit point, stat values, ...).
+  Since the player is basycally just composed of his coordinates, playerHandleInput just handle the input to move the player around.
+  Since there's no world player movements are free, no collision, no enemies to attack, ... not much to do.
+
+- main flow
+
+  The next thing to do is to modify the main function to implement a minimalistic game loop: display the player, move the player base on his input and quit.
+  All this logic is implemented in
+```c
+while(command!='q')
+ {
+  //clear the screen
+  screenClear();
+
+  //draw the player and a hint on how to quit
+  screenPut(player.x,player.y,'@');
+  screenPrint(0,screenHeight,"Press 'q' to quit");
+
+  //get player input
+  command=keyboardRead();
+  //handle the input based on game/player status
+  playerHandleInput(&player,command);
+ }
+```
+  As you can see the code is quite commented so i'll not go much into datails on the implementation or the code itself, you can download each week and each part separately and take a look/play with it.
+
+- Extra
+
+  I've uniformed all "libraries" init/deinit function names to have the same structure.
+  I've added an init and a deinit function to screen basically to hide/show the terminal cursor and clear the screen/attributes (this is just a convenience)
+  I've also added some comments to some file ... expect this since sometime i'll forget to add all comments 8p
 
 - - -
 ## Week 2- Tues July 5th
