@@ -144,6 +144,10 @@ while(command!='q')
   I've added an init and a deinit function to screen basically to hide/show the terminal cursor and clear the screen/attributes (this is just a convenience)
   
   I've also added some comments to some file ... expect this since sometime i'll forget to add all comments 8p
+  
+- Result
+
+  ![part1 001](https://github.com/samelinux/rlTutorial2022/raw/3a43ec5a247e7e739a9fb36c2311e7a461d58729/images/part1_001.png "Part 1 screenshot")
 
 - - -
 ## Week 2- Tues July 5th
