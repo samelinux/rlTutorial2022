@@ -4,7 +4,7 @@ RoguelikeDev Does The Complete Roguelike Tutorial 2022. [Link](https://www.reddi
 - - -
 
 <details>
-<summary> ## Week 0- Tues June 21th </summary>
+<summary><b>Week 0- Tues June 21th</b></summary>
 
 Bolerplate code. Here you can find the partial source: [tag](https://github.com/samelinux/rlTutorial2022/releases/tag/week0)
 
@@ -55,7 +55,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 - - -
 
 <details>
-<summary> ## Week 1- Tues June 28th </summary>
+<summary><b>Week 1- Tues June 28th</b></summary>
 
 <details>
 <summary> Part 0 - Setting Up </summary>
@@ -169,7 +169,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 2- Tues July 5th </summary>
+<summary><b>Week 2- Tues July 5th</b></summary>
 
 <details>
 <summary> Part 2 - The generic Entity, the render functions, and the map </summary>
@@ -186,7 +186,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 3 - Tues July 12th </summary>
+<summary><b>Week 3 - Tues July 12th</b></summary>
 
 <details>
 <summary> Part 4 - Field of View </summary>
@@ -203,7 +203,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 4 - Tues July 19th </summary>
+<summary><b>Week 4 - Tues July 19th</b></summary>
 
 <details>
 <summary> Part 6 - Doing (and taking) some damage </summary>
@@ -220,7 +220,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 5 - Tues July 26th </summary>
+<summary><b>Week 5 - Tues July 26th</b></summary>
 
 <details>
 <summary> Part 8 - Items and Inventory </summary>
@@ -237,7 +237,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 6 - Tues August 2rd </summary>
+<summary><b>Week 6 - Tues August 2rd</b></summary>
 
 <details>
 <summary> Part 10 - Saving and loading </summary>
@@ -254,7 +254,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 7 - Tues August 9th </summary>
+<summary><b>Week 7 - Tues August 9th</b></summary>
 
 <details>
 <summary> Part 12 - Increasing Difficulty </summary>
@@ -271,7 +271,7 @@ while(command!='q')
 - - -
 
 <details>
-<summary> ## Week 8 - Tues August 16th </summary>
+<summary><b>Week 8 - Tues August 16th</b></summary>
 
 Share you game / Conclusion
 
