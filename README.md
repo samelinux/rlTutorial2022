@@ -78,7 +78,7 @@ Part 0 - Setting Up
    - start the compiled program with the command './target'
    If all went right you should see something like this:
    
-   ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/3a43ec5a247e7e739a9fb36c2311e7a461d58729/images/part0_001.png "Part 0 screenshot")
+   ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part0_001.png "Part 0 screenshot")
 
 Part 1 - Drawing the '@' symbol and moving it around
 You can find the code from Week 1, Part 1 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week1part1).
