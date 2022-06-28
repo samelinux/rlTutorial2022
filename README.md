@@ -73,7 +73,7 @@ You can find the code from Week 1, Part 1 [here](https://github.com/samelinux/rl
 
 - Player structure
 
-  We start by creating a structure to represent the player and give it a name:
+  We start by creating a structure to represent the player and give it a name. For now we just need his coordinates, but we will add property to the player structure as we go on.
 ```c
 struct player_t
 {
@@ -82,23 +82,23 @@ struct player_t
 };
 typedef struct player_t player_t;
 ```
-  
-  For now we just need his coordinates, but we will add property to the player structure as we go on.
 
 - Player input handling
 
-  Next we need a way to work with a player: initialize it and modify it base on the game and the player state. For this purpose we have created two functions:
+  Next we need a way to work with a player: initialize it and modify it base on the game and the player state.
+  For now playerInit just set the player coordinates to 0, but later we will add more properties initializations (like hit point, stat values, ...).
+  Since the player is basycally just composed of his coordinates, playerHandleInput just handle the input to move the player around.
+  Since there's no world player movements are free, no collision, no enemies to attack, ... not much to do.
+  For this purpose we have created two functions:
 ```c
 void playerInit(player_t* player);
 void playerHandleInput(player_t* player,char input);
 ```
-  For now playerInit just set the player coordinates to 0, but later we will add more properties initializations (like hit point, stat values, ...).
-  Since the player is basycally just composed of his coordinates, playerHandleInput just handle the input to move the player around.
-  Since there's no world player movements are free, no collision, no enemies to attack, ... not much to do.
 
 - main flow
 
   The next thing to do is to modify the main function to implement a minimalistic game loop: display the player, move the player base on his input and quit.
+  As you can see the code is quite commented so i'll not go much into datails on the implementation or the code itself, you can download each week and each part separately and take a look/play with it.
   All this logic is implemented in
 ```c
 while(command!='q')
@@ -116,7 +116,6 @@ while(command!='q')
   playerHandleInput(&player,command);
  }
 ```
-  As you can see the code is quite commented so i'll not go much into datails on the implementation or the code itself, you can download each week and each part separately and take a look/play with it.
 
 - Extra
 
