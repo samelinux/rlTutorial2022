@@ -42,18 +42,23 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 Part 0 - Setting Up
 
   - Build automation
+
     We will use [make] to automate the building process. You can find it [here](https://www.gnu.org/software/make/) but it can be already installed on your system if you choose to install some developer tool (Xcode on macos, gcc toolchain on linux)
 
   - Compiler
+
     We will use [gcc] to compile our code. You can find it [here](https://gcc.gnu.org/install/) but it come as a package in most linux distribution and as part of Xcode on macos.
 
   - Editor
+
     To edit your code you can use any editor you like, i personally use [vim](https://www.vim.org/) but [clion](https://www.jetbrains.com/clion/), [visual studio code](https://code.visualstudio.com/) and [Xcode](https://developer.apple.com/xcode/) are good alternatives.
 
   - Terminal
+
     All linux distro and macos come with a preinstalled terminal. I'm pretty sure you can use any terminal you want as long as it supports at last the original ansi 8 colors specification.
 
  - Testing the environment
+
    To test your environment you can use the boilerplate code i created in week 0 which you can find [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week0).
    - Download the zip and unpack it (or checkout the project and then checkout the week0 tag)
    - open your favorite terminal and move to the code directory (using the command 'cd')
