@@ -2,8 +2,9 @@
 RoguelikeDev Does The Complete Roguelike Tutorial 2022. [Link](https://www.reddit.com/r/roguelikedev/comments/vhfsda/roguelikedev_does_the_complete_roguelike_tutorial/)
 
 - - -
+<details>
 ## Week 0- Tues June 21th
-Bolerplate code. Here you can find the partial source: [tag](https://github.com/samelinux/rlTutorial2022/releases/tag/week0)
+<summary>Bolerplate code. Here you can find the partial source: [tag](https://github.com/samelinux/rlTutorial2022/releases/tag/week0)</summary>
 
 - [keyboard.c](keyboard.c)
 
@@ -46,7 +47,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
   This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm.
   
   I'm not 100% sure we will need this, but if costs nothing to have it laying around.
-
+<details>
 - - -
 ## Week 1- Tues June 28th
 Part 0 - Setting Up
