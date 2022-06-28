@@ -4,11 +4,13 @@
 //this whole file is based on
 //https://www.man7.org/linux/man-pages/man3/termios.3.html
 
+//This structur contains the initial termianl configuration
 struct termios oldKeyboardFlags;
-struct termios newKeyboardFlags;
 
-void keyboardSetup(void)
+//Initialized the keyboard: clear ICANON and ECHO flags
+void keyboardInit(void)
 {
+ struct termios newKeyboardFlags;
  //get terminal flags
  if(tcgetattr(0,&oldKeyboardFlags)>=0)
  {
@@ -25,12 +27,15 @@ void keyboardSetup(void)
  }
 }
 
-void keyboardRestore(void)
+//Deinitialize the keyboard: set the initial terminal configuration
+void keyboardDeinit(void)
 {
  //set the old terminal flags
  tcsetattr(0,TCSADRAIN,&oldKeyboardFlags);
 }
 
+//Read a character from the keyboard [this function will wait until the player
+//press a key]
 char keyboardRead(void)
 {
  char buf;

@@ -6,9 +6,9 @@
 #include <termios.h>
 #include <unistd.h>
 
-void keyboardSetup(void);
+void keyboardInit(void);
 
-void keyboardRestore(void);
+void keyboardDeinit(void);
 
 char keyboardRead(void);
 

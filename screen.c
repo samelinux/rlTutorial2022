@@ -4,10 +4,37 @@
 //this whole file is based on ansi escape codes:
 //https://en.wikipedia.org/wiki/ANSI_escape_code
 
-//clear the screen
-void screenClear(void)
+//These two varaibles will hold the terminal size after a call to screenInit
+int screenWidth=0;
+int screenHeight=0;
+
+//Initialize the screen: get terminal size and hide the cursor
+void screenInit(void)
 {
- printf("\033[H\033[J");
+ struct winsize window;
+ //get window attributes
+ ioctl(0,TIOCGWINSZ,&window);
+ //save terminal width and height
+ screenWidth=window.ws_col;
+ screenHeight=window.ws_row;
+ //hide the cursor
+ printf("\033[?25l");
+ //reset attributes so we don't have any terminal color affecting our print
+ screenReset();
+ //clear the screen so we don't have any terminal text left
+ screenClear();
+ fflush(stdout);
+}
+
+//Deinitialize the screen: reset attributes and show the cursor
+void screenDeinit(void)
+{
+ //clear the screen so we don't leave any mess
+ screenClear();
+ //reset attributes so we don't leave any color
+ screenReset();
+ //show the cursor
+ printf("\033[?25h");
  fflush(stdout);
 }
 
@@ -15,6 +42,13 @@ void screenClear(void)
 void screenReset(void)
 {
  printf("\033[0m");
+ fflush(stdout);
+}
+
+//clear the screen
+void screenClear(void)
+{
+ printf("\033[H\033[J");
  fflush(stdout);
 }
 

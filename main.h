@@ -14,5 +14,7 @@
 #include "signal.h"
 #include "time.h"
 
+#include "player.h"
+
 #endif
 

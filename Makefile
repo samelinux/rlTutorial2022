@@ -6,7 +6,7 @@ OBJS=$(SRCS:.c=.o)
 OBJSWITHDIR=$(addprefix obj/, $(OBJS))
 CFLAGS=-Wall -Wextra -Werror
 CTARGETFLAGS=-lm -rdynamic -Wall -Wextra -Werror
-TARGET=target
+TARGET=rlTutorial
 
 .PHONY: clean
 

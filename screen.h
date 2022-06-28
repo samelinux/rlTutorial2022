@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdarg.h>
+#include <sys/ioctl.h>
 
 #define BLACK 30
 #define RED 31
@@ -23,9 +24,16 @@
 #define CYAN_BRIGHT 96
 #define WHITE_BRIGHT 97
 
-void screenClear(void);
+extern int screenWidth;
+extern int screenHeight;
+
+void screenInit(void);
+
+void screenDeinit(void);
 
 void screenReset(void);
+
+void screenClear(void);
 
 void screenPut(int8_t x,int8_t y,uint8_t c);
 
