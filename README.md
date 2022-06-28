@@ -47,7 +47,7 @@ RoguelikeDev Does The Complete Roguelike Tutorial 2022. [Link](https://www.reddi
   This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm.
   
   I'm not 100% sure we will need this, but if costs nothing to have it laying around.
-<details>
+</details>
 - - -
 ## Week 1- Tues June 28th
 Part 0 - Setting Up
