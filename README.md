@@ -23,19 +23,29 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 
 - [random.c](random.c)
 
-  This file contains a straight copy and paste of a Lehmer random number generation function from wikipedia and some utility. We will mostly only use two functions randomSetup and randomDice
+  This file contains a straight copy and paste of a Lehmer random number generation function from wikipedia and some utility.
+  
+  We will mostly only use two functions randomSetup and randomDice
 
 - [screen.c](screen.c)
 
-  This file contains a rough and semplified ncurses implementation with way less functions but way easier to understand. It is base on ansi escape codes which is a fancy way to say "codes to instruct the terminal on how to draw things". With this you can print character and string anywhere on the terminal using foreground and background colors ... i think this will be enough for the tutorial, but we can expand this if we need to.
+  This file contains a rough and semplified ncurses implementation with way less functions but way easier to understand.
+  
+  It is base on ansi escape codes which is a fancy way to say "codes to instruct the terminal on how to draw things".
+  
+  With this you can print character and string anywhere on the terminal using foreground and background colors ... i think this will be enough for the tutorial, but we can expand this if we need to.
 
 - [signal.c](signal.c)
 
-  This file contains some code to help people which are less familiar with C debug some crashes. Nothing special, it just register some callback for handling signals the operating system may throw at your game in case we write something wrong (think of it as a way more destructive try/catch which always and with a crash and a stack trace 8p ).
+  This file contains some code to help people which are less familiar with C debug some crashes.
+  
+  Nothing special, it just register some callback for handling signals the operating system may throw at your game in case we write something wrong (think of it as a way more destructive try/catch which always and with a crash and a stack trace 8p ).
 
 - [time.c](time.c)
 
-  This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm. I'm not 100% sure we will need this, but if costs nothing to have it laying around.
+  This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm.
+  
+  I'm not 100% sure we will need this, but if costs nothing to have it laying around.
 
 - - -
 ## Week 1- Tues June 28th
@@ -55,7 +65,9 @@ Part 0 - Setting Up
 
   - Terminal
 
-    All linux distro and macos come with a preinstalled terminal. I'm pretty sure you can use any terminal you want as long as it supports at last the original ansi 8 colors specification.
+    All linux distro and macos come with a preinstalled terminal.
+    
+    I'm pretty sure you can use any terminal you want as long as it supports at last the original ansi 8 colors specification.
 
  - Testing the environment
 
@@ -73,7 +85,9 @@ You can find the code from Week 1, Part 1 [here](https://github.com/samelinux/rl
 
 - Player structure
 
-  We start by creating a structure to represent the player and give it a name. For now we just need his coordinates, but we will add property to the player structure as we go on.
+  We start by creating a structure to represent the player and give it a name.
+  
+  For now we just need his coordinates, but we will add property to the player structure as we go on.
 ```c
 struct player_t
 {
@@ -86,9 +100,13 @@ typedef struct player_t player_t;
 - Player input handling
 
   Next we need a way to work with a player: initialize it and modify it base on the game and the player state.
+  
   For now playerInit just set the player coordinates to 0, but later we will add more properties initializations (like hit point, stat values, ...).
+  
   Since the player is basycally just composed of his coordinates, playerHandleInput just handle the input to move the player around.
+  
   Since there's no world player movements are free, no collision, no enemies to attack, ... not much to do.
+  
   For this purpose we have created two functions:
 ```c
 void playerInit(player_t* player);
@@ -98,7 +116,9 @@ void playerHandleInput(player_t* player,char input);
 - main flow
 
   The next thing to do is to modify the main function to implement a minimalistic game loop: display the player, move the player base on his input and quit.
+  
   As you can see the code is quite commented so i'll not go much into datails on the implementation or the code itself, you can download each week and each part separately and take a look/play with it.
+  
   All this logic is implemented in
 ```c
 while(command!='q')
@@ -120,7 +140,9 @@ while(command!='q')
 - Extra
 
   I've uniformed all "libraries" init/deinit function names to have the same structure.
+  
   I've added an init and a deinit function to screen basically to hide/show the terminal cursor and clear the screen/attributes (this is just a convenience)
+  
   I've also added some comments to some file ... expect this since sometime i'll forget to add all comments 8p
 
 - - -
