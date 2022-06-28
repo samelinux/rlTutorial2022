@@ -39,9 +39,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 
 - - -
 ## Week 1- Tues June 28th
-Part 0
-
- - Installing the toolchain
+Part 0 - Installing the toolchain
 
   - Build automation
     We will use [make] to automate the building process. You can find it [here](https://www.gnu.org/software/make/) but it can be already installed on your system if you choose to install some developer tool (Xcode on macos, gcc toolchain on linux)
