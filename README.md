@@ -39,7 +39,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 
 - - -
 ## Week 1- Tues June 28th
-Part 0 - Installing the toolchain
+Part 0 - Setting Up
 
   - Build automation
     We will use [make] to automate the building process. You can find it [here](https://www.gnu.org/software/make/) but it can be already installed on your system if you choose to install some developer tool (Xcode on macos, gcc toolchain on linux)
@@ -63,31 +63,43 @@ Part 0 - Installing the toolchain
    
    ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/3a43ec5a247e7e739a9fb36c2311e7a461d58729/images/part0_001.png "Part 0 screenshot")
 
-Part 1
+Part 1 - Drawing the ‘@’ symbol and moving it around
 
 - - -
 ## Week 2- Tues July 5th
-Parts 2 & 3
+Part 2 - The generic Entity, the render functions, and the map
+
+Part 3 - Generating a dungeon
 
 - - -
 ## Week 3 - Tues July 12th
-Parts 4 & 5
+Part 4 - Field of View
+
+Part 5 - Placing Enemies and kicking them (harmlessly)
 
 - - -
 ## Week 4 - Tues July 19th
-Parts 6 & 7
+Part 6 - Doing (and taking) some damage
+
+Part 7 - Creating the Interface
 
 - - -
 ## Week 5 - Tues July 26th
-Parts 8 & 9
+Part 8 - Items and Inventory
+
+Part 9 - Ranged Scrolls and Targeting
 
 - - -
 ## Week 6 - Tues August 2rd
-Parts 10 & 11
+Part 10 - Saving and loading
+
+Part 11 - Delving into the Dungeon
 
 - - -
 ## Week 7 - Tues August 9th
-Parts 12 & 13
+Part 12 - Increasing Difficulty
+
+Part 13 - Gearing up
 
 - - -
 ## Week 8 - Tues August 16th
