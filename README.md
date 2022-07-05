@@ -192,6 +192,10 @@ You can find the code from Week 2, Part 2 [here](https://github.com/samelinux/rl
 - [map.c](map.c)
 
   This file will contain all map related functions and data types.
+  
+  Take a look at [map.c](map.c) to have a better understanding of all map related functions, they are quite commented.
+  
+  For now all maps data types we need are:
 ```c
 enum mapType_t
 {
@@ -212,8 +216,6 @@ struct map_t
 typedef struct map_t map_t;
 ```
   This struct is the representation of a map containing its type and all its tiles.
-  
-  Take a look at [map.c](map.c) to have a better understanding of all map related functions, they are quite commented.
   
 - [mapSample.c](mapSample.c)
 
@@ -258,6 +260,12 @@ typedef struct monster_t monster_t;
 - [tile.c](tile.c)
 
   This file will contain all tile related functions and data types.
+  
+  Take a look at [tile.c](tile.c) to have a better understanding of all tiles related functions, they are quite commented.
+
+  We added some function to work with tiles like tileInit which initialize a tile based on its type and, as we did with [monster.c](monster.c), a family of functions, that we will expand in the future, which basically act as a "database" of tiles property like tileGlyph, tileFGColor, tileBGColor, tileWalkable and tileBlockFOV.
+  
+  For now, all tiles data types we need are:
 ```c
 enum tileType_t
 {
@@ -283,10 +291,6 @@ typedef struct tile_t tile_t;
 ```
   Which is the representation of a single tile with all its characteristics
   
-  We also added some function to work with tiles like tileInit which initialize a tile based on its type and, as we did with [monster.c](monster.c), a family of functions, that we will expand in the future, which basically act as a "database" of tiles property like tileGlyph, tileFGColor, tileBGColor, tileWalkable and tileBlockFOV.
-  
-  Take a look at [tile.c](tile.c) to have a better understanding of all tiles related functions, they are quite commented.
-
 </details>
 
 <details>
