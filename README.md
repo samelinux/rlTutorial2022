@@ -291,6 +291,8 @@ typedef struct tile_t tile_t;
 ```
   Which is the representation of a single tile with all its characteristics
   
+![part2 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part2_001.png "Part 2 screenshot")
+  
 </details>
 
 <details>
