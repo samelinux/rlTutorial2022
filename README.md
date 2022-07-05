@@ -87,6 +87,8 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
    - start the compiled program with the command './target'
    If all went right you should see something like this:
    
+- Result
+
    ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part0_001.png "Part 0 screenshot")
 
 </details>
@@ -291,7 +293,9 @@ typedef struct tile_t tile_t;
 ```
   Which is the representation of a single tile with all its characteristics
   
-![part2 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part2_001.png "Part 2 screenshot")
+- Result
+
+  ![part2 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part2_001.png "Part 2 screenshot")
   
 </details>
 
