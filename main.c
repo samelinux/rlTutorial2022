@@ -4,8 +4,6 @@
 //int main(int argc,char** argv)
 int main(void)
 {
- //declare a player
- player_t player;
  //declare a variable to store user input
  char command=0;
 
@@ -15,7 +13,18 @@ int main(void)
  screenInit();
 
  //setup the player
- playerInit(&player);
+ playerInit(MAP_WIDTH/2,MAP_HEIGHT/2);
+
+ //setup the map
+ mapInit(MAP_SAMPLE);
+
+ //setup monsters
+ monstersInit();
+
+ //add a monster
+ monster_t rat;
+ monsterInit(&rat,MONSTER_RAT,MAP_WIDTH/2-5,MAP_HEIGHT/2);
+ monstersAdd(rat);
 
  //while the user has not pressed 'q'
  while(command!='q')
@@ -23,14 +32,19 @@ int main(void)
   //clear the screen
   screenClear();
 
+  //draw the map
+  mapRender();
+  //draw all monsters
+  monstersRender();
   //draw the player and a hint on how to quit
-  screenPut(player.x,player.y,'@');
+  playerRender();
+
   screenPrint(0,screenHeight,"Press 'q' to quit");
 
   //get player input
   command=keyboardRead();
   //handle the input based on game/player status
-  playerHandleInput(&player,command);
+  playerHandleInput(command);
  }
 
  //deinit the "engine"

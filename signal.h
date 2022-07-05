@@ -13,7 +13,7 @@ void signalInit(void);
 
 void signalDeinit(void);
 
-void sigHandler(int signal);
+void signalHandler(int signal);
 
 #endif
 

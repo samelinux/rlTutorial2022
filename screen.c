@@ -5,8 +5,8 @@
 //https://en.wikipedia.org/wiki/ANSI_escape_code
 
 //These two varaibles will hold the terminal size after a call to screenInit
-int screenWidth=0;
-int screenHeight=0;
+uint16_t screenWidth=0;
+uint16_t screenHeight=0;
 
 //Initialize the screen: get terminal size and hide the cursor
 void screenInit(void)

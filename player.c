@@ -1,30 +1,51 @@
 
 #include "player.h"
 
+//declare a player
+player_t player;
+
 //setup a player_t structure
-void playerInit(player_t* player)
+void playerInit(int16_t x,int16_t y)
 {
- player->x=0;
- player->y=0;
+ player.x=x;
+ player.y=y;
 }
 
 //handle one input from the player
-void playerHandleInput(player_t* player,char input)
+void playerHandleInput(char input)
 {
+ tile_t* toTile=NULL;
+ int8_t x=player.x;
+ int8_t y=player.y;
  switch(input)
  {
   case 'h':
-   player->x-=1;
+   x-=1;
    break;
   case 'j':
-   player->y+=1;
+   y+=1;
    break;
   case 'k':
-   player->y-=1;
+   y-=1;
    break;
   case 'l':
-   player->x+=1;
+   x+=1;
    break;
  }
+ //if a tile exists at the new location [avoid goind off the map boundaries]
+ if((toTile=mapTileAt(x,y))!=NULL)
+ {
+  //if the tile is walkable
+  if(toTile->walkable)
+  {
+   player.x=x;
+   player.y=y;
+  }
+ }
+}
+
+void playerRender(void)
+{
+ screenPut(player.x,player.y,'@');
 }
 

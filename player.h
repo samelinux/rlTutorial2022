@@ -2,16 +2,21 @@
 #ifndef _player_
 #define _player_
 
+#include <stdint.h>
+#include "map.h"
+
 struct player_t
 {
- int x;
- int y;
+ int16_t x;
+ int16_t y;
 };
 typedef struct player_t player_t;
 
-void playerInit(player_t* player);
+void playerInit(int16_t x,int16_t y);
 
-void playerHandleInput(player_t* player,char input);
+void playerHandleInput(char input);
+
+void playerRender(void);
 
 #endif
 

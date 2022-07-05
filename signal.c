@@ -9,15 +9,15 @@
 //setup signal handlers for most of the fault signals
 void signalInit(void)
 {
- signal(SIGABRT,sigHandler);
- signal(SIGBUS,sigHandler);
- signal(SIGFPE,sigHandler);
- signal(SIGILL,sigHandler);
- signal(SIGPIPE,sigHandler);
- signal(SIGSEGV,sigHandler);
- signal(SIGSYS,sigHandler);
- signal(SIGXCPU,sigHandler);
- signal(SIGXFSZ,sigHandler);
+ signal(SIGABRT,signalHandler);
+ signal(SIGBUS,signalHandler);
+ signal(SIGFPE,signalHandler);
+ signal(SIGILL,signalHandler);
+ signal(SIGPIPE,signalHandler);
+ signal(SIGSEGV,signalHandler);
+ signal(SIGSYS,signalHandler);
+ signal(SIGXCPU,signalHandler);
+ signal(SIGXFSZ,signalHandler);
 }
 
 //reset signals handler to their default
@@ -35,7 +35,7 @@ void signalDeinit(void)
 }
 
 //on signal just print the stack trace and quit
-void sigHandler(int signal)
+void signalHandler(int signal)
 {
  void *array[100];
  size_t size;

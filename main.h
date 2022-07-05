@@ -8,6 +8,9 @@
 
 #include "keyboard.h"
 #include "macro.h"
+#include "map.h"
+#include "monster.h"
+#include "monsters.h"
 #include "position.h"
 #include "random.h"
 #include "screen.h"

@@ -24,8 +24,8 @@
 #define CYAN_BRIGHT 96
 #define WHITE_BRIGHT 97
 
-extern int screenWidth;
-extern int screenHeight;
+extern uint16_t screenWidth;
+extern uint16_t screenHeight;
 
 void screenInit(void);
 
