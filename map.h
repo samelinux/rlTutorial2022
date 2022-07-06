@@ -7,6 +7,8 @@
 #include "tile.h"
 #include "screen.h"
 #include "mapSample.h"
+#include "mapCave.h"
+#include "player.h"
 
 #define MAP_WIDTH (80)
 #define MAP_HEIGHT (24)
@@ -16,6 +18,7 @@ enum mapType_t
  MAP_NONE=0,
  MAP_EMPTY,
  MAP_SAMPLE,
+ MAP_CAVE,
  MAP_MAX,
 };
 typedef enum mapType_t mapType_t;
@@ -30,6 +33,10 @@ typedef struct map_t map_t;
 void mapInit(mapType_t type);
 
 bool mapIsValid(int16_t x,int16_t y);
+
+void mapRandomWalkablePosition(int16_t* x,int16_t* y);
+
+bool mapIsConnected(void);
 
 void mapRender();
 

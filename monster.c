@@ -2,9 +2,13 @@
 #include "monster.h"
 
 //setup a monster_t structure
-void monsterInit(monster_t* monster,monsterType_t type,int16_t x,int16_t y)
+void monsterInit(monster_t* monster,monsterType_t type)
 {
+ int16_t x=0;
+ int16_t y=0;
  monster->type=type;
+ //get a random walkable position and place the monster there
+ mapRandomWalkablePosition(&x,&y);
  monster->x=x;
  monster->y=y;
  //get standard values for monsterType_t

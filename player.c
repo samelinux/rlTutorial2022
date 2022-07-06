@@ -46,6 +46,17 @@ void playerHandleInput(char input)
 
 void playerRender(void)
 {
- screenPut(player.x,player.y,'@');
+ screenColorPut(player.x,player.y,WHITE_BRIGHT,BLACK,'@');
+}
+
+//teleport the player to a specific position (this is usefull to place the
+//player in newly created maps or for teleport traps for example)
+void playerTeleportTo(int16_t x,int16_t y)
+{
+ if(mapIsValid(x,y)==true)
+ {
+  player.x=x;
+  player.y=y;
+ }
 }
 

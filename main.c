@@ -11,19 +11,20 @@ int main(void)
  signalInit();
  keyboardInit();
  screenInit();
+ randomSetup();
 
  //setup the player
  playerInit(MAP_WIDTH/2,MAP_HEIGHT/2);
 
  //setup the map
- mapInit(MAP_SAMPLE);
+ mapInit(MAP_CAVE);
 
  //setup monsters
  monstersInit();
 
  //add a monster
  monster_t rat;
- monsterInit(&rat,MONSTER_RAT,MAP_WIDTH/2-5,MAP_HEIGHT/2);
+ monsterInit(&rat,MONSTER_RAT);
  monstersAdd(rat);
 
  //while the user has not pressed 'q'

@@ -9,6 +9,7 @@
 //setup signal handlers for most of the fault signals
 void signalInit(void)
 {
+ signal(SIGINT,signalInterruptHandler);
  signal(SIGABRT,signalHandler);
  signal(SIGBUS,signalHandler);
  signal(SIGFPE,signalHandler);
@@ -45,6 +46,18 @@ void signalHandler(int signal)
  print("Stack trace:\n");
  //print it in a "pretty" way
  backtrace_symbols_fd(array,size,STDERR_FILENO);
+ exit(-1);
+}
+
+//we use a different signal handler for SIGINT so when the player presse
+//ctrl+c we still have time to reset the screen and the terminal to its
+//original state
+void signalInterruptHandler(int signal)
+{
+ screenDeinit();
+ keyboardDeinit();
+ signalDeinit();
+ print("Closing for signal: %d\n",signal);
  exit(-1);
 }
 

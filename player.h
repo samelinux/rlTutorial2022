@@ -18,5 +18,7 @@ void playerHandleInput(char input);
 
 void playerRender(void);
 
+void playerTeleportTo(int16_t x,int16_t y);
+
 #endif
 

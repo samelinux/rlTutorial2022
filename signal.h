@@ -8,12 +8,16 @@
 #include <execinfo.h>
 #include <unistd.h>
 #include "macro.h"
+#include "screen.h"
+#include "keyboard.h"
 
 void signalInit(void);
 
 void signalDeinit(void);
 
 void signalHandler(int signal);
+
+void signalInterruptHandler(int signal);
 
 #endif
 
