@@ -302,6 +302,39 @@ typedef struct tile_t tile_t;
 <details>
 <summary> Part 3 - Generating a dungeon </summary>
 
+You can find the code from Week 2, Part 3 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week2part3).
+
+- [mapCave.c](mapCave.c)
+
+  The big changes of Part 3 are all in this file. This is part of a family of files that we will expand to implement other types of map.
+  
+  The main and only functions in this type of files is in the form map(TYPE)Build which is responsable of building the type of map we want, in this case a cave.
+  
+  To build a cave we use a model called "cellular automata", to know more about them take a look here: [wikipedia](https://en.wikipedia.org/wiki/Cellular_automaton). 
+  Maybe you are familiar with [Conway's game of life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) which you can play around with [here](https://playgameoflife.com/) ... to generate caves we simply change the rules!
+  
+  Take a look at [mapCave.c](mapCave.c) to have a better understanding of how we implemented a cellular automata and how we used it to generate our map.
+  
+- [monster.c](monster.c) and [player.c](player.c)
+
+  We had to modify how we place entities in the map since now not all tiles are walkable and we do not want to bury alive neither monsters nor the player.
+  
+- position.c
+
+  I choose to remove position_t and its relative files from the project since this is a tutorial and I want to keep things as simple as possible.
+  
+- [map.c](map.c)
+
+  We added some convenience functions inside the map basic file to ease maps generation, the most important being [mapIsConnected](https://github.com/samelinux/rlTutorial2022/blob/9facbc8874a7a542177c1b25e88f33ccb71972be/map.c#L68) which we use to ensure our maps are fully connected.
+  
+- [signal.c](signal.c)
+
+  We added a special signal handler for SIGINT so when the player press ctrl+c to halt the game we do not leave the terminal and the screen messed up (I noticed that when closing with ctrl+c the cursor did not become visible again).
+  
+- Result
+
+  ![part3 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part3_001.png "Part 3 screenshot")
+
 </details>
 
 </details>
