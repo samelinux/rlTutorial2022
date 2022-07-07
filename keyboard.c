@@ -38,9 +38,40 @@ void keyboardDeinit(void)
 //press a key]
 char keyboardRead(void)
 {
- char buf;
+ int remaining=0;
+ char buffer;
  //read one character from stdin
- read(STDIN_FILENO,&buf,1);
- return buf;
+ read(STDIN_FILENO,&buffer,1);
+ //if buffer contains 27 [ESC] we may have an escape sequence
+ if(buffer==27)
+ {
+  //if there are more character [mybe it's just ESC!]
+  if(ioctl(0,FIONREAD,&remaining)==0 && remaining>0)
+  {
+   //read the [ character
+   read(STDIN_FILENO,&buffer,1);
+   if(buffer==91)
+   {
+    //read the "real" character and translate it
+    read(STDIN_FILENO,&buffer,1);
+    switch(buffer)
+    {
+     case 68://left arrow
+      buffer='h';
+      break;
+     case 66://down arrow
+      buffer='j';
+      break;
+     case 65://up arrow
+      buffer='k';
+      break;
+     case 67://right arrow
+      buffer='l';
+      break;
+    }
+   }
+  }
+ }
+ return buffer;
 }
 
