@@ -9,6 +9,7 @@ void playerInit(int16_t x,int16_t y)
 {
  player.x=x;
  player.y=y;
+ player.losLength=4;
 }
 
 //handle one input from the player
@@ -57,6 +58,37 @@ void playerTeleportTo(int16_t x,int16_t y)
  {
   player.x=x;
   player.y=y;
+ }
+}
+
+//calculate player field of view inside the actual map
+void playerCalculateFOV(void)
+{
+ //reset map field of view from previous turn
+ mapResetFOV();
+ //loop through all tile in line of site range
+ for(int16_t y=player.y-player.losLength;y<=player.y+player.losLength;y++)
+ {
+  for(int16_t x=player.x-player.losLength;x<=player.x+player.losLength;x++)
+  {
+   //if the tile is valid, is in line of sight "real" distance and we can
+   //trace an unobstructed line from the player position to that tile
+   if(mapIsValid(x,y) && distance(player.x,player.y,x,y)<player.losLength &&
+     bresenhamLos(player.x,player.y,x,y)==true)
+   {
+    //mark the tile visible
+    tile_t* tile=mapTileAt(x,y);
+    tile->visible=true;
+    if(tileRememberViewed(tile->type)==true)
+    {
+     //mark it seen if the tileType_t should be remembered by the player
+     //this is usefull to show [for example] walls that are not in sight
+     //so the player can see the shape of the map as if the character roughly
+     //remember it
+     tile->seen=true;
+    }
+   }
+  }
  }
 }
 

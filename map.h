@@ -42,5 +42,7 @@ void mapRender();
 
 tile_t* mapTileAt(int16_t x,int16_t y);
 
+void mapResetFOV(void);
+
 #endif
 

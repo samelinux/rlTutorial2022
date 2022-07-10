@@ -11,6 +11,8 @@ void tileInit(tile_t* tile,tileType_t type)
  tile->bgColor=tileBGColor(type);
  tile->walkable=tileWalkable(type);
  tile->blockFOV=tileBlockFOV(type);
+ tile->visible=false;
+ tile->seen=false;
 }
 
 //return each tileType_t character representation
@@ -76,5 +78,19 @@ bool tileBlockFOV(tileType_t type)
   case TILE_WALL: return true;
  }
  return true;
+}
+
+//return true for all tileType_t that should be remembered when seen by the
+//player [see playerCalculateFOV function in player.c for more datails]
+bool tileRememberViewed(tileType_t type)
+{
+ switch(type)
+ {
+  case TILE_MAX:
+  case TILE_NONE: return false;
+  case TILE_FLOOR: return false;
+  case TILE_WALL: return true;
+ }
+ return false;
 }
 

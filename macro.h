@@ -2,6 +2,8 @@
 #ifndef _macro_
 #define _macro_
 
+#include <math.h>
+
 //dampened loop, we may need it during maps generation
 #define STANDARD_DAMPEN (1000)
 #define DAMPENED_LOOP(CONDITION,MAX) \

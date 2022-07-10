@@ -6,6 +6,7 @@
 #include <stdint.h>
 #include <stdio.h>
 
+#include "bresenham.h"
 #include "keyboard.h"
 #include "macro.h"
 #include "map.h"

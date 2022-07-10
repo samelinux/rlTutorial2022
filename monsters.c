@@ -32,7 +32,13 @@ void monstersRender(void)
   //render each monster
   if(monsters[i].type!=MONSTER_NONE)
   {
-   screenColorPut(monsters[i].x,monsters[i].y,monsters[i].color,BLACK,monsters[i].glyph);
+   tile_t* tile=mapTileAt(monsters[i].x,monsters[i].y);
+   //render a monster only if the player can see the tile the monster is in
+   if(tile!=NULL && tile->visible==true)
+   {
+    screenColorPut(monsters[i].x,monsters[i].y,monsters[i].color,tile->bgColor,
+      monsters[i].glyph);
+   }
   }
  }
 }

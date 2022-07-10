@@ -115,10 +115,20 @@ void mapRender()
  {
   for(int16_t x=0;x<MAP_WIDTH;x++)
   {
-   int i=x+y*MAP_WIDTH;
-   //draw each tile
-   screenColorPut(x,y,map.tiles[i].fgColor,map.tiles[i].bgColor,
-     map.tiles[i].glyph);
+   tile_t* tile=mapTileAt(x,y);
+   if(tile->visible)
+   {
+    //draw each visible tile
+    screenColorPut(x,y,tile->fgColor,tile->bgColor,tile->glyph);
+   }
+   else
+   {
+    if(tile->seen)
+    {
+     //draw each tile that has been seen and is a wall
+     screenColorPut(x,y,tile->fgColor,tile->bgColor,tile->glyph);
+    }
+   }
   }
  }
 }
@@ -131,5 +141,17 @@ tile_t* mapTileAt(int16_t x,int16_t y)
   return &(map.tiles[x+y*MAP_WIDTH]);
  }
  return NULL;
+}
+
+//clear all map tile visible status
+void mapResetFOV(void)
+{
+ for(int16_t y=0;y<MAP_HEIGHT;y++)
+ {
+  for(int16_t x=0;x<MAP_WIDTH;x++)
+  {
+   mapTileAt(x,y)->visible=false;
+  }
+ }
 }
 

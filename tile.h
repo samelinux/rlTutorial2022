@@ -23,6 +23,8 @@ struct tile_t
  int8_t bgColor;
  bool walkable;
  bool blockFOV;
+ bool visible;
+ bool seen;
 };
 typedef struct tile_t tile_t;
 
@@ -37,6 +39,8 @@ int8_t tileBGColor(tileType_t type);
 bool tileWalkable(tileType_t type);
 
 bool tileBlockFOV(tileType_t type);
+
+bool tileRememberViewed(tileType_t type);
 
 #endif
 

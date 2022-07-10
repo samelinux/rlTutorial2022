@@ -39,3 +39,4 @@ int8_t monsterColor(monsterType_t type)
  }
  return BLACK;
 }
+

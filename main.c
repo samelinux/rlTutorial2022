@@ -33,6 +33,10 @@ int main(void)
   //clear the screen
   screenClear();
 
+  //reset map field of view status
+  mapResetFOV();
+  //calculate new field of view
+  playerCalculateFOV();
   //draw the map
   mapRender();
   //draw all monsters
