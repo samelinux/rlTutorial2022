@@ -347,6 +347,8 @@ You can find the code from Week 2, Part 3 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 4 - Field of View </summary>
 
+You can find the code from Week 3, Part 4 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week3part4).
+
 - [bresenham.c](bresenham.c)
 
   added a "line drawing" function wich for now is only used to calculate the player field of view inside the map. This uses the Bresenham's line algorithm that calculate "digital" lines (digital intended as pixel perfect, without antialiasing).
@@ -386,6 +388,10 @@ You can find the code from Week 2, Part 3 [here](https://github.com/samelinux/rl
   We added visible and seen property to all tiles (to implement field of view and map memory). visible is used to mark a tile actually visible from the player point of view while seen is used to implement character memory: an hero in a dungeon can not remember all the map details, just the walls outline to track his way back.
   
   We added tileRememberViewed to implement map memory on a tileType_t basis, with this we can have the character remember only important tiles (for now only walls) which the player can use at his own advantage (think about remembering traps position ...).
+
+- Result
+
+   ![part4 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part4_001.png "Part 4 screenshot")
 
 </details>
 
