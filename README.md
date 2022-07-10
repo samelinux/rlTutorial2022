@@ -347,6 +347,46 @@ You can find the code from Week 2, Part 3 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 4 - Field of View </summary>
 
+- [bresenham.c](bresenham.c)
+
+  added a "line drawing" function wich for now is only used to calculate the player field of view inside the map. This uses the Bresenham's line algorithm that calculate "digital" lines (digital intended as pixel perfect, without antialiasing).
+
+  I'm not going much into details about the algorithm itself since it is explained quite well in its [wikipedia page](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
+  
+  We use it to trace lines from the player position to each tile inside his line of sight distance, checking whatever an unobstructed line can be made (without hitting any wall for now, but in the future there could be other tiles/object that block the line of sight). The set of tiles which a player can see it's called his field of view.
+  
+- [macro.h](macro.h)
+
+  added math.h to the import since is uses the sqrt function. Now it generates a compiler error because we are using the distance macro. Before, since macro are exapanded in place (literally sobstituting the defined "string" for the "difining" string) this was not a problem.
+
+- [main.c](main.c)
+
+  We added field of view reset and calculation inside the main loop. This refresh the player field of view after each action giving us the opportunity to explore the map instaed of having it fully visible from the start.
+ 
+- [map.c](map.c)
+
+  We added mapResetFOV to reset the tiles visible attribute so we can calculate the player field of view "fresh" each turn. This basically set all tiles in the map as non visible, afther this function you should always call playerCalculateFOV otherwise no tile will be visible on the next map rendering call.
+  
+  We modified the render function to render only visible and seen tiles. Now that a player has his own filed of view we can fully render only the tiles he sees and the tile marked as "to be remembered" (more on this later). As said before, this create a nice feel ofexploration and a character memory of the map, almost as if the here draws the maps edge while exploting to remember the way back.
+  
+- [monster.c](monster.c)
+
+  I added a missing return at end of file (my OCD was tilting).
+  
+- [monsters.c](monsters.c)
+
+  We modified the render function to render only visible monsters (a visible monster is one staying on a visible tile). This create the uncertainty of knowing the position of monsters outside the player field of view, is the monster still there?
+ 
+- [player.c](player.c)
+
+  We adde playerCalculateFOV which calcuate the actual player field of view inside the map. As said before this has to be called, almost always, in pairs with mapResetFOV to have a "fresh" field of view each turn. No one is forcing you to only call playerCalculateFOV and never cal mapResetFOV, this will generate a prefect memory of the map from the player prospective! Try it!
+  
+- [tile.c](tile.c)
+
+  We added visible and seen property to all tiles (to implement field of view and map memory). visible is used to mark a tile actually visible from the player point of view while seen is used to implement character memory: an hero in a dungeon can not remember all the map details, just the walls outline to track his way back.
+  
+  We added tileRememberViewed to implement map memory on a tileType_t basis, with this we can have the character remember only important tiles (for now only walls) which the player can use at his own advantage (think about remembering traps position ...).
+
 </details>
 
 <details>
