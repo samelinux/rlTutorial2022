@@ -398,6 +398,56 @@ You can find the code from Week 3, Part 4 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 5 - Placing Enemies and kicking them (harmlessly) </summary>
 
+You can find the code from Week 3, Part 5 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week3part5).
+
+- [main.c](main.c)
+
+  We moved some code to have more consistent logic blocks, now the "engine" initialization is all in one block.
+
+  We removed the rat generation we used in past weeks, we do not need it anymore since we are generating way more monsters to make floors more "enjoyable". For now monsters generation is done inside [map.c](map.c) but we can move it inside map types specific files so we can customize each floor.
+
+  We added monster turns handling when the player takes a turn ... this seems fair even if, for now, monsters have no artificial intelligence so they do nothing 8)
+
+- [map.c](map.c)
+
+  We added monsters spawn after map generation by adding a call to [monsterPoolSpawn](https://github.com/samelinux/rlTutorial2022/blob/e7e9f8955dce594fcc1f761e361e6ad6a3e3bdf5/map.c#L28) after generating the map. This, as said before, can be moved in map types specific files so we can customize each floor.
+
+  We added a check in map coordinates randomization so we do not pick monsters occupied tiles. This is usefull when searching for a coordinate to spawn (or teleport) the player and for spawning monsters (so we do not pile up them!).
+
+- [monsters.c](monsters.c)
+
+  We removed the file to keep the code simpler, we do not need to separate single monster functions from multi-monsters functions.
+
+- [monster.c](monster.c)
+
+  We renamed some functions (which where in monsters.c) to make it clear that they are "pool functions" (monsterPoolInit for example which initialize the pool of monsters). This is not necessary, but i think this is better from a tutorial prospective.
+
+  We added a name to monsters and loaded it in monsterInit. This way we can better comunicate to the player what monsters are doing and what the player is interacting with.
+
+  We changed some monsterType_t character representation to '?' so we see if we miss a case in monsterGlyph. If you add more monster types and forget to add their case in [monsterGlyph](https://github.com/samelinux/rlTutorial2022/blob/e7e9f8955dce594fcc1f761e361e6ad6a3e3bdf5/monster.c#L38) you will see a '?' instaed of a blank tile, this is way easier to spot.
+
+  We added two type of new monsters: orc and troll.
+
+  We added monsterPoolSpawn which is used during map generation to popolate floors and, as said before, we can move it inside map types specific files so we can customize each floor. For now it is way easier to have it centralizedin just one point, but feel free to try having a different number of monsters for each different map type.
+
+  We added monsterPoolAt to easly retrive monsters given their coordinates, this is usefull when checking for player movements but also while spawning monsters.
+
+  We added monsterPoolHandleTurn which generate a new turn for all monsters when the player takes a turn ... this is fair because monsters have thier right too!
+  
+- player.c/h
+
+  We modified playerHandleInput to return a boolean value which inform the main loop that the player has or has not taken a turn so we can make monster take their turns. For now all player actions generate a new turn, but in the future we can have actions that do not take a turn: think about a player wanting to look at his surrounding, it makes sense that this action should not consume a turn.
+
+  We added the basics to implement "bump combat" in playerHandleInput, if the player moves toward a monster occupied tile then he attack the monsters instaed of moving. This is basically all we need to implement hand-to-hand combat ... it is taht simple!
+
+- tile.c
+
+  We changed some tileType_t character representation to '?' so we see if we miss a case in tileGlyph. Take a look above at the comments for monster.c to better understand why.
+  
+- Result
+
+  ![part5 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part5_001.png "Part 5 screenshot")
+
 </details>
 
 </details>
