@@ -24,6 +24,8 @@ void mapInit(mapType_t type)
   case MAP_SAMPLE: mapSampleBuild(); break;
   case MAP_CAVE: mapCaveBuild(); break;
  }
+ //generate some monsters
+ monsterPoolSpawn(10);
  //get a random walkable tile and teleport the player there
  mapRandomWalkablePosition(&x,&y);
  playerTeleportTo(x,y);
@@ -40,9 +42,14 @@ void mapRandomWalkablePosition(int16_t* x,int16_t* y)
 {
  do
  {
+  //randomize an x,y coordinate
   *x=randomGet(0,MAP_WIDTH);
   *y=randomGet(0,MAP_HEIGHT);
- }while(mapIsValid(*x,*y)==false || mapTileAt(*x,*y)->walkable==false);
+  //until the tile is not valid or the tile in not walkable or there is a
+  //monster at that coordinate
+ }while(mapIsValid(*x,*y)==false ||
+   mapTileAt(*x,*y)->walkable==false ||
+   monsterPoolAt(*x,*y)!=NULL);
 }
 
 //recursively calculate the map connection "mask" in connectionMap

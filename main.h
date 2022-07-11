@@ -11,7 +11,6 @@
 #include "macro.h"
 #include "map.h"
 #include "monster.h"
-#include "monsters.h"
 #include "random.h"
 #include "screen.h"
 #include "signal.h"

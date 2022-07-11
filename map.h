@@ -8,6 +8,7 @@
 #include "screen.h"
 #include "mapSample.h"
 #include "mapCave.h"
+#include "monster.h"
 #include "player.h"
 
 #define MAP_WIDTH (80)

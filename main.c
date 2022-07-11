@@ -12,20 +12,13 @@ int main(void)
  keyboardInit();
  screenInit();
  randomSetup();
+ monsterPoolInit();
 
  //setup the player
  playerInit(MAP_WIDTH/2,MAP_HEIGHT/2);
 
  //setup the map
  mapInit(MAP_CAVE);
-
- //setup monsters
- monstersInit();
-
- //add a monster
- monster_t rat;
- monsterInit(&rat,MONSTER_RAT);
- monstersAdd(rat);
 
  //while the user has not pressed 'q'
  while(command!='q')
@@ -40,16 +33,19 @@ int main(void)
   //draw the map
   mapRender();
   //draw all monsters
-  monstersRender();
+  monsterPoolRender();
   //draw the player and a hint on how to quit
   playerRender();
 
-  screenPrint(0,screenHeight,"Press 'q' to quit");
-
   //get player input
   command=keyboardRead();
-  //handle the input based on game/player status
-  playerHandleInput(command);
+  //handle the input based on game/player status and if the player took an
+  //action, make the monsters take their turns
+  if(playerHandleInput(command)==true)
+  {
+   //handle monsters turn
+   monsterPoolHandleTurn();
+  }
  }
 
  //deinit the "engine"

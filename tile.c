@@ -21,11 +21,11 @@ char tileGlyph(tileType_t type)
  switch(type)
  {
   case TILE_MAX:
-  case TILE_NONE: return ' ';
+  case TILE_NONE: return '?';
   case TILE_FLOOR: return '.';
   case TILE_WALL: return '#';
  }
- return ' ';
+ return '?';
 }
 
 //return each tileType_t foreground color

@@ -17,7 +17,7 @@ typedef struct player_t player_t;
 
 void playerInit(int16_t x,int16_t y);
 
-void playerHandleInput(char input);
+bool playerHandleInput(char input);
 
 void playerRender(void);
 

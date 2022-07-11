@@ -13,36 +13,56 @@ void playerInit(int16_t x,int16_t y)
 }
 
 //handle one input from the player
-void playerHandleInput(char input)
+bool playerHandleInput(char input)
 {
+ bool newTurn=false;
  tile_t* toTile=NULL;
  int8_t x=player.x;
  int8_t y=player.y;
+ //each action can change newTurn to true to signal the main loop a net turn
+ //has passed. You may want some actoins to not consume a turn, in that case
+ //just leave newTurn to false
  switch(input)
  {
   case 'h':
    x-=1;
+   newTurn=true;
    break;
   case 'j':
    y+=1;
+   newTurn=true;
    break;
   case 'k':
    y-=1;
+   newTurn=true;
    break;
   case 'l':
    x+=1;
+   newTurn=true;
    break;
  }
  //if a tile exists at the new location [avoid goind off the map boundaries]
  if((toTile=mapTileAt(x,y))!=NULL)
  {
-  //if the tile is walkable
-  if(toTile->walkable)
+  monster_t* monster=monsterPoolAt(x,y);
+  //if a monster is present where the player wants to move, attack it
+  if(monster!=NULL)
   {
-   player.x=x;
-   player.y=y;
+   fprintf(stderr,"You kick the %s, it is not amused!\n",monster->name);
+  }
+  else
+  {
+   //if the tile is walkable
+   if(toTile->walkable==true)
+   {
+    player.x=x;
+    player.y=y;
+   }
   }
  }
+ //return the newTurn value to the main loop so monsters can take a turn when
+ //the player take a turn
+ return newTurn;
 }
 
 void playerRender(void)
