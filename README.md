@@ -514,7 +514,7 @@ You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rl
    account the pathfinding. Try it!
 
   To ease the creation of multiple monster artificial intelligence we added a
-   function [monsterBestMoveToReachPlayer]() which move the monster toward the
+   function [monsterBestMoveToReachPlayer](https://github.com/samelinux/rlTutorial2022/blob/68ac51471761f2f1b154a388e320d5f9609f0823/monster.c#L227) which move the monster toward the
    players. This function will be usefull when wrinting more artificial
    intelligence.
 
