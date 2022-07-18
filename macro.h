@@ -3,6 +3,7 @@
 #define _macro_
 
 #include <math.h>
+#include <stdio.h>
 
 //dampened loop, we may need it during maps generation
 #define STANDARD_DAMPEN (1000)
@@ -18,7 +19,7 @@
 #define distanceX(X0,Y0,X1,Y1) (abs((X0)-(X1)))
 #define distanceY(X0,Y0,X1,Y1) (abs((Y0)-(Y1)))
 #define distanceXY(X0,Y0,X1,Y1) (abs((X0)-(X1))+abs((Y0)-(Y1)))
-#define distance(X0,Y0,X1,Y1) sqrt(pow((X0)-(X1),2)+pow((Y0)-(Y1),2))
+#define distance(X0,Y0,X1,Y1) ((int16_t)sqrt(pow((X0)-(X1),2)+pow((Y0)-(Y1),2)))
 
 #endif
 

@@ -1,4 +1,7 @@
 
+#include <stdio.h>
+#include <stdarg.h>
+#include <sys/ioctl.h>
 #include "screen.h"
 
 //this whole file is based on ansi escape codes:

@@ -3,7 +3,6 @@
 #define _random_
 
 #include <stdint.h>
-#include <time.h>
 
 void randomSetup(void);
 

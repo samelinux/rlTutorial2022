@@ -4,7 +4,6 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "screen.h"
 
 enum tileType_t
 {

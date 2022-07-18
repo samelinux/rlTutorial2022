@@ -1,4 +1,6 @@
 
+#include <stdlib.h>
+#include <sys/time.h>
 #include "time.h"
 
 //this whole file is based on:

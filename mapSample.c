@@ -1,5 +1,6 @@
 
 #include "mapSample.h"
+#include "map.h"
 
 //setup a sample map
 void mapSampleBuild()

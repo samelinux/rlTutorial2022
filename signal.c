@@ -1,5 +1,13 @@
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
+#include <execinfo.h>
+#include <unistd.h>
+#include "screen.h"
 #include "signal.h"
+#include "macro.h"
+#include "keyboard.h"
 
 //this whole file is base on:
 //https://man7.org/linux/man-pages/man2/signal.2.html
@@ -42,6 +50,10 @@ void signalHandler(int signal)
  size_t size;
  //get the backgrace up to 100 calls
  size=backtrace(array,100);
+ //reset the screen and terminal to their original states
+ screenDeinit();
+ keyboardDeinit();
+ //print some info
  print("CRASH! Signal: %d\n",signal);
  print("Stack trace:\n");
  //print it in a "pretty" way
@@ -50,7 +62,7 @@ void signalHandler(int signal)
 }
 
 //we use a different signal handler for SIGINT so when the player presse
-//ctrl+c we still have time to reset the screen and the terminal to its
+//ctrl+c we still have time to reset the screen and the terminal to their
 //original state
 void signalInterruptHandler(int signal)
 {

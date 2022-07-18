@@ -1,8 +1,18 @@
 
+#include <string.h>
 #include "map.h"
+#include "screen.h"
+#include "mapSample.h"
+#include "mapCave.h"
+#include "monster.h"
+#include "player.h"
+#include "random.h"
 
 //declare a map
 map_t map;
+//declare a Dijkstra map
+//[http://www.roguebasin.com/index.php/Dijkstra_Maps_Visualized]
+int16_t dijkstraMap[MAP_WIDTH*MAP_HEIGHT];
 
 //setup a map_t structure
 void mapInit(mapType_t type)
@@ -114,9 +124,9 @@ bool mapIsConnected(void)
  return false;
 }
 
-//render the whole map [for now this is ok since it is 80x24 but when the map
-//will become bigger we will implement rendering just a part of it]
-void mapRender()
+//render the whole map [for now this is ok since it is 80x24 but when the
+//map will become bigger we will implement rendering just a part of it]
+void mapRender(void)
 {
  for(int16_t y=0;y<MAP_HEIGHT;y++)
  {
@@ -134,6 +144,7 @@ void mapRender()
     {
      //draw each tile that has been seen and is a wall
      screenColorPut(x,y,tile->fgColor,tile->bgColor,tile->glyph);
+
     }
    }
   }
@@ -160,5 +171,91 @@ void mapResetFOV(void)
    mapTileAt(x,y)->visible=false;
   }
  }
+}
+
+//clear the dijkstra map
+void mapResetDijkstraMap(void)
+{
+ memset(dijkstraMap,0,sizeof(int16_t)*MAP_WIDTH*MAP_HEIGHT);
+}
+
+//calculate the map dijkstra map from x,y point of view
+void mapCalculateDijkstraMap(int16_t x,int16_t y)
+{
+ //declare a queue to store tile index
+ int16_t indexQueue[MAP_WIDTH*MAP_HEIGHT];
+ //head and tail of the queue
+ int16_t head=0;
+ int16_t tail=1;
+ //current hazzard
+ int16_t hazard=INT16_MAX;
+ //start with x,y in the queue
+ indexQueue[head]=x+y*MAP_WIDTH;
+ //while there are index to process
+ while(head<tail)
+ {
+  //save the actual tail
+  int16_t tmpTail=tail;
+  //for each index of the previous iteration
+  while(head<tmpTail)
+  {
+   //"pop" an index and calculate its x,y coordinate
+   int16_t newIndex=indexQueue[head];
+   head++;
+   int16_t newX=newIndex%MAP_WIDTH;
+   int16_t newY=newIndex/MAP_WIDTH;
+   tile_t* tile=mapTileAt(newX,newY);
+   //if it is a valid tile
+   if(tile!=NULL)
+   {
+    //if there is no hazard or the old hazard is worse
+    if(dijkstraMap[newIndex]==0 || hazard>dijkstraMap[newIndex])
+    {
+     //update the hazard and "push" all its neighbour tile
+     dijkstraMap[newIndex]=hazard;
+     for(int8_t dy=-1;dy<=1;dy++)
+     {
+      for(int8_t dx=-1;dx<=1;dx++)
+      {
+       if(dx!=0 || dy!=0)
+       {
+        tile=mapTileAt(newX+dx,newY+dy);
+        monster_t* monster=monsterPoolAt(newX+dx,newY+dy);
+        //if the tile is valid, walkable and there is not a monster in it
+        if(tile!=NULL && tile->walkable==true && monster==NULL)
+        {
+         indexQueue[tail]=newX+dx+(newY+dy)*MAP_WIDTH;
+         tail++;
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+  //pack the queue toward the start and reset tail and head [so we don't have
+  //to handle wraparound in the array]
+  int16_t j=0;
+  for (int16_t i=head;i<=tail;i++)
+  {
+   indexQueue[j]=indexQueue[i];
+   j++;
+  }
+  tail=tail-head;
+  head=0;
+  //calculate the next hazard
+  hazard--;
+ }
+}
+
+//return the hazard at x,y or 0 if the coordinate is not valid
+int16_t mapDijkstraAt(int16_t x,int16_t y)
+{
+ if(mapIsValid(x,y)==true)
+ {
+  return dijkstraMap[x+y*MAP_WIDTH];
+ }
+ //return 0 because it is the worst possible hazard
+ return 0;
 }
 

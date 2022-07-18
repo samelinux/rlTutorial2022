@@ -2,14 +2,8 @@
 #ifndef _map_
 #define _map_
 
-#include <string.h>
 #include <stdint.h>
 #include "tile.h"
-#include "screen.h"
-#include "mapSample.h"
-#include "mapCave.h"
-#include "monster.h"
-#include "player.h"
 
 #define MAP_WIDTH (80)
 #define MAP_HEIGHT (24)
@@ -39,11 +33,17 @@ void mapRandomWalkablePosition(int16_t* x,int16_t* y);
 
 bool mapIsConnected(void);
 
-void mapRender();
+void mapRender(void);
 
 tile_t* mapTileAt(int16_t x,int16_t y);
 
 void mapResetFOV(void);
+
+void mapResetDijkstraMap(void);
+
+void mapCalculateDijkstraMap(int16_t x,int16_t y);
+
+int16_t mapDijkstraAt(int16_t x,int16_t y);
 
 #endif
 

@@ -1,5 +1,6 @@
 
 #include "tile.h"
+#include "screen.h"
 
 //setup a tile_t structure
 void tileInit(tile_t* tile,tileType_t type)

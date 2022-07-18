@@ -1,5 +1,12 @@
 
+#include <stdlib.h>
+#include <string.h>
 #include "monster.h"
+#include "map.h"
+#include "screen.h"
+#include "monsterAIHostile.h"
+#include "random.h"
+#include "player.h"
 
 monster_t monsterPool[MONSTER_POOL_SIZE];
 
@@ -18,6 +25,11 @@ void monsterInit(monster_t* monster,monsterType_t type)
  strncpy(monster->name,monsterName(type),MONSTER_NAME_LENGTH);
  monster->glyph=monsterGlyph(type);
  monster->color=monsterColor(type);
+ monster->maxHitPoints=monsterMaxHitPoints(type);
+ monster->hitPoints=monster->maxHitPoints;
+ monster->defence=monsterDefence(type);
+ monster->attack=monsterAttack(type);
+ monster->ai=monsterAI(type);
 }
 
 //return each monsterType_t name
@@ -62,11 +74,66 @@ int8_t monsterColor(monsterType_t type)
  return BLACK;
 }
 
+//return each monsterType_t maximum hit points
+int8_t monsterMaxHitPoints(monsterType_t type)
+{
+ switch(type)
+ {
+  case MONSTER_MAX:
+  case MONSTER_NONE: return 0;
+  case MONSTER_RAT: return 5;
+  case MONSTER_ORC: return 10;
+  case MONSTER_TROL: return 16;
+ }
+ return 0;
+}
+
+//return each monsterType_t defence
+int8_t monsterDefence(monsterType_t type)
+{
+ switch(type)
+ {
+  case MONSTER_MAX:
+  case MONSTER_NONE: return 0;
+  case MONSTER_RAT: return 0;
+  case MONSTER_ORC: return 1;
+  case MONSTER_TROL: return 2;
+ }
+ return 0;
+}
+
+//return each monsterType_t attack
+int8_t monsterAttack(monsterType_t type)
+{
+ switch(type)
+ {
+  case MONSTER_MAX:
+  case MONSTER_NONE: return 0;
+  case MONSTER_RAT: return 1;
+  case MONSTER_ORC: return 3;
+  case MONSTER_TROL: return 4;
+ }
+ return 0;
+}
+//return each monsterType_t ai
+monsterAI_t monsterAI(monsterType_t type)
+{
+ switch(type)
+ {
+  case MONSTER_MAX:
+  case MONSTER_NONE: return MONSTER_AI_NONE;
+  case MONSTER_RAT: return MONSTER_AI_HOSTILE;
+  case MONSTER_ORC: return MONSTER_AI_HOSTILE;
+  case MONSTER_TROL: return MONSTER_AI_HOSTILE;
+ }
+ return MONSTER_AI_NONE;
+}
+
 //initialize monsters structure
 void monsterPoolInit(void)
 {
  //clear monsters list [MONSTER_NONE=0 so each monsterPool[i].type=MONSTER_NONE]
- memset(&monsterPool,0,sizeof(monster_t)*MONSTER_POOL_SIZE);
+ memset(monsterPool,0,sizeof(monster_t)*MONSTER_POOL_SIZE);
 }
 
 //add a monster to the pool of monsters
@@ -102,8 +169,9 @@ monster_t* monsterPoolAt(int16_t x,int16_t y)
 {
  for(int i=0;i<MONSTER_POOL_SIZE;i++)
  {
-  //search for any monster which occupy the position x,y
-  if(monsterPool[i].x==x && monsterPool[i].y==y)
+  //search for any monster which occupy the position x,y and is alive
+  if(monsterPool[i].x==x && monsterPool[i].y==y &&
+    monsterPool[i].hitPoints>0)
   {
    return &monsterPool[i];
   }
@@ -116,8 +184,8 @@ void monsterPoolRender(void)
 {
  for(int i=0;i<MONSTER_POOL_SIZE;i++)
  {
-  //render each monster
-  if(monsterPool[i].type!=MONSTER_NONE)
+  //render each alive monster
+  if(monsterPool[i].type!=MONSTER_NONE && monsterPool[i].hitPoints>0)
   {
    tile_t* tile=mapTileAt(monsterPool[i].x,monsterPool[i].y);
    //render a monster only if the player can see the tile the monster is in
@@ -135,11 +203,58 @@ void monsterPoolHandleTurn(void)
 {
  for(int i=0;i<MONSTER_POOL_SIZE;i++)
  {
-  if(monsterPool[i].type!=MONSTER_NONE)
+  //if the monster is present and alive
+  if(monsterPool[i].type!=MONSTER_NONE && monsterPool[i].hitPoints>0)
   {
-   fprintf(stderr,"The %s contemplates the meaning of life.\n",
-     monsterPool[i].name);
+   //reset the current dijkstra map
+   mapResetDijkstraMap();
+   //update the dijkstra map
+   playerCalculateDijkstraMap();
+   //use its ai to perform an action
+   switch(monsterPool[i].ai)
+   {
+    case MONSTER_AI_NONE:
+    case MONSTER_AI_MAX:
+     break;
+    case MONSTER_AI_HOSTILE:
+     monsterAIHostileAct(&(monsterPool[i]));
+     break;
+   }
   }
+ }
+}
+
+void monsterBestMoveToReachPlayer(monster_t* monster)
+{
+ int8_t bestDx=0;
+ int8_t bestDy=0;
+ int16_t bestHazard=0;
+ //calculate the best hazard to get to the player
+ for(int8_t dy=-1;dy<=1;dy++)
+ {
+  for(int8_t dx=-1;dx<=1;dx++)
+  {
+   if(dx!=0 || dy!=0)
+   {
+    int16_t newHazard=mapDijkstraAt(monster->x+dx,monster->y+dy);
+    monster_t* neighbour=monsterPoolAt(monster->x+dx,monster->y+dy);
+    //if the move is to a walkable tile, if the hazard is better and if there
+    //is no other monster there
+    if(newHazard!=0 && newHazard>bestHazard && neighbour==NULL)
+    {
+     //save the best move and the new best hazard
+     bestDx=dx;
+     bestDy=dy;
+     bestHazard=newHazard;
+    }
+   }
+  }
+ }
+ //if we found a better hazard than staying still
+ if(bestHazard!=0)
+ {
+  monster->x+=bestDx;
+  monster->y+=bestDy;
  }
 }
 

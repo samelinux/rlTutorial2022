@@ -1,4 +1,5 @@
 
+#include <time.h>
 #include "random.h"
 
 //this whole file is based on Lehmer random numbers:

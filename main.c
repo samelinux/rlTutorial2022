@@ -1,5 +1,15 @@
 
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 #include "main.h"
+#include "keyboard.h"
+#include "map.h"
+#include "monster.h"
+#include "random.h"
+#include "screen.h"
+#include "signal.h"
+#include "player.h"
 
 //int main(int argc,char** argv)
 int main(void)
@@ -26,8 +36,6 @@ int main(void)
   //clear the screen
   screenClear();
 
-  //reset map field of view status
-  mapResetFOV();
   //calculate new field of view
   playerCalculateFOV();
   //draw the map

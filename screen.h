@@ -2,10 +2,7 @@
 #ifndef _screen_
 #define _screen_
 
-#include <stdio.h>
 #include <stdint.h>
-#include <stdarg.h>
-#include <sys/ioctl.h>
 
 #define BLACK 30
 #define RED 31

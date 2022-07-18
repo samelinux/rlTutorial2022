@@ -1,4 +1,7 @@
 
+#include <stdlib.h>
+#include "map.h"
+#include "tile.h"
 #include "bresenham.h"
 
 //calculate if an unobstructed line can be drawn from fromX,fromY to toX,toY

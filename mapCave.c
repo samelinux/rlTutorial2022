@@ -1,6 +1,9 @@
 
-#include "mapCave.h"
 #include <unistd.h>
+#include <string.h>
+#include "mapCave.h"
+#include "map.h"
+#include "random.h"
 
 //setup a cave shaped map
 void mapCaveBuild()

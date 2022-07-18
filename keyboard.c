@@ -1,4 +1,8 @@
 
+#include <stdio.h>
+#include <sys/ioctl.h>
+#include <termios.h>
+#include <unistd.h>
 #include "keyboard.h"
 
 //this whole file is based on
@@ -56,6 +60,18 @@ char keyboardRead(void)
     read(STDIN_FILENO,&buffer,1);
     switch(buffer)
     {
+     case 49:
+      buffer='y';
+      break;
+     case 52:
+      buffer='b';
+      break;
+     case 53:
+      buffer='u';
+      break;
+     case 54:
+      buffer='n';
+      break;
      case 68://left arrow
       buffer='h';
       break;

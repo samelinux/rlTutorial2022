@@ -460,6 +460,126 @@ You can find the code from Week 3, Part 5 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 6 - Doing (and taking) some damage </summary>
 
+You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week4part6).
+
+- general
+
+  I changed all the #include directives to be more precise. Until now there
+   where no problems including all the necessary header inside other header
+   files, but now we have some header cycles. To avoid any further problem,
+   now each source/header file include only the needed headers.
+
+   I also changed some memset parameters, they worked anyway but with this
+    changes the call is more correct.
+
+- [keyboard.c](keyboard.c)
+
+  We added support for numpad movement and for diagonal movement while using
+   arrows via home,end,pageUp and pageDown.
+
+- [macro.h](macro.h)
+
+  Since distance uses sqrt which returns a double I added a cast to int16_t
+   so it should not cause any problems with conversion.
+
+- [main.c](main.c)
+
+  I removed a unnecessary mapResetFOV since it is already done in
+   playerCalculateFOV.
+
+- [map.c](map.c)
+
+  We added an implementatio of Dijkstra map to perform monsters pathfinding.
+   You can learn more about Dijkstra maps on [roguebasin](http://www.roguebasin.com/index.php/Dijkstra_Maps_Visualized) and on [wikipedia](https://en.wikipedia.org/wiki/Dijkstra%27s_algorithm).
+
+   Basically we create three functions to clear and compute Dijkstra maps and
+   to retrive its values.
+
+- [monster.c](monster.c)
+
+  We added some stats to monsters: maxHitPoints, hitPoints, attack and
+   defence. These stats are used to implement the combat which, for now, is
+   quite easy and completly predictable.
+
+  We also added the Dijkstra map calculation before each monsters turn because
+   other monsters obstruct passing on the tile they occupy.
+
+  Next we added a basic artificial intelligence to make monsters alive. For
+   now they just move towards the player (using the Dijkstra maps pathfinding)
+   and attack him when in reach.
+
+  You can easly add other artificial inteligence, for example a
+   MONSTER_AI_WANDER which just move randomly and attack the player if in
+   reach. It is just a simpler MONSTER_AI_HOSTILE which does not take into
+   account the pathfinding. Try it!
+
+  To ease the creation of multiple monster artificial intelligence we added a
+   function [monsterBestMoveToReachPlayer]() which move the monster toward the
+   players. This function will be usefull when wrinting more artificial
+   intelligence.
+
+- [player.c](player.c)
+
+  We added the same monsters stats to the player: maxHitPoints, hitPoints,
+   attack and defence. Now the player can attack monster and get attacked ...
+   and eventually die.
+
+  Since moveing in just in the four cardinal direction is limiting, tedious
+   during exploration and monsters can move diagonally, we also added diagonal
+   movement for the player.
+
+  In [playerRender]() we added an indication of the player hitPoints and
+   maxHitPoints. For now it is writtein in the upper left corner of the screen
+   over the map, in the next Part we will polish the interface and move it in
+   a better place.
+
+  We also added three functions to implement combat, one to calculate if a
+   monster is in attack range, one to implement player to monster attacks and
+   one to implement monster to player attack. I've decided to have them
+   separate as the data structure to represent the player and the monsters so
+   we can optimize more the single data structures to fit more its uses.
+   The combat is quite simple: attacking a target deals (attacker attack
+   stat)-(defender defence) damage. This is completely predictable, we will
+   add some randomness in the future, for now it is more than enough to kill
+   and be killed.
+   One important note: dead monsters do not leave corpses because I am
+   planning to implement them as item.
+
+- [signal.c](signal.c)
+
+  I added screenDeinit and keyboardDeinit inside [signalHandler]() so even in
+  case of a crash the terminal should recover to its original settings.
+
+- [monsterAIHostile.c](monsterAIHostile.c)
+
+  In this file we added a basic "seek and destroy" artificial intelligence for
+   our monsters. They will basically move toward the player and try to kill
+   him. They do not need line of sight to start being aggressive and do not
+   lose interest/will/sight ... they are basically the perfect killing
+   machine!
+
+  You can easly add more artificial intelligence in files named monsterAIXXX
+   to create a family of files. For example you can create, as mentioned
+   before, a monsterAIWander which make a monster wander through the level and
+   switch to monsterAIHostile in case it sees the player (remember, if the
+   player sees the monster, the opposite is also true!).
+
+- Dijkstra map example
+
+  By modifying the [mapRender]() you can easly print the Dijkstra maps value
+  (modulo 10 to have a clearer result) and visualize them directly in game.
+
+  ![part6 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part6_001.png "Part 6 Dijkstra map example")
+
+- Result
+
+  As I said before, these monsters artificial intelligence are a little bit
+   overtuned; they will find you anywhere in the level, they will surround you
+   and they will kill you!
+
+  ![part6 002](https://github.com/samelinux/rlTutorial2022/raw/main/images/part6_002.png "Part 6 screenshot")
+
+
 </details>
 
 <details>
