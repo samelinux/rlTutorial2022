@@ -528,7 +528,7 @@ You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rl
    during exploration and monsters can move diagonally, we also added diagonal
    movement for the player.
 
-  In [playerRender]() we added an indication of the player hitPoints and
+  In [playerRender](https://github.com/samelinux/rlTutorial2022/blob/6fd26f54caf0567f42a5550dfbc6fd1b8f02c776/player.c#L116) we added an indication of the player hitPoints and
    maxHitPoints. For now it is writtein in the upper left corner of the screen
    over the map, in the next Part we will polish the interface and move it in
    a better place.
@@ -547,7 +547,7 @@ You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rl
 
 - [signal.c](signal.c)
 
-  I added screenDeinit and keyboardDeinit inside [signalHandler]() so even in
+  I added screenDeinit and keyboardDeinit inside [signalHandler](https://github.com/samelinux/rlTutorial2022/blob/6fd26f54caf0567f42a5550dfbc6fd1b8f02c776/signal.c#L47) so even in
   case of a crash the terminal should recover to its original settings.
 
 - [monsterAIHostile.c](monsterAIHostile.c)
@@ -566,7 +566,7 @@ You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rl
 
 - Dijkstra map example
 
-  By modifying the [mapRender]() you can easly print the Dijkstra maps value
+  By modifying the [mapRender](https://github.com/samelinux/rlTutorial2022/blob/6fd26f54caf0567f42a5550dfbc6fd1b8f02c776/map.c#L129) you can easly print the Dijkstra maps value
   (modulo 10 to have a clearer result) and visualize them directly in game.
 
   ![part6 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part6_001.png "Part 6 Dijkstra map example")
