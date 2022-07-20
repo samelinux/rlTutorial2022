@@ -671,7 +671,7 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
 
 - [map.c](map.c)
 
-  We modified the [mapRender]() function to render the map from a specific point
+  We modified the [mapRender](https://github.com/samelinux/rlTutorial2022/blob/2a1d6cce6f26034bffa5e2bc8f6cd2196960bb28/map.c#L141) function to render the map from a specific point
    of view. This enable us to render the map from the player perspective or,
    while examining the map, from a tile perspective.
 
@@ -681,7 +681,7 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
    to draw monster from the player perspective and from any tile perspective.
    This is usefull to implement the map examination command.
 
-  We also modified [monsterPoolRender]() to take advantage of the new monster
+  We also modified [monsterPoolRender](https://github.com/samelinux/rlTutorial2022/blob/2a1d6cce6f26034bffa5e2bc8f6cd2196960bb28/monster.c#L202) to take advantage of the new monster
    render function.
 
 - [player.c](player.c)
@@ -691,7 +691,7 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
   We added a journal for the player to read where every important event gets
    logged up to 100 events. In the map state, only the last few events get
    printed. To ease the reading we also added a state to view the full journal.
-   To write to the journal we created the [playerLog]() function.
+   To write to the journal we created the [playerLog](https://github.com/samelinux/rlTutorial2022/blob/2a1d6cce6f26034bffa5e2bc8f6cd2196960bb28/player.c#L109) function.
    Since now we have a journal, all combat event gets written to it instead of
    the terminal.
 
