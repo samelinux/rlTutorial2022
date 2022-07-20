@@ -25,6 +25,19 @@ bool stateMapUpdate(player_t* player,char input)
     //close the program
     mainQuit();
     break;
+   case 'x':
+    player->examineMapX=player->x;
+    player->examineMapY=player->y;
+    player->state=STATE_EXAMINE_MAP;
+    break;
+   case 'J':
+    player->journalIndex=JOURNAL_LENGTH-screenHeight+1;
+    if(player->journalIndex<0)
+    {
+     player->journalIndex=0;
+    }
+    player->state=STATE_JOURNAL;
+    break;
    case '5':
    case '.':
     //wait a turn
@@ -83,23 +96,27 @@ bool stateMapUpdate(player_t* player,char input)
     newTurn=true;
     break;
   }
-  //if a tile exists at the new location [avoid goind off the map boundaries]
-  toTile=mapTileAt(x,y);
-  if(toTile!=NULL)
+  //if the player moved
+  if(x!=player->x || y!=player->y)
   {
-   monster_t* monster=monsterPoolAt(x,y);
-   //if a monster is present where the player wants to move, attack it
-   if(monster!=NULL)
+   //if a tile exists at the new location [avoid goind off the map boundaries]
+   toTile=mapTileAt(x,y);
+   if(toTile!=NULL)
    {
-    playerAttack(monster);
-   }
-   else
-   {
-    //if the tile is walkable
-    if(toTile->walkable==true)
+    monster_t* monster=monsterPoolAt(x,y);
+    //if a monster is present where the player wants to move, attack it
+    if(monster!=NULL)
     {
-     player->x=x;
-     player->y=y;
+     playerAttack(monster);
+    }
+    else
+    {
+     //if the tile is walkable
+     if(toTile->walkable==true)
+     {
+      player->x=x;
+      player->y=y;
+     }
     }
    }
   }
@@ -117,11 +134,30 @@ void stateMapRender(player_t* player)
  //calculate new field of view
  playerCalculateFOV();
  //draw the map
- mapRender();
+ mapRender(player->x,player->y);
  //draw all monsters
- monsterPoolRender();
- //render the player and his info
- screenColorPut(player->x,player->y,WHITE_BRIGHT,BLACK,'@');
- screenPrint(0,0,"HP: %d/%d",player->hitPoints,player->maxHitPoints);
+ monsterPoolRender(player->x,player->y);
+ //render the player
+ screenColorPut(MAP_VIEWPORT_WIDTH/2,MAP_VIEWPORT_HEIGHT/2,
+   WHITE_BRIGHT,BLACK,'@');
+
+ //print player stats
+ int8_t statX=MAP_VIEWPORT_WIDTH+1;
+ screenPrint(statX,0,"HP: %d/%d",player->hitPoints,player->maxHitPoints);
+ screenPrint(statX,1,"Attack: %d",player->attack);
+ screenPrint(statX,2,"Defence: %d",player->defence);
+
+ //print the last journal lines
+ int8_t maxLines=screenHeight-MAP_VIEWPORT_HEIGHT;
+ int8_t start=JOURNAL_LENGTH-maxLines;
+ if(start<0)
+ {
+  start+=JOURNAL_LENGTH;
+ }
+ for(int8_t i=0;i<maxLines;i++)
+ {
+  int8_t line=(start+i)%JOURNAL_LENGTH;
+  screenPrint(0,MAP_VIEWPORT_HEIGHT+i,"%s",player->journal[line]);
+ }
 }
 

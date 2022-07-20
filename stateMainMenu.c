@@ -18,6 +18,7 @@ bool stateMainMenuUpdate(player_t* player,char input)
   case 10:
    //setup the player for a new game
    playerNewGame();
+   playerLog("Welcome to the dungeon!");
    //generate a new map
    mapGenerate(MAP_CAVE);
    //move the player to the map state

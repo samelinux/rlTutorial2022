@@ -43,6 +43,9 @@ typedef struct monster_t monster_t;
 
 void monsterInit(monster_t* monster,monsterType_t type);
 
+void monsterRender(monster_t* monster,int16_t fromX,int16_t fromY,
+  int16_t fgColor,int16_t bgColor);
+
 char* monsterName(monsterType_t type);
 
 char monsterGlyph(monsterType_t type);
@@ -67,7 +70,7 @@ void monsterPoolSpawn(int16_t maxMonsters);
 
 monster_t* monsterPoolAt(int16_t x,int16_t y);
 
-void monsterPoolRender(void);
+void monsterPoolRender(int16_t fromX,int16_t fromY);
 
 void monsterPoolHandleTurn(void);
 

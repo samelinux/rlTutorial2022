@@ -9,6 +9,8 @@
 #include "map.h"
 #include "screen.h"
 #include "stateMap.h"
+#include "stateExamineMap.h"
+#include "stateJournal.h"
 #include "stateMainMenu.h"
 #include "stateGameOver.h"
 
@@ -38,6 +40,11 @@ void playerNewGame(void)
  player.hitPoints=player.maxHitPoints;
  player.defence=2;
  player.attack=5;
+ memset(&(player.journal),0,
+   sizeof(char)*JOURNAL_LENGTH*JOURNAL_LINE_LENGTH);
+ player.journalIndex=0;
+ player.examineMapX=0;
+ player.examineMapY=0;
 }
 
 //call the states update function based on the actual player state
@@ -49,8 +56,12 @@ bool playerUpdate(char input)
    return false;
   case STATE_MAP:
    return stateMapUpdate(&player,input);
+  case STATE_EXAMINE_MAP:
+   return stateExamineMapUpdate(&player,input);
   case STATE_MAIN_MENU:
    return stateMainMenuUpdate(&player,input);
+  case STATE_JOURNAL:
+   return stateJournalUpdate(&player,input);
   case STATE_GAME_OVER:
    return stateGameOverUpdate(&player,input);
  }
@@ -67,13 +78,44 @@ void playerRender(void)
   case STATE_MAP:
    stateMapRender(&player);
    break;
+  case STATE_EXAMINE_MAP:
+   stateExamineMapRender(&player);
+   break;
   case STATE_MAIN_MENU:
    stateMainMenuRender(&player);
+   break;
+  case STATE_JOURNAL:
+   stateJournalRender(&player);
    break;
   case STATE_GAME_OVER:
    stateGameOverRender(&player);
    break;
  }
+}
+
+void playerRenderPlayer(int16_t fromX,int16_t fromY,
+  int16_t fgColor,int16_t bgColor)
+{
+ int16_t screenX=player.x+MAP_VIEWPORT_WIDTH/2-fromX;
+ int16_t screenY=player.y+MAP_VIEWPORT_HEIGHT/2-fromY;
+ if(screenX>=0 && screenX<MAP_VIEWPORT_WIDTH &&
+   screenY>=0 && screenY<MAP_VIEWPORT_HEIGHT)
+ {
+  screenColorPut(screenX,screenY,fgColor,bgColor,'@');
+ }
+}
+
+//add a line to the player journal
+void playerLog(char* format,...)
+{
+ va_list argumentList;
+ //get the variadic function arguments
+ va_start(argumentList,format);
+ memmove(&(player.journal[0]),&(player.journal[1]),
+   JOURNAL_LENGTH*JOURNAL_LINE_LENGTH);
+ vsnprintf(player.journal[JOURNAL_LENGTH-1],JOURNAL_LINE_LENGTH,
+   format,argumentList);
+ va_end(argumentList);
 }
 
 //teleport the player to a specific position (this is usefull to place the
@@ -138,19 +180,19 @@ void playerAttack(monster_t* monster)
  if(damage>0)
  {
   //show the attack action
-  print("You attack %s for %d damage.\n",monster->name,damage);
+  playerLog("You attack %s for %d damage.",monster->name,damage);
   monster->hitPoints-=damage;
   if(monster->hitPoints<=0)
   {
    //show monster death
-   print("%s dies.\n",monster->name);
+   playerLog("%s dies.",monster->name);
    monster->type=MONSTER_NONE;
   }
  }
  else
  {
   //show attack misses
-  print("You attack %s but do no damage.\n",monster->name);
+  playerLog("You attack %s but do no damage.",monster->name);
  }
 }
 
@@ -166,19 +208,19 @@ void playerAttackedBy(monster_t* monster)
   if(damage>0)
   {
    //show the attack action
-   print("%s attacks you for %d damage.\n",monster->name,damage);
+   playerLog("%s attacks you for %d damage.",monster->name,damage);
    player.hitPoints-=damage;
    if(player.hitPoints<=0)
    {
     //show player death
-    print("Your die.\n");
+    playerLog("Your die.");
     player.state=STATE_GAME_OVER;
    }
   }
   else
   {
    //show monster misses
-   print("%s attacks you but does no damage.\n",monster->name);
+   playerLog("%s attacks you but does no damage.",monster->name);
   }
  }
 }

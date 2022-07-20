@@ -32,6 +32,18 @@ void monsterInit(monster_t* monster,monsterType_t type)
  monster->ai=monsterAI(type);
 }
 
+void monsterRender(monster_t* monster,int16_t fromX,int16_t fromY,
+  int16_t fgColor,int16_t bgColor)
+{
+ int16_t screenX=monster->x+MAP_VIEWPORT_WIDTH/2-fromX;
+ int16_t screenY=monster->y+MAP_VIEWPORT_HEIGHT/2-fromY;
+ if(screenX>=0 && screenX<MAP_VIEWPORT_WIDTH &&
+   screenY>=0 && screenY<MAP_VIEWPORT_HEIGHT)
+ {
+  screenColorPut(screenX,screenY,fgColor,bgColor,monster->glyph);
+ }
+}
+
 //return each monsterType_t name
 char* monsterName(monsterType_t type)
 {
@@ -187,7 +199,7 @@ monster_t* monsterPoolAt(int16_t x,int16_t y)
 }
 
 //render all visible monsters
-void monsterPoolRender(void)
+void monsterPoolRender(int16_t fromX,int16_t fromY)
 {
  for(int i=0;i<MONSTER_POOL_SIZE;i++)
  {
@@ -198,8 +210,8 @@ void monsterPoolRender(void)
    //render a monster only if the player can see the tile the monster is in
    if(tile!=NULL && tile->visible==true)
    {
-    screenColorPut(monsterPool[i].x,monsterPool[i].y,
-      monsterPool[i].color,tile->bgColor,monsterPool[i].glyph);
+    monsterRender(&(monsterPool[i]),fromX,fromY,
+      monsterPool[i].color,tile->bgColor);
    }
   }
  }

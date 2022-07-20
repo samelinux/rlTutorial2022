@@ -137,27 +137,21 @@ bool mapIsConnected(void)
  return false;
 }
 
-//render the whole map [for now this is ok since it is 80x24 but when the
-//map will become bigger we will implement rendering just a part of it]
-void mapRender(void)
+//render map from fromX,fromY point of view
+void mapRender(int16_t fromX,int16_t fromY)
 {
- for(int16_t y=0;y<MAP_HEIGHT;y++)
+ int16_t x=fromX-MAP_VIEWPORT_WIDTH/2;
+ int16_t y=fromY-MAP_VIEWPORT_HEIGHT/2;
+ for(int16_t dy=0;dy<MAP_VIEWPORT_HEIGHT;dy++)
  {
-  for(int16_t x=0;x<MAP_WIDTH;x++)
-  {
-   tile_t* tile=mapTileAt(x,y);
-   if(tile->visible)
+  for(int16_t dx=0;dx<MAP_VIEWPORT_WIDTH;dx++) {
+   tile_t* tile=mapTileAt(x+dx,y+dy);
+   if(tile!=NULL)
    {
-    //draw each visible tile
-    screenColorPut(x,y,tile->fgColor,tile->bgColor,tile->glyph);
-   }
-   else
-   {
-    if(tile->seen)
+    if(tile->visible || tile->seen)
     {
-     //draw each tile that has been seen and is a wall
-     screenColorPut(x,y,tile->fgColor,tile->bgColor,tile->glyph);
-
+     //draw each visible tile
+     tileRender(tile,x+dx,y+dy,fromX,fromY,tile->fgColor,tile->bgColor);
     }
    }
   }

@@ -1,12 +1,16 @@
 
+#include <string.h>
 #include "tile.h"
 #include "screen.h"
+#include "map.h"
 
 //setup a tile_t structure
 void tileInit(tile_t* tile,tileType_t type)
 {
  tile->type=type;
  //get standard values for tileType_t
+ memset(tile->name,0,sizeof(char)*TILE_NAME_LENGTH);
+ strncpy(tile->name,tileName(type),TILE_NAME_LENGTH);
  tile->glyph=tileGlyph(type);
  tile->fgColor=tileFGColor(type);
  tile->bgColor=tileBGColor(type);
@@ -14,6 +18,30 @@ void tileInit(tile_t* tile,tileType_t type)
  tile->blockFOV=tileBlockFOV(type);
  tile->visible=false;
  tile->seen=false;
+}
+
+void tileRender(tile_t* tile,int16_t x,int16_t y,int16_t fromX,int16_t fromY,
+  int16_t fgColor,int16_t bgColor)
+{
+ int16_t screenX=x+MAP_VIEWPORT_WIDTH/2-fromX;
+ int16_t screenY=y+MAP_VIEWPORT_HEIGHT/2-fromY;
+ if(screenX>=0 && screenX<MAP_VIEWPORT_WIDTH &&
+   screenY>=0 && screenY<MAP_VIEWPORT_HEIGHT)
+ {
+  screenColorPut(screenX,screenY,fgColor,bgColor,tile->glyph);
+ }
+}
+
+char* tileName(tileType_t type)
+{
+ switch(type)
+ {
+  case TILE_MAX:
+  case TILE_NONE: return "no name";
+  case TILE_FLOOR: return "floor";
+  case TILE_WALL: return "wall";
+ }
+ return "no name";
 }
 
 //return each tileType_t character representation

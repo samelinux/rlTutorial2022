@@ -7,6 +7,8 @@
 
 #define MAP_WIDTH (80)
 #define MAP_HEIGHT (24)
+#define MAP_VIEWPORT_WIDTH (60)
+#define MAP_VIEWPORT_HEIGHT (20)
 
 enum mapType_t
 {
@@ -37,7 +39,7 @@ void mapRandomWalkablePosition(int16_t* x,int16_t* y);
 
 bool mapIsConnected(void);
 
-void mapRender(void);
+void mapRender(int16_t fromX,int16_t fromY);
 
 tile_t* mapTileAt(int16_t x,int16_t y);
 

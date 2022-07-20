@@ -5,6 +5,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define TILE_NAME_LENGTH (16)
+
 enum tileType_t
 {
  TILE_NONE=0,
@@ -17,6 +19,7 @@ typedef enum tileType_t tileType_t;
 struct tile_t
 {
  tileType_t type;
+ char name[TILE_NAME_LENGTH];
  char glyph;
  int8_t fgColor;
  int8_t bgColor;
@@ -28,6 +31,11 @@ struct tile_t
 typedef struct tile_t tile_t;
 
 void tileInit(tile_t* tile,tileType_t type);
+
+void tileRender(tile_t* tile,int16_t x,int16_t y,int16_t fromX,int16_t fromY,
+  int16_t fgColor,int16_t bgColor);
+
+char* tileName(tileType_t type);
 
 char tileGlyph(tileType_t type);
 

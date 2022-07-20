@@ -363,7 +363,7 @@ You can find the code from Week 3, Part 4 [here](https://github.com/samelinux/rl
 
 - [main.c](main.c)
 
-  We added field of view reset and calculation inside the main loop. This refresh the player field of view after each action giving us the opportunity to explore the map instaed of having it fully visible from the start.
+  We added field of view reset and calculation inside the main loop. This refresh the player field of view after each action giving us the opportunity to explore the map instead of having it fully visible from the start.
  
 - [map.c](map.c)
 
@@ -424,7 +424,7 @@ You can find the code from Week 3, Part 5 [here](https://github.com/samelinux/rl
 
   We added a name to monsters and loaded it in monsterInit. This way we can better comunicate to the player what monsters are doing and what the player is interacting with.
 
-  We changed some monsterType_t character representation to '?' so we see if we miss a case in monsterGlyph. If you add more monster types and forget to add their case in [monsterGlyph](https://github.com/samelinux/rlTutorial2022/blob/e7e9f8955dce594fcc1f761e361e6ad6a3e3bdf5/monster.c#L38) you will see a '?' instaed of a blank tile, this is way easier to spot.
+  We changed some monsterType_t character representation to '?' so we see if we miss a case in monsterGlyph. If you add more monster types and forget to add their case in [monsterGlyph](https://github.com/samelinux/rlTutorial2022/blob/e7e9f8955dce594fcc1f761e361e6ad6a3e3bdf5/monster.c#L38) you will see a '?' instead of a blank tile, this is way easier to spot.
 
   We added two type of new monsters: orc and troll.
 
@@ -438,7 +438,7 @@ You can find the code from Week 3, Part 5 [here](https://github.com/samelinux/rl
 
   We modified playerHandleInput to return a boolean value which inform the main loop that the player has or has not taken a turn so we can make monster take their turns. For now all player actions generate a new turn, but in the future we can have actions that do not take a turn: think about a player wanting to look at his surrounding, it makes sense that this action should not consume a turn.
 
-  We added the basics to implement "bump combat" in playerHandleInput, if the player moves toward a monster occupied tile then he attack the monsters instaed of moving. This is basically all we need to implement hand-to-hand combat ... it is taht simple!
+  We added the basics to implement "bump combat" in playerHandleInput, if the player moves toward a monster occupied tile then he attack the monsters instead of moving. This is basically all we need to implement hand-to-hand combat ... it is taht simple!
 
 - tile.c
 
@@ -666,6 +666,93 @@ You can find the code from Week 4, Part 6.5 [here](https://github.com/samelinux/
 
 <details>
 <summary> Part 7 - Creating the Interface </summary>
+
+You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week4part7).
+
+- [map.c](map.c)
+
+  We modified the [mapRender]() function to render the map from a specific point
+   of view. This enable us to render the map from the player perspective or,
+   while examining the map, from a tile perspective.
+
+- [monster.c](monster.c)
+
+  We added a function to draw a monster from a specific point of view to be able
+   to draw monster from the player perspective and from any tile perspective.
+   This is usefull to implement the map examination command.
+
+  We also modified [monsterPoolRender]() to take advantage of the new monster
+   render function.
+
+- [player.c](player.c)
+
+  We added some field to the player structure to implement some nice feature.
+
+  We added a journal for the player to read where every important event gets
+   logged up to 100 events. In the map state, only the last few events get
+   printed. To ease the reading we also added a state to view the full journal.
+   To write to the journal we created the [playerLog]() function.
+   Since now we have a journal, all combat event gets written to it instead of
+   the terminal.
+
+  We added two coordinates examineMapX and examineMapY which are used in the
+   STATE_EXAMINE_MAP to move around the selection. This state is quite usefull
+   for the player since it enables the player to move according to threats he
+   spots on the map from further away.
+
+  We also added a functon to render the player from a specific point of view.
+   This function is used while examining the map to easly draw the player with
+   inverted colors.
+
+- [stateGameOver.c](stateGameOver.c)
+
+  We added an hack in this state to have an updated map in the death screen so
+   the player can see the killing blow log and his hit points after dieing.
+
+- [stateMap.c](stateMap.c)
+
+  We added two new command to the map screen: 'x' to eXamine the map and 'J' to
+   view the Journal.
+
+  The bulk of the UI update is in this state:
+
+  1. we constrained the map to MAP_VIEWPORT_WIDTH x MAP_VIEWPORT_HEIGHT
+  2. we move the player stats to the remaining space on the right
+  3. we added the last lines of the journal in the remaining space under the map
+
+- [tile.c](tile.c)
+
+  We added a name to all tile so we can display it when the player examine map
+   tiles.
+
+  We also added a utility function to draw tiles.
+
+- [stateExaminemap.c](stateExaminemap.c)
+
+  This state handle all the game logic that let the player examine the map, from
+   handling the input to move the selection, to drawing a modified versione of
+   the map and some info on the selected tile. To have a better understanding of
+   it take a look at the implementation, it is quite easy and indipendent from
+   the rest of the code.
+
+- [stateJournal.c](stateJournal.c)
+
+  This state handle all the game logic that let the player view the full journal
+   of the last 100 events, from handling the scrolling to drawing it. The code
+   is very very simple, take a look at the file to have a better idea of how it
+   works.
+
+  This is a perfect example and should clarify why we created the states in
+   first place: to separate the varius game block in separate files which are
+   smaller and easier to understand.
+
+- New UI result
+
+  ![part7 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part7_001.png "Part 7 new UI")
+
+- Examine command result
+
+  ![part7 002](https://github.com/samelinux/rlTutorial2022/raw/main/images/part7_002.png "Part 7 examine command")
 
 </details>
 

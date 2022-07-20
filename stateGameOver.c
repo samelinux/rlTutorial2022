@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include "stateGameOver.h"
+#include "stateMap.h"
 #include "screen.h"
 
 //handle the game over screen input
@@ -20,6 +21,8 @@ bool stateGameOverUpdate(player_t* player,char input)
 //render the game over screen
 void stateGameOverRender(player_t* player)
 {
+ //this is an hack to have the map screen updated to the last action
+ stateMapRender(player);
  //we do not need to use player for now, avoid unused variable compile error
  (void)player;
  //for now lets just print a "Dark Souls style" death screen
