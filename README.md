@@ -583,6 +583,88 @@ You can find the code from Week 4, Part 6 [here](https://github.com/samelinux/rl
 </details>
 
 <details>
+<summary> Part 6.5 - Creating a better loop </summary>
+
+You can find the code from Week 4, Part 6.5 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week4part6.5).
+
+- main.c
+
+  I deeply changed the main loop of the game by adding [player states]().
+
+  Player states are used to separate the input and update logic of various
+   screen/logic block of the game into separate files and functions. For example
+   the STATE_MAP handle all player input specific to the map screen which for
+   now is just movement.
+
+  We created the function [mainQuit]() which can be used everywhere in the code
+   to safetly exit the program, deinitializing all "engine" system and
+   returning the terminal to its initial configuration.
+
+- map.c
+
+  We splitted the map initialization from the map generation and added a
+   function to deinitialize the map. For now the [mapDeinit]() function is now
+   veryusefull because we allocate the map statically, but its utility will
+   become clear in the future if we decide to allocate the map dinamically.
+
+- monster.c
+
+  We adde a deinitialization function as in [map.c]() for the monsters pool
+   for the same reason.
+
+- player.c
+
+  We adde a deinitialization function as in [map.c]() for the player for the
+   same reason.
+
+  We changed a bit how the player is initializaed.
+  Now the [playerInit]() function just setup the player state so the game start
+   in the main menu screen.
+  The [playerNewGame]() function setup the player to start a new game, we will
+   eventually create also a playerLoadGame function.
+
+  [playerUpdate]() is now just a wrapper which calls the correct stateXXXUpdate
+   function. Also [playerRender]() become a wrapper to the correct
+   stateXXXRender function.
+  This is quite usefull because let us separate various update and render code
+   for the different screen/logic block of the game.
+
+  We also added a state change in [playerAttackedBy]() function to move the
+   player to the game over screen if he reach 0 hit points.
+
+- stateGameOver.c
+
+  This file contains the update and render function for the game over screen.
+
+  [stateGameOverUpdate]() is quite simple, when the player press return move
+   him to the main menu.
+
+  [stateGameOverRender]() for now is also quite simple, it just prints "You
+   died" in the middle of the screen. Note that we do not clear the screen
+   in this state so the last map rendered remain visible and the player can see
+   his last moment of life.
+
+- stateMainMenu.c
+
+  This file contains the update and render function for the main menu screen.
+  It is just a basic main menu, but in the future we will add a real menu for
+   the player to start a new game, load a saved one if present and maybe change
+   some game options.
+
+- stateMap.c
+
+  This file contains the update and render function for the main game screen.
+
+  [stateMapUpdate]() handle all the input needed to let the player move in the
+   map. In the future we will add others keys to let the player perform other
+   actions like: access his backpack, examine the map, ...
+
+  [stateMapRender]() just render the map. In the next part we will polish this
+   screen to print more usefull informations.
+
+</details>
+
+<details>
 <summary> Part 7 - Creating the Interface </summary>
 
 </details>

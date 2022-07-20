@@ -14,8 +14,21 @@ map_t map;
 //[http://www.roguebasin.com/index.php/Dijkstra_Maps_Visualized]
 int16_t dijkstraMap[MAP_WIDTH*MAP_HEIGHT];
 
-//setup a map_t structure
-void mapInit(mapType_t type)
+//clear the map
+void mapInit(void)
+{
+ memset(&(map),0,sizeof(map));
+}
+
+//deinitialize the map
+void mapDeinit(void)
+{
+ //for now doed nothing, but if we decide to allocate the map dynamically here
+ //is the right player do deallocate it
+}
+
+//generate a new level
+void mapGenerate(mapType_t type)
 {
  int16_t x=0;
  int16_t y=0;

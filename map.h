@@ -25,7 +25,11 @@ struct map_t
 };
 typedef struct map_t map_t;
 
-void mapInit(mapType_t type);
+void mapInit(void);
+
+void mapDeinit(void);
+
+void mapGenerate(mapType_t type);
 
 bool mapIsValid(int16_t x,int16_t y);
 

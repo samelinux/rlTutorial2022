@@ -59,6 +59,8 @@ monsterAI_t monsterAI(monsterType_t type);
 
 void monsterPoolInit(void);
 
+void monsterPoolDeinit(void);
+
 void monsterPoolAdd(monsterType_t type);
 
 void monsterPoolSpawn(int16_t maxMonsters);

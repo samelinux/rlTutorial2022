@@ -8,15 +8,31 @@
 #include "macro.h"
 #include "map.h"
 #include "screen.h"
+#include "stateMap.h"
+#include "stateMainMenu.h"
+#include "stateGameOver.h"
 
 //declare a player
 player_t player;
 
-//setup a player_t structure
-void playerInit(int16_t x,int16_t y)
+//set the player state to STATE_MAIN_MENU
+void playerInit(void)
 {
- player.x=x;
- player.y=y;
+ player.state=STATE_MAIN_MENU;
+}
+
+//deinitialize the player
+void playerDeinit(void)
+{
+ //for now doed nothing, but if we decide to allocate the player dynamically
+ //here is the right player do deallocate it
+}
+
+//setup the player for a new game
+void playerNewGame(void)
+{
+ player.x=0;
+ player.y=0;
  player.losLength=4;
  player.maxHitPoints=30;
  player.hitPoints=player.maxHitPoints;
@@ -24,99 +40,40 @@ void playerInit(int16_t x,int16_t y)
  player.attack=5;
 }
 
-//handle one input from the player
-bool playerHandleInput(char input)
+//call the states update function based on the actual player state
+bool playerUpdate(char input)
 {
- bool newTurn=false;
- if(player.hitPoints>0)
+ switch(player.state)
  {
-  tile_t* toTile=NULL;
-  int8_t x=player.x;
-  int8_t y=player.y;
-  //each action can change newTurn to true to signal the main loop a net turn
-  //has passed. You may want some actoins to not consume a turn, in that case
-  //just leave newTurn to false
-  switch(input)
-  {
-   case '5':
-   case '.':
-    newTurn=true;
-    break;
-   case '7':
-   case 'y':
-    y-=1;
-    x-=1;
-    newTurn=true;
-    break;
-   case 'u':
-   case '9':
-    y-=1;
-    x+=1;
-    newTurn=true;
-    break;
-   case '4':
-   case 'h':
-    x-=1;
-    newTurn=true;
-    break;
-   case '2':
-   case 'j':
-    y+=1;
-    newTurn=true;
-    break;
-   case '8':
-   case 'k':
-    y-=1;
-    newTurn=true;
-    break;
-   case '6':
-   case 'l':
-    x+=1;
-    newTurn=true;
-    break;
-   case '1':
-   case 'b':
-    y+=1;
-    x-=1;
-    newTurn=true;
-    break;
-   case '3':
-   case 'n':
-    y+=1;
-    x+=1;
-    newTurn=true;
-    break;
-  }
-  //if a tile exists at the new location [avoid goind off the map boundaries]
-  toTile=mapTileAt(x,y);
-  if(toTile!=NULL)
-  {
-   monster_t* monster=monsterPoolAt(x,y);
-   //if a monster is present where the player wants to move, attack it
-   if(monster!=NULL)
-   {
-    playerAttack(monster);
-   }
-   else
-   {
-    //if the tile is walkable
-    if(toTile->walkable==true)
-    {
-     player.x=x;
-     player.y=y;
-    }
-   }
-  }
+  case STATE_MAX:
+   return false;
+  case STATE_MAP:
+   return stateMapUpdate(&player,input);
+  case STATE_MAIN_MENU:
+   return stateMainMenuUpdate(&player,input);
+  case STATE_GAME_OVER:
+   return stateGameOverUpdate(&player,input);
  }
- //return the newTurn value to the main loop so monsters can take a turn when
- //the player take a turn
- return newTurn;
+ return false;
 }
 
+//call the states render function based on the actual player state
 void playerRender(void)
 {
- screenColorPut(player.x,player.y,WHITE_BRIGHT,BLACK,'@');
- screenPrint(0,0,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
+ switch(player.state)
+ {
+  case STATE_MAX:
+   break;
+  case STATE_MAP:
+   stateMapRender(&player);
+   break;
+  case STATE_MAIN_MENU:
+   stateMainMenuRender(&player);
+   break;
+  case STATE_GAME_OVER:
+   stateGameOverRender(&player);
+   break;
+ }
 }
 
 //teleport the player to a specific position (this is usefull to place the
@@ -200,23 +157,29 @@ void playerAttack(monster_t* monster)
 //handle an attack from a monster to the player
 void playerAttackedBy(monster_t* monster)
 {
- //simple damage formula
- int16_t damage=MAX(0,monster->attack-player.defence);
- if(damage>0)
+ //since monsters turn does not end with player death ... do not "beat a dead
+ //player"
+ if(player.hitPoints>0)
  {
-  //show the attack action
-  print("%s attacks you for %d damage.\n",monster->name,damage);
-  player.hitPoints-=damage;
-  if(player.hitPoints<=0)
+  //simple damage formula
+  int16_t damage=MAX(0,monster->attack-player.defence);
+  if(damage>0)
   {
-   //show player death
-   print("Your die.\n");
+   //show the attack action
+   print("%s attacks you for %d damage.\n",monster->name,damage);
+   player.hitPoints-=damage;
+   if(player.hitPoints<=0)
+   {
+    //show player death
+    print("Your die.\n");
+    player.state=STATE_GAME_OVER;
+   }
   }
- }
- else
- {
-  //show monster misses
-  print("%s attacks you but does no damage.\n",monster->name);
+  else
+  {
+   //show monster misses
+   print("%s attacks you but does no damage.\n",monster->name);
+  }
  }
 }
 

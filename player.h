@@ -6,8 +6,18 @@
 #include <stdbool.h>
 #include "monster.h"
 
+enum state_t
+{
+ STATE_MAIN_MENU=0,
+ STATE_MAP,
+ STATE_GAME_OVER,
+ STATE_MAX,
+};
+typedef enum state_t state_t;
+
 struct player_t
 {
+ state_t state;
  int16_t x;
  int16_t y;
  int16_t losLength;
@@ -18,9 +28,13 @@ struct player_t
 };
 typedef struct player_t player_t;
 
-void playerInit(int16_t x,int16_t y);
+void playerInit(void);
 
-bool playerHandleInput(char input);
+void playerDeinit(void);
+
+void playerNewGame(void);
+
+bool playerUpdate(char input);
 
 void playerRender(void);
 

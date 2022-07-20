@@ -129,11 +129,18 @@ monsterAI_t monsterAI(monsterType_t type)
  return MONSTER_AI_NONE;
 }
 
-//initialize monsters structure
+//initialize the monsters pool
 void monsterPoolInit(void)
 {
  //clear monsters list [MONSTER_NONE=0 so each monsterPool[i].type=MONSTER_NONE]
  memset(monsterPool,0,sizeof(monster_t)*MONSTER_POOL_SIZE);
+}
+
+//deinitialize the monster pool
+void monsterPoolDeinit(void)
+{
+ //for now doed nothing, but if we decide to allocate the pool dynamically
+ //here is the right player do deallocate it
 }
 
 //add a monster to the pool of monsters

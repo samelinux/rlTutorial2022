@@ -1,6 +1,5 @@
 
 #include "monsterAIHostile.h"
-#include "monster.h"
 #include "player.h"
 #include "map.h"
 
