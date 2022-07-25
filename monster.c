@@ -152,7 +152,7 @@ void monsterPoolInit(void)
 void monsterPoolDeinit(void)
 {
  //for now doed nothing, but if we decide to allocate the pool dynamically
- //here is the right player do deallocate it
+ //here is the right place do deallocate it
 }
 
 //add a monster to the pool of monsters

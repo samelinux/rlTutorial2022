@@ -4,11 +4,13 @@
 #include <stdarg.h>
 #include <sys/param.h>
 #include "player.h"
+#include "item.h"
 #include "bresenham.h"
 #include "macro.h"
 #include "map.h"
 #include "screen.h"
 #include "stateMap.h"
+#include "stateBackpack.h"
 #include "stateExamineMap.h"
 #include "stateJournal.h"
 #include "stateMainMenu.h"
@@ -27,12 +29,13 @@ void playerInit(void)
 void playerDeinit(void)
 {
  //for now doed nothing, but if we decide to allocate the player dynamically
- //here is the right player do deallocate it
+ //here is the right place do deallocate it
 }
 
 //setup the player for a new game
 void playerNewGame(void)
 {
+ //setup the player for a new game
  player.x=0;
  player.y=0;
  player.losLength=4;
@@ -40,9 +43,14 @@ void playerNewGame(void)
  player.hitPoints=player.maxHitPoints;
  player.defence=2;
  player.attack=5;
- memset(&(player.journal),0,
-   sizeof(char)*JOURNAL_LENGTH*JOURNAL_LINE_LENGTH);
+ memset(player.journal,0,sizeof(char)*JOURNAL_LENGTH*JOURNAL_LINE_LENGTH);
  player.journalIndex=0;
+ memset(player.backpack,0,sizeof(item_t)*BACKPACK_LENGTH);
+ player.backpackSelected=true;
+ player.backpackIndex=0;
+ player.backpackStart=0;
+ player.nearbyIndex=0;
+ player.nearbyStart=0;
  player.examineMapX=0;
  player.examineMapY=0;
 }
@@ -55,15 +63,17 @@ bool playerUpdate(char input)
   case STATE_MAX:
    return false;
   case STATE_MAP:
-   return stateMapUpdate(&player,input);
+   return stateMapUpdate(input);
+  case STATE_BACKPACK:
+   return stateBackpackUpdate(input);
   case STATE_EXAMINE_MAP:
-   return stateExamineMapUpdate(&player,input);
+   return stateExamineMapUpdate(input);
   case STATE_MAIN_MENU:
-   return stateMainMenuUpdate(&player,input);
+   return stateMainMenuUpdate(input);
   case STATE_JOURNAL:
-   return stateJournalUpdate(&player,input);
+   return stateJournalUpdate(input);
   case STATE_GAME_OVER:
-   return stateGameOverUpdate(&player,input);
+   return stateGameOverUpdate(input);
  }
  return false;
 }
@@ -76,23 +86,27 @@ void playerRender(void)
   case STATE_MAX:
    break;
   case STATE_MAP:
-   stateMapRender(&player);
+   stateMapRender();
+   break;
+  case STATE_BACKPACK:
+   stateBackpackRender();
    break;
   case STATE_EXAMINE_MAP:
-   stateExamineMapRender(&player);
+   stateExamineMapRender();
    break;
   case STATE_MAIN_MENU:
-   stateMainMenuRender(&player);
+   stateMainMenuRender();
    break;
   case STATE_JOURNAL:
-   stateJournalRender(&player);
+   stateJournalRender();
    break;
   case STATE_GAME_OVER:
-   stateGameOverRender(&player);
+   stateGameOverRender();
    break;
  }
 }
 
+//render the player form fromX,fromY point of view
 void playerRenderPlayer(int16_t fromX,int16_t fromY,
   int16_t fgColor,int16_t bgColor)
 {
@@ -222,6 +236,92 @@ void playerAttackedBy(monster_t* monster)
    //show monster misses
    playerLog("%s attacks you but does no damage.",monster->name);
   }
+ }
+}
+
+//return the number of items in the player backpack
+int16_t playerBackpackCount(void)
+{
+ int16_t count=0;
+ for(int16_t i=0;i<BACKPACK_LENGTH;i++)
+ {
+  //count only real items
+  if(player.backpack[i].type!=ITEM_NONE)
+  {
+   count++;
+  }
+ }
+ return count;
+}
+
+//pack the player backpack towards index 0, but since we always keep the
+//backpackpacked, we just have to find the only empty spot that we might have
+void playerPackBackpack(void)
+{
+ int firstEmpty=0;
+ //search the first free spot
+ while(player.backpack[firstEmpty].type!=ITEM_NONE)
+ {
+  firstEmpty++;
+ }
+ //pack items from firstEmpty to the backpack length
+ for(int16_t i=firstEmpty;i<BACKPACK_LENGTH-1;i++)
+ {
+  player.backpack[i]=player.backpack[i+1];
+ }
+ //remove the last item
+ player.backpack[BACKPACK_LENGTH-1].type=ITEM_NONE;
+ //if the player had his selection at the end, move it one back
+ if(player.backpackIndex==BACKPACK_LENGTH-1)
+ {
+  player.backpackIndex--;
+ }
+}
+
+//pickup an item: copy it to the player backpack first free spot and mark the
+//original one as not an item [ITEM_NONE]
+void playerPickup(item_t* item)
+{
+ for(int16_t i=0;i<BACKPACK_LENGTH;i++)
+ {
+  if(player.backpack[i].type==ITEM_NONE)
+  {
+   player.backpack[i]=*item;
+   item->type=ITEM_NONE;
+   playerLog("You pick up %s",item->name);
+   return;
+  }
+ }
+ playerLog("Cannot pick up %s, backpack full",item->name);
+}
+
+//use the item currently selected being it in hte player backpack or at his foot
+void playerUseSelectedItem(void)
+{
+ item_t* item=NULL;
+ if(player.backpackSelected==true)
+ {
+  item=&(player.backpack[player.backpackIndex]);
+ }
+ else
+ {
+  item=itemPoolAt(player.x,player.y,player.nearbyIndex);
+ }
+ if(item!=NULL)
+ {
+  itemUse(item,player.x,player.y);
+ }
+}
+
+//drop backpack selected item to the player foot
+void playerDropSelectedItem(void)
+{
+ if(player.backpackSelected==true)
+ {
+  playerLog("You drop %s",player.backpack[player.backpackIndex].name);
+  itemPoolAdd(player.backpack[player.backpackIndex].type,player.x,player.y);
+  player.backpack[player.backpackIndex].type=ITEM_NONE;
+  playerPackBackpack();
  }
 }
 

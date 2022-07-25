@@ -5,9 +5,10 @@
 #include "screen.h"
 #include "main.h"
 #include "map.h"
+#include "player.h"
 
 //handle the main menu input
-bool stateMainMenuUpdate(player_t* player,char input)
+bool stateMainMenuUpdate(char input)
 {
  switch(input)
  {
@@ -22,16 +23,15 @@ bool stateMainMenuUpdate(player_t* player,char input)
    //generate a new map
    mapGenerate(MAP_CAVE);
    //move the player to the map state
-   player->state=STATE_MAP;
+   player.state=STATE_MAP;
    break;
  }
  return false;
 }
 
 //draw the main menu screen
-void stateMainMenuRender(player_t* player)
+void stateMainMenuRender(void)
 {
- (void)player;
  screenClear();
  //for now lets just print a basic welcome screen
  screenPrint((screenWidth-strlen("Welcome to rlTutorial"))/2,screenHeight/2,

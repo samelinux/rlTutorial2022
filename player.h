@@ -4,15 +4,18 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "item.h"
 #include "monster.h"
 
 #define JOURNAL_LENGTH (100)
 #define JOURNAL_LINE_LENGTH (80)
+#define BACKPACK_LENGTH (10)
 
 enum state_t
 {
  STATE_MAIN_MENU=0,
  STATE_MAP,
+ STATE_BACKPACK,
  STATE_EXAMINE_MAP,
  STATE_JOURNAL,
  STATE_GAME_OVER,
@@ -32,10 +35,18 @@ struct player_t
  int8_t attack;
  char journal[JOURNAL_LENGTH][JOURNAL_LINE_LENGTH];
  int16_t journalIndex;
+ item_t backpack[BACKPACK_LENGTH];
+ bool backpackSelected;
+ int16_t backpackIndex;
+ int16_t backpackStart;
+ int16_t nearbyIndex;
+ int16_t nearbyStart;
  int16_t examineMapX;
  int16_t examineMapY;
 };
 typedef struct player_t player_t;
+
+extern player_t player;
 
 void playerInit(void);
 
@@ -63,6 +74,16 @@ bool playerIsInAttackRange(monster_t* monster,int16_t range);
 void playerAttack(monster_t* monster);
 
 void playerAttackedBy(monster_t* monster);
+
+int16_t playerBackpackCount(void);
+
+void playerPackBackpack(void);
+
+void playerPickup(item_t* item);
+
+void playerUseSelectedItem(void);
+
+void playerDropSelectedItem(void);
 
 #endif
 

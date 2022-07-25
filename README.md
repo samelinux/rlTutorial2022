@@ -27,27 +27,27 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
 - [random.c](random.c)
 
   This file contains a straight copy and paste of a Lehmer random number generation function from wikipedia and some utility.
-  
+
   We will mostly only use two functions randomSetup and randomDice
 
 - [screen.c](screen.c)
 
   This file contains a rough and semplified ncurses implementation with way less functions but way easier to understand.
-  
+
   It is base on ansi escape codes which is a fancy way to say "codes to instruct the terminal on how to draw things".
-  
+
   With this you can print character and string anywhere on the terminal using foreground and background colors ... i think this will be enough for the tutorial, but we can expand this if we need to.
 
 - [signal.c](signal.c)
 
   This file contains some code to help people which are less familiar with C debug some crashes.
-  
+
   Nothing special, it just register some callback for handling signals the operating system may throw at your game in case we write something wrong (think of it as a way more destructive try/catch which always and with a crash and a stack trace 8p ).
 
 - [time.c](time.c)
 
   This file contains just a function to get the current timestamp in milliseconds, it may come handy to profile some map generation/pathfinding algorithm.
-  
+
   I'm not 100% sure we will need this, but if costs nothing to have it laying around.
 
 </details>
@@ -75,7 +75,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
   - Terminal
 
     All linux distro and macos come with a preinstalled terminal.
-    
+
     I'm pretty sure you can use any terminal you want as long as it supports at last the original ansi 8 colors specification.
 
  - Testing the environment
@@ -86,7 +86,7 @@ Bolerplate code. Here you can find the partial source: [tag](https://github.com/
    - start the build using the command 'make'
    - start the compiled program with the command './target'
    If all went right you should see something like this:
-   
+
 - Result
 
    ![part0 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part0_001.png "Part 0 screenshot")
@@ -101,7 +101,7 @@ You can find the code from Week 1, Part 1 [here](https://github.com/samelinux/rl
 - Player structure
 
   We start by creating a structure to represent the player and give it a name.
-  
+
   For now we just need his coordinates, but we will add property to the player structure as we go on.
 ```c
 struct player_t
@@ -115,13 +115,13 @@ typedef struct player_t player_t;
 - Player input handling
 
   Next we need a way to work with a player: initialize it and modify it base on the game and the player state.
-  
+
   For now playerInit just set the player coordinates to 0, but later we will add more properties initializations (like hit point, stat values, ...).
-  
+
   Since the player is basycally just composed of his coordinates, playerHandleInput just handle the input to move the player around.
-  
+
   Since there's no world player movements are free, no collision, no enemies to attack, ... not much to do.
-  
+
   For this purpose we have created two functions:
 ```c
 void playerInit(player_t* player);
@@ -131,9 +131,9 @@ void playerHandleInput(player_t* player,char input);
 - main flow
 
   The next thing to do is to modify the main function to implement a minimalistic game loop: display the player, move the player base on his input and quit.
-  
+
   As you can see the code is quite commented so i'll not go much into datails on the implementation or the code itself, you can download each week and each part separately and take a look/play with it.
-  
+
   All this logic is implemented in
 ```c
 while(command!='q')
@@ -155,11 +155,11 @@ while(command!='q')
 - Extra
 
   I've uniformed all "libraries" init/deinit function names to have the same structure.
-  
+
   I've added an init and a deinit function to screen basically to hide/show the terminal cursor and clear the screen/attributes (this is just a convenience)
-  
+
   I've also added some comments to some file ... expect this since sometime i'll forget to add all comments 8p
-  
+
 - Result
 
   ![part1 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part1_001.png "Part 1 screenshot")
@@ -181,22 +181,22 @@ You can find the code from Week 2, Part 2 [here](https://github.com/samelinux/rl
 - [main.c](main.c)
 
   In Part2 we added map and monster to the main loop (for now just initialization and drawing). We also removed the player variable since we're going to isolate it inside [player.c](player.c)
-  
+
 - [player.c](player.c)
 
   We moved the player variable here and modified all functions accordingly. Also we've added two checks during player movements:
-  
+
   1. map boundaries to limit the player movements inside the map
   2. tile walkable flag to to limit the player movements on walkable tiles
-  
+
   We also added a convenience function to render the player
-  
+
 - [map.c](map.c)
 
   This file will contain all map related functions and data types.
-  
+
   Take a look at [map.c](map.c) to have a better understanding of all map related functions, they are quite commented.
-  
+
   For now all maps data types we need are:
 ```c
 enum mapType_t
@@ -218,19 +218,19 @@ struct map_t
 typedef struct map_t map_t;
 ```
   This struct is the representation of a map containing its type and all its tiles.
-  
+
 - [mapSample.c](mapSample.c)
 
   To separate all map types on their own file we created the file so we can implement the "building" of MAP_SAMPLE maps type. There's not much going on for now, this is just a basic map, we will add more in Part3
-  
+
 - [monster.c](monster.c)
 
   This file will contain all single monster related functions and data type. Here we will implement combat, movement and the fundation of a single monster AI.
-  
+
   For now we wrote some simple functions like monsterInit to initialize a monster based on its type.
-  
+
   There are also a "family" of functions, that we will expand in the future, which basically act as a "database" of monster property like monsterGlyph and monsterColor.
-  
+
   In [monster.h](monster.h) we will define all monster data type like:
 ```c
 enum monsterType_t
@@ -254,19 +254,19 @@ struct monster_t
 typedef struct monster_t monster_t;
 ```
   Which is the representation of a single monster with all its characteristics
-  
+
 - [monsters.c](monsters.c)
 
   This file will contain functions related to all existing monsters like start their turn, render them, add/remove a monster from existence, ...
-  
+
 - [tile.c](tile.c)
 
   This file will contain all tile related functions and data types.
-  
+
   Take a look at [tile.c](tile.c) to have a better understanding of all tiles related functions, they are quite commented.
 
   We added some function to work with tiles like tileInit which initialize a tile based on its type and, as we did with [monster.c](monster.c), a family of functions, that we will expand in the future, which basically act as a "database" of tiles property like tileGlyph, tileFGColor, tileBGColor, tileWalkable and tileBlockFOV.
-  
+
   For now, all tiles data types we need are:
 ```c
 enum tileType_t
@@ -292,11 +292,11 @@ struct tile_t
 typedef struct tile_t tile_t;
 ```
   Which is the representation of a single tile with all its characteristics
-  
+
 - Result
 
   ![part2 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part2_001.png "Part 2 screenshot")
-  
+
 </details>
 
 <details>
@@ -307,30 +307,30 @@ You can find the code from Week 2, Part 3 [here](https://github.com/samelinux/rl
 - [mapCave.c](mapCave.c)
 
   The big changes of Part 3 are all in this file. This is part of a family of files that we will expand to implement other types of map.
-  
+
   The main and only functions in this type of files is in the form map(TYPE)Build which is responsable of building the type of map we want, in this case a cave.
-  
+
   To build a cave we use a model called "cellular automata", to know more about them take a look here: [wikipedia](https://en.wikipedia.org/wiki/Cellular_automaton). 
   Maybe you are familiar with [Conway's game of life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) which you can play around with [here](https://playgameoflife.com/) ... to generate caves we simply change the rules!
-  
+
   Take a look at [mapCave.c](mapCave.c) to have a better understanding of how we implemented a cellular automata and how we used it to generate our map.
-  
+
 - [monster.c](monster.c) and [player.c](player.c)
 
   We had to modify how we place entities in the map since now not all tiles are walkable and we do not want to bury alive neither monsters nor the player.
-  
+
 - position.c
 
   I choose to remove position_t and its relative files from the project since this is a tutorial and I want to keep things as simple as possible.
-  
+
 - [map.c](map.c)
 
   We added some convenience functions inside the map basic file to ease maps generation, the most important being [mapIsConnected](https://github.com/samelinux/rlTutorial2022/blob/9facbc8874a7a542177c1b25e88f33ccb71972be/map.c#L68) which we use to ensure our maps are fully connected.
-  
+
 - [signal.c](signal.c)
 
   We added a special signal handler for SIGINT so when the player press ctrl+c to halt the game we do not leave the terminal and the screen messed up (I noticed that when closing with ctrl+c the cursor did not become visible again).
-  
+
 - Result
 
   ![part3 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part3_001.png "Part 3 screenshot")
@@ -354,9 +354,9 @@ You can find the code from Week 3, Part 4 [here](https://github.com/samelinux/rl
   added a "line drawing" function wich for now is only used to calculate the player field of view inside the map. This uses the Bresenham's line algorithm that calculate "digital" lines (digital intended as pixel perfect, without antialiasing).
 
   I'm not going much into details about the algorithm itself since it is explained quite well in its [wikipedia page](https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm).
-  
+
   We use it to trace lines from the player position to each tile inside his line of sight distance, checking whatever an unobstructed line can be made (without hitting any wall for now, but in the future there could be other tiles/object that block the line of sight). The set of tiles which a player can see it's called his field of view.
-  
+
 - [macro.h](macro.h)
 
   added math.h to the import since is uses the sqrt function. Now it generates a compiler error because we are using the distance macro. Before, since macro are exapanded in place (literally sobstituting the defined "string" for the "difining" string) this was not a problem.
@@ -364,29 +364,29 @@ You can find the code from Week 3, Part 4 [here](https://github.com/samelinux/rl
 - [main.c](main.c)
 
   We added field of view reset and calculation inside the main loop. This refresh the player field of view after each action giving us the opportunity to explore the map instead of having it fully visible from the start.
- 
+
 - [map.c](map.c)
 
   We added mapResetFOV to reset the tiles visible attribute so we can calculate the player field of view "fresh" each turn. This basically set all tiles in the map as non visible, afther this function you should always call playerCalculateFOV otherwise no tile will be visible on the next map rendering call.
-  
+
   We modified the render function to render only visible and seen tiles. Now that a player has his own filed of view we can fully render only the tiles he sees and the tile marked as "to be remembered" (more on this later). As said before, this create a nice feel ofexploration and a character memory of the map, almost as if the here draws the maps edge while exploting to remember the way back.
-  
+
 - [monster.c](monster.c)
 
   I added a missing return at end of file (my OCD was tilting).
-  
+
 - [monsters.c](monsters.c)
 
   We modified the render function to render only visible monsters (a visible monster is one staying on a visible tile). This create the uncertainty of knowing the position of monsters outside the player field of view, is the monster still there?
- 
+
 - [player.c](player.c)
 
   We adde playerCalculateFOV which calcuate the actual player field of view inside the map. As said before this has to be called, almost always, in pairs with mapResetFOV to have a "fresh" field of view each turn. No one is forcing you to only call playerCalculateFOV and never cal mapResetFOV, this will generate a prefect memory of the map from the player prospective! Try it!
-  
+
 - [tile.c](tile.c)
 
   We added visible and seen property to all tiles (to implement field of view and map memory). visible is used to mark a tile actually visible from the player point of view while seen is used to implement character memory: an hero in a dungeon can not remember all the map details, just the walls outline to track his way back.
-  
+
   We added tileRememberViewed to implement map memory on a tileType_t basis, with this we can have the character remember only important tiles (for now only walls) which the player can use at his own advantage (think about remembering traps position ...).
 
 - Result
@@ -443,7 +443,7 @@ You can find the code from Week 3, Part 5 [here](https://github.com/samelinux/rl
 - tile.c
 
   We changed some tileType_t character representation to '?' so we see if we miss a case in tileGlyph. Take a look above at the comments for monster.c to better understand why.
-  
+
 - Result
 
   ![part5 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part5_001.png "Part 5 screenshot")
@@ -765,6 +765,131 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
 
 <details>
 <summary> Part 8 - Items and Inventory </summary>
+
+- Refactoring
+
+  I changed the [player]() variable to be global and removed all pointer passed
+   across functions to make the tutorial easier to follow. It is not a good
+   practice to have global variables, but in the end a roguelike needs a player.
+   You can write each player structure attribute setter and getter, I decided to
+   skip this because i find it easier to follow in a tutorial.
+   This changes made all stateXXX functions take one leass argument, the player
+   pointer.
+
+- map.c
+
+  I added a reset of the pool of monster while generating the map, for now it is
+   not much usefull, but when we will add multiple dungeon levels it will clear
+   the old map monsters. As of right now, if you generate a new map after the
+   first one you will end up with some monsters of the previous level in the new
+   level.
+  We also added item spawning and, of course, a reset of the item pool.
+
+- player.c
+
+  I fixed some bad [memset](https://man7.org/linux/man-pages/man3/memset.3.html)
+  We added all the new player parameters to the [playerNewGame]() function to
+   setup his variable before game start.
+  We added a backpack which can contain 10 items to the player structure. I'm
+   not a fan of infinite inventories in games and I don't want to overcomplicate
+   the tutorial with items weight/size so I decided to keep it simple. Also, in
+   every game i tried out, even game with strict item carry capacity, players
+   can carry too many items in my opinion.
+  We added some functions to manipulate the player backpack easly:
+   1. [playerBackpackCount]() to retrive the number of items stored in the
+    backpack
+   2. [playerPackBackpack]() to pack the items in the player backpack
+   3. [playerPickup]() to move an item from anywhere to the player backpack
+   4. [playerUseSelectedItem]() to allow the player to use items in his backpack
+   5. [playerDropSelectedItem]() to allow the player to drop items
+
+- stateExamineMap.c
+
+  We added item rendering on the map and in the info on the bottom of the
+   screen.This is usefull so a player can have a better picture of his surrounding.
+
+- stateMap.c
+
+  We added item rendering to the map and the commands to pickup items on the
+   ground and view the player backpack [i/,/g]. Since we have [itemPoolRender]()
+   this was quite easy as adding new commands to a state: just add their
+   relative cases in stateXXXUpdate.
+
+- item.c
+
+  This file is the main implementation of all items specific functions. Take a
+   deep look into it since it implements the basis, items specific functions
+   will be in separate file as for [itemHealthPotion.c](itemHealthPotion.c)
+   which implements all ITEM_HEALTH_POTION functions (for now just the use
+   function).
+  We adde the basic data structure to represent an item:
+```c
+enum itemType_t
+{
+ ITEM_NONE=0,
+ ITEM_HEALTH_POTION,
+ ITEM_MAX,
+};
+
+struct item_t
+{
+ itemType_t type;
+ char name[ITEM_NAME_LENGTH];
+ int16_t x;
+ int16_t y;
+ char glyph;
+ int16_t color;
+};
+```
+  We also wrote a lot of functions:
+   1. [itemInit]() to setup an item structure from its type
+   2. [itemRender]() to render an item
+   3. [itemName]() to retrive the item type name
+   4. [itemGlyph]() to retrive the item type glyph
+   5. [itemColor]() to retrivethe item type color
+   6. [itemUse]() the implement different item type usage
+   7. [itemPoolInit]() to init the item pool
+   8. [itemPoolDeinit]() the deinit the item pool
+   9. [itemPoolAdd]() to add an item to the pool
+   10. [itemPoolSpawn]() so spawn some items in the map
+   11. [itemPoolCountAt]() to count the number of items at a given location
+   12. [itemPoolAt]() to retrive the n-th item at a given location
+   13. [itemPoolRender]() to render all visible items
+
+- itemHealthPotion.c
+
+  In this type of file (itemXXX.c) we will implement all game logic of a single
+   type of item (in this case ITEM_HEALTH_POTION).
+  ITEM_HEALTH_POTION heal the player if it is used on the player.
+  We implemented 'on the player' using the location of the player (his
+   coordinate) so we can add more subtle items usage (for example using a
+   scroll of lightning on the location of a monster). This implementation also
+   allow us to implement a throw action (assuming we add a throwable attribute
+   to all items and in particular to ITEM_HEALTH_POTION) to throw, for example,
+   an ITEM_HEALTH_POTION to a monster and ... well ... heal it!
+
+- stateBackpack.c
+
+  We added a state to show the player his backpack, but we added a twist to it:
+   we show also the items on the ground in the right half of the screen. This
+   makes it way easier for the player to manage his inventory by seeing his
+   backpack side by side to the items on the tile he is occupying. It is NOT
+   easier to implement, but it is quite statisfying when it comes together.
+   We added almost all way to interact with the two panels:
+    1. left/right/h/l/num4/num6  change tab
+    2. TAB switch between tabs
+    3. u/RETURN use the selected item even if it is on the ground
+    4. g/, pick up an item if it is on the ground
+    5. d drop an item if it is in the player backpack
+    6. up/down/j/k/num2/num8 scroll selected tab on line up/down
+
+- Result: items
+
+  ![part8 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part8_001.png "Part 8 items")
+
+- Result: backpack/pickup
+
+  ![part8 002](https://github.com/samelinux/rlTutorial2022/raw/main/images/part8_002.png "Part 8 backpack")
 
 </details>
 

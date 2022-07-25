@@ -2,11 +2,11 @@
 #ifndef _stateMainMenu_
 #define _stateMainMenu_
 
-#include "player.h"
+#include <stdbool.h>
 
-bool stateMainMenuUpdate(player_t* player,char input);
+bool stateMainMenuUpdate(char input);
 
-void stateMainMenuRender(player_t* player);
+void stateMainMenuRender(void);
 
 #endif
 

@@ -2,11 +2,11 @@
 #ifndef _stateJournal_
 #define _stateJournal_
 
-#include "player.h"
+#include <stdbool.h>
 
-bool stateJournalUpdate(player_t* player,char input);
+bool stateJournalUpdate(char input);
 
-void stateJournalRender(player_t* player);
+void stateJournalRender(void);
 
 #endif
 

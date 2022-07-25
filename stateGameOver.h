@@ -2,11 +2,11 @@
 #ifndef _stateGameOver_
 #define _stateGameOver_
 
-#include "player.h"
+#include <stdbool.h>
 
-bool stateGameOverUpdate(player_t* player,char input);
+bool stateGameOverUpdate(char input);
 
-void stateGameOverRender(player_t* player);
+void stateGameOverRender(void);
 
 #endif
 

@@ -48,7 +48,11 @@ void mapGenerate(mapType_t type)
   case MAP_CAVE: mapCaveBuild(); break;
  }
  //generate some monsters
+ monsterPoolInit();
  monsterPoolSpawn(10);
+ //generate some items
+ itemPoolInit();
+ itemPoolSpawn(10);
  //get a random walkable tile and teleport the player there
  mapRandomWalkablePosition(&x,&y);
  playerTeleportTo(x,y);

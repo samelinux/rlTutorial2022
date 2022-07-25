@@ -1,21 +1,24 @@
 
 #include <stdlib.h>
 #include "stateMap.h"
+#include "stateBackpack.h"
+#include "item.h"
 #include "monster.h"
 #include "tile.h"
 #include "screen.h"
 #include "main.h"
 #include "map.h"
+#include "player.h"
 
 //handle the in map player input
-bool stateMapUpdate(player_t* player,char input)
+bool stateMapUpdate(char input)
 {
  bool newTurn=false;
- if(player->hitPoints>0)
+ if(player.hitPoints>0)
  {
   tile_t* toTile=NULL;
-  int8_t x=player->x;
-  int8_t y=player->y;
+  int8_t x=player.x;
+  int8_t y=player.y;
   //each action can change newTurn to true to signal the main loop a net turn
   //has passed. You may want some actoins to not consume a turn, in that case
   //just leave newTurn to false
@@ -26,17 +29,34 @@ bool stateMapUpdate(player_t* player,char input)
     mainQuit();
     break;
    case 'x':
-    player->examineMapX=player->x;
-    player->examineMapY=player->y;
-    player->state=STATE_EXAMINE_MAP;
+    player.examineMapX=player.x;
+    player.examineMapY=player.y;
+    player.state=STATE_EXAMINE_MAP;
     break;
+   case 'i':
+    player.backpackSelected=true;
+    player.backpackIndex=0;
+    player.backpackStart=0;
+    player.nearbyIndex=0;
+    player.nearbyStart=0;
+    player.state=STATE_BACKPACK;
+    break;
+   case ',':
+   case 'g':
+    player.backpackSelected=false;
+    player.backpackIndex=0;
+    player.backpackStart=0;
+    player.nearbyIndex=0;
+    player.nearbyStart=0;
+    player.state=STATE_BACKPACK;
+   break;
    case 'J':
-    player->journalIndex=JOURNAL_LENGTH-screenHeight+1;
-    if(player->journalIndex<0)
+    player.journalIndex=JOURNAL_LENGTH-screenHeight+1;
+    if(player.journalIndex<0)
     {
-     player->journalIndex=0;
+     player.journalIndex=0;
     }
-    player->state=STATE_JOURNAL;
+    player.state=STATE_JOURNAL;
     break;
    case '5':
    case '.':
@@ -97,7 +117,7 @@ bool stateMapUpdate(player_t* player,char input)
     break;
   }
   //if the player moved
-  if(x!=player->x || y!=player->y)
+  if(x!=player.x || y!=player.y)
   {
    //if a tile exists at the new location [avoid goind off the map boundaries]
    toTile=mapTileAt(x,y);
@@ -114,8 +134,8 @@ bool stateMapUpdate(player_t* player,char input)
      //if the tile is walkable
      if(toTile->walkable==true)
      {
-      player->x=x;
-      player->y=y;
+      player.x=x;
+      player.y=y;
      }
     }
    }
@@ -127,25 +147,27 @@ bool stateMapUpdate(player_t* player,char input)
 }
 
 //render the in map screen
-void stateMapRender(player_t* player)
+void stateMapRender(void)
 {
  //clear the screen
  screenClear();
  //calculate new field of view
  playerCalculateFOV();
  //draw the map
- mapRender(player->x,player->y);
+ mapRender(player.x,player.y);
+ //draw all items
+ itemPoolRender(player.x,player.y);
  //draw all monsters
- monsterPoolRender(player->x,player->y);
+ monsterPoolRender(player.x,player.y);
  //render the player
  screenColorPut(MAP_VIEWPORT_WIDTH/2,MAP_VIEWPORT_HEIGHT/2,
    WHITE_BRIGHT,BLACK,'@');
 
  //print player stats
  int8_t statX=MAP_VIEWPORT_WIDTH+1;
- screenPrint(statX,0,"HP: %d/%d",player->hitPoints,player->maxHitPoints);
- screenPrint(statX,1,"Attack: %d",player->attack);
- screenPrint(statX,2,"Defence: %d",player->defence);
+ screenPrint(statX,0,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
+ screenPrint(statX,1,"Attack: %d",player.attack);
+ screenPrint(statX,2,"Defence: %d",player.defence);
 
  //print the last journal lines
  int8_t maxLines=screenHeight-MAP_VIEWPORT_HEIGHT;
@@ -157,7 +179,7 @@ void stateMapRender(player_t* player)
  for(int8_t i=0;i<maxLines;i++)
  {
   int8_t line=(start+i)%JOURNAL_LENGTH;
-  screenPrint(0,MAP_VIEWPORT_HEIGHT+i,"%s",player->journal[line]);
+  screenPrint(0,MAP_VIEWPORT_HEIGHT+i,"%s",player.journal[line]);
  }
 }
 

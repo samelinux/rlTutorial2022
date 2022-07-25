@@ -2,11 +2,11 @@
 #ifndef _stateMap_
 #define _stateMap_
 
-#include "player.h"
+#include <stdbool.h>
 
-bool stateMapUpdate(player_t* player,char input);
+bool stateMapUpdate(char input);
 
-void stateMapRender(player_t* player);
+void stateMapRender(void);
 
 #endif
 
