@@ -766,9 +766,11 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 8 - Items and Inventory </summary>
 
+You can find the code from Week 5, Part 8 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week5part8).
+
 - Refactoring
 
-  I changed the [player]() variable to be global and removed all pointer passed
+  I changed the [player](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L20) variable to be global and removed all pointer passed
    across functions to make the tutorial easier to follow. It is not a good
    practice to have global variables, but in the end a roguelike needs a player.
    You can write each player structure attribute setter and getter, I decided to
@@ -776,7 +778,7 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
    This changes made all stateXXX functions take one leass argument, the player
    pointer.
 
-- map.c
+- [map.c](map.c)
 
   I added a reset of the pool of monster while generating the map, for now it is
    not much usefull, but when we will add multiple dungeon levels it will clear
@@ -785,10 +787,10 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
    level.
   We also added item spawning and, of course, a reset of the item pool.
 
-- player.c
+- [player.c](player.c)
 
   I fixed some bad [memset](https://man7.org/linux/man-pages/man3/memset.3.html)
-  We added all the new player parameters to the [playerNewGame]() function to
+  We added all the new player parameters to the [playerNewGame](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L36) function to
    setup his variable before game start.
   We added a backpack which can contain 10 items to the player structure. I'm
    not a fan of infinite inventories in games and I don't want to overcomplicate
@@ -796,28 +798,28 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
    every game i tried out, even game with strict item carry capacity, players
    can carry too many items in my opinion.
   We added some functions to manipulate the player backpack easly:
-   1. [playerBackpackCount]() to retrive the number of items stored in the
+   1. [playerBackpackCount](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L243) to retrive the number of items stored in the
     backpack
-   2. [playerPackBackpack]() to pack the items in the player backpack
-   3. [playerPickup]() to move an item from anywhere to the player backpack
-   4. [playerUseSelectedItem]() to allow the player to use items in his backpack
-   5. [playerDropSelectedItem]() to allow the player to drop items
+   2. [playerPackBackpack](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L259) to pack the items in the player backpack
+   3. [playerPickup](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L283) to move an item from anywhere to the player backpack
+   4. [playerUseSelectedItem](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L299) to allow the player to use items in his backpack
+   5. [playerDropSelectedItem](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/player.c#L317) to allow the player to drop items
 
-- stateExamineMap.c
+- [stateExamineMap.c](stateExamineMap.c)
 
   We added item rendering on the map and in the info on the bottom of the
    screen.This is usefull so a player can have a better picture of his surrounding.
 
-- stateMap.c
+- [stateMap.c](stateMap.c)
 
   We added item rendering to the map and the commands to pickup items on the
-   ground and view the player backpack [i/,/g]. Since we have [itemPoolRender]()
+   ground and view the player backpack [i/,/g]. Since we have [itemPoolRender](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L177)
    this was quite easy as adding new commands to a state: just add their
    relative cases in stateXXXUpdate.
 
-- item.c
+- [item.c](item.c)
 
-  This file is the main implementation of all items specific functions. Take a
+  This file is the main implementation of all items generic functions. Take a
    deep look into it since it implements the basis, items specific functions
    will be in separate file as for [itemHealthPotion.c](itemHealthPotion.c)
    which implements all ITEM_HEALTH_POTION functions (for now just the use
@@ -842,21 +844,21 @@ struct item_t
 };
 ```
   We also wrote a lot of functions:
-   1. [itemInit]() to setup an item structure from its type
-   2. [itemRender]() to render an item
-   3. [itemName]() to retrive the item type name
-   4. [itemGlyph]() to retrive the item type glyph
-   5. [itemColor]() to retrivethe item type color
-   6. [itemUse]() the implement different item type usage
-   7. [itemPoolInit]() to init the item pool
-   8. [itemPoolDeinit]() the deinit the item pool
-   9. [itemPoolAdd]() to add an item to the pool
-   10. [itemPoolSpawn]() so spawn some items in the map
-   11. [itemPoolCountAt]() to count the number of items at a given location
-   12. [itemPoolAt]() to retrive the n-th item at a given location
-   13. [itemPoolRender]() to render all visible items
+   1. [itemInit](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L14) to setup an item structure from its type
+   2. [itemRender](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L26) to render an item
+   3. [itemName](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L48) to retrive the item type name
+   4. [itemGlyph](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L60) to retrive the item type glyph
+   5. [itemColor](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L72) to retrivethe item type color
+   6. [itemUse](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L84) the implement different item type usage
+   7. [itemPoolInit](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L102) to init the item pool
+   8. [itemPoolDeinit](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L108) the deinit the item pool
+   9. [itemPoolAdd](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L115) to add an item to the pool
+   10. [itemPoolSpawn](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L129) so spawn some items in the map
+   11. [itemPoolCountAt](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L146) to count the number of items at a given location
+   12. [itemPoolAt](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L161) to retrive the n-th item at a given location
+   13. [itemPoolRender](https://github.com/samelinux/rlTutorial2022/blob/b069e62e54e4861084f476a508ce9396f4143ac4/item.c#L177) to render all visible items
 
-- itemHealthPotion.c
+- [itemHealthPotion.c](itemHealthPotion.c)
 
   In this type of file (itemXXX.c) we will implement all game logic of a single
    type of item (in this case ITEM_HEALTH_POTION).
@@ -868,7 +870,7 @@ struct item_t
    to all items and in particular to ITEM_HEALTH_POTION) to throw, for example,
    an ITEM_HEALTH_POTION to a monster and ... well ... heal it!
 
-- stateBackpack.c
+- [stateBackpack.c](stateBackpack.c)
 
   We added a state to show the player his backpack, but we added a twist to it:
    we show also the items on the ground in the right half of the screen. This
