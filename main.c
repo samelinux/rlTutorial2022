@@ -32,6 +32,8 @@ int main(void)
   //action, make the monsters take their turns
   if(playerUpdate(keyboardRead())==true)
   {
+   //advance the turn counter
+   player.turn++;
    //handle monsters turn
    monsterPoolHandleTurn();
   }

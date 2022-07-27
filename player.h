@@ -17,6 +17,7 @@ enum state_t
  STATE_MAP,
  STATE_BACKPACK,
  STATE_EXAMINE_MAP,
+ STATE_CHOOSE_TARGET,
  STATE_JOURNAL,
  STATE_GAME_OVER,
  STATE_MAX,
@@ -28,6 +29,7 @@ struct player_t
  state_t state;
  int16_t x;
  int16_t y;
+ int64_t turn;
  int16_t losLength;
  int8_t maxHitPoints;
  int8_t hitPoints;
@@ -41,8 +43,9 @@ struct player_t
  int16_t backpackStart;
  int16_t nearbyIndex;
  int16_t nearbyStart;
- int16_t examineMapX;
- int16_t examineMapY;
+ int16_t examineX;
+ int16_t examineY;
+ item_t* itemToUse;
 };
 typedef struct player_t player_t;
 
@@ -60,6 +63,8 @@ void playerRender(void);
 
 void playerRenderPlayer(int16_t fromX,int16_t fromY,
   int16_t fgColor,int16_t bgColor);
+
+void playerCheckDeath();
 
 void playerLog(char* format,...);
 
@@ -81,7 +86,7 @@ void playerPackBackpack(void);
 
 void playerPickup(item_t* item);
 
-void playerUseSelectedItem(void);
+bool playerUseSelectedItem(void);
 
 void playerDropSelectedItem(void);
 

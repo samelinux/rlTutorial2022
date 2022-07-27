@@ -3,6 +3,7 @@
 #include <string.h>
 #include "item.h"
 #include "itemHealthPotion.h"
+#include "itemLightningScroll.h"
 #include "map.h"
 #include "random.h"
 #include "screen.h"
@@ -52,6 +53,9 @@ char* itemName(itemType_t type)
   case ITEM_MAX:
   case ITEM_NONE: return "no name";
   case ITEM_HEALTH_POTION: return "health potion";
+  case ITEM_LIGHTNING_SCROLL: return "lightning scroll";
+  case ITEM_CONFUSION_SCROLL: return "confusion scroll";
+  case ITEM_FIREBALL_SCROLL: return "fireball scroll";
  }
  return "no name";
 }
@@ -64,6 +68,9 @@ char itemGlyph(itemType_t type)
   case ITEM_MAX:
   case ITEM_NONE: return '?';
   case ITEM_HEALTH_POTION: return '!';
+  case ITEM_LIGHTNING_SCROLL:
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL: return '~';
  }
  return '?';
 }
@@ -76,26 +83,39 @@ int8_t itemColor(itemType_t type)
   case ITEM_MAX:
   case ITEM_NONE: return BLACK;
   case ITEM_HEALTH_POTION: return GREEN;
+  case ITEM_LIGHTNING_SCROLL:
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL: return MAGENTA;
  }
  return BLACK;
 }
 
 //wrapper to implement item usage since every items has its own functionality
-void itemUse(item_t* item,int16_t x,int16_t y)
+bool itemUse(item_t* item,int16_t x,int16_t y)
 {
+ bool newTurn=false;
  switch(item->type)
  {
   case ITEM_NONE:
   case ITEM_MAX:
    break;
   case ITEM_HEALTH_POTION:
-   itemUseHealthPotion(item,x,y);
+   newTurn=itemUseHealthPotion(item,x,y);
+   player.state=STATE_MAP;
+   break;
+  case ITEM_LIGHTNING_SCROLL:
+   newTurn=itemUseLightningScroll(item,x,y);
+   player.state=STATE_MAP;
+   break;
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL:
+   player.itemToUse=item;
+   player.examineX=player.x;
+   player.examineY=player.y;
+   player.state=STATE_CHOOSE_TARGET;
    break;
  }
- //pack the player backpack in case the item has been used up and has become an
- //ITEM_NONE, we do not know if that is true because item usage is type
- //dependant
- playerPackBackpack();
+ return newTurn;
 }
 
 //initialize the item pool
@@ -189,5 +209,13 @@ void itemPoolRender(int16_t fromX,int16_t fromY)
    }
   }
  }
+}
+
+//consume an item and pack the player backpack in case the item was in his
+//backpack
+void itemConsume(item_t* item)
+{
+ item->type=ITEM_NONE;
+ playerPackBackpack();
 }
 

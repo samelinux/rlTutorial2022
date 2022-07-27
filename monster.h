@@ -21,6 +21,7 @@ enum monsterAI_t
 {
  MONSTER_AI_NONE=0,
  MONSTER_AI_HOSTILE,
+ MONSTER_AI_CONFUSED,
  MONSTER_AI_MAX,
 };
 typedef enum monsterAI_t monsterAI_t;
@@ -38,6 +39,7 @@ struct monster_t
  int8_t defence;
  int8_t attack;
  monsterAI_t ai;
+ int8_t confusionDuration;
 };
 typedef struct monster_t monster_t;
 
@@ -45,6 +47,8 @@ void monsterInit(monster_t* monster,monsterType_t type);
 
 void monsterRender(monster_t* monster,int16_t fromX,int16_t fromY,
   int16_t fgColor,int16_t bgColor);
+
+void monsterCheckDeath(monster_t* monster);
 
 char* monsterName(monsterType_t type);
 
@@ -59,6 +63,8 @@ int8_t monsterDefence(monsterType_t type);
 int8_t monsterAttack(monsterType_t type);
 
 monsterAI_t monsterAI(monsterType_t type);
+
+void monsterAttackMonster(monster_t* attacker,monster_t* defender);
 
 void monsterPoolInit(void);
 

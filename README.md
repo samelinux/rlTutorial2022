@@ -695,7 +695,7 @@ You can find the code from Week 4, Part 7 [here](https://github.com/samelinux/rl
    Since now we have a journal, all combat event gets written to it instead of
    the terminal.
 
-  We added two coordinates examineMapX and examineMapY which are used in the
+  We added two coordinates examineX and examineY which are used in the
    STATE_EXAMINE_MAP to move around the selection. This state is quite usefull
    for the player since it enables the player to move according to threats he
    spots on the map from further away.
@@ -897,6 +897,94 @@ struct item_t
 
 <details>
 <summary> Part 9 - Ranged Scrolls and Targeting </summary>
+
+You can find the code from Week 5, Part 9 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week5part9).
+
+- [item.c](item.c)
+
+  We added three items: ITEM_LIGHTNING_SCROLL, ITEM_CONFUSION_SCROLL and
+   ITEM_FIREBALL_SCROLL so we adde all the basic items handling code in the
+   generic item functions.
+  We changed all itemUseXXX to return a boolean value to know if the item use
+   costs a player turn. This is usefull because some items do not get used
+   instantly/if certain conditions are met.
+  We also added [itemConsume]() to ease writing new items.
+
+- [itemHealthPotion.c](itemHealthPotion.c)
+
+  We changed the implementation of health potions use since now, when using one
+   while at full health the game tells the player that he is already at full
+   health and does nothing.
+
+- [main.c](main.c)
+
+  We added turns counting, nothing special but a new statistic the player can
+   use.
+
+- [monster.c](monster.c)
+
+  We added confusionDuration to the mosnter_t structure to handle the confuse
+   status and switch monster artificial intelligence during their turns. This
+   has been implemented in monsterPoolHandleTurn as a modifier to the monsters
+   artificial intelligence.
+  We created the new artificial intelligence confused so in addition to haveing
+   an handler for the confuse status we also can assign it as a real artificial
+   intelligence.
+  Since a confused monster can attack other monster, we added
+   monsterAttackMonster: a function that take two monster as parameters and
+   make the attacker attack the defender.
+  We added a utility function monsterCheckDeath to automate the process of
+   checking if a monster is dead, log the event to the player and remove the
+   monster from the pool.
+
+- [player.c](player.c)
+
+  We enlarged the player line of sight range so more of the map can be seen
+   while exploring. Before it was too small and not of much use.
+  We added a state STATE_CHOOSE_TARGET to let the player choose a target. This
+   is used in the process of reading ITEM_CONFUSION_SCROLL and
+   ITEM_FIREBALL_SCROLL.
+  I fixed a previous bug in which, while calculating the player field of view,
+   I messed up a check on the length resulting in a smaller field of view than
+   expected.
+
+- [stateExamineMap.c](stateExamineMap.c)
+
+  I fixed some mistake while writing the render function and not useing the
+   types specific functions to render items, monsters and tiles.
+
+- [stateMap.c](stateMap.c)
+
+  We added the turn variable to the player info.
+
+- [itemConfusionScroll.c](itemConfusionScroll.c) [itemFireballScroll.c](itemFireballScroll.c) [itemLightningScroll.c](itemLightningScroll.c)
+
+  We added items specific files for confusion scrolls, lightning scrolls and
+   fireball scrolls.
+  In [itemFireballScroll.c](itemFireballScroll.c) we added an extra function
+   to define the fireball range since it is usefull in the file itself but also
+   when showing to the player the area of effect. This can be automated for any
+   item type just by adding its case inside [stateChooseTarget.c](stateChooseTarget.c) while reading the item range.
+
+- [monsterAIConfused.c](monsterAIConfused.c)
+
+  This artificial intelligence is not used for now as a real monster artificial
+   intelligence but rather to implement the monsters confused state. In the
+   future we can use it to have particular type of monsters (like drunk orcs!).
+
+- [stateChooseTarget.c](stateChooseTarget.c)
+
+  This state is used to let the player choose a target for
+   ITEM_CONFUSION_SCROLL and ITEM_FIREBALL_SCROLL but is quite usefull if we
+   decide to implement ranged combat.
+  Its implementation is very similar to [stateExamineMap.c](stateExamineMap.c)
+   from which we completly reuse the render and the update functions. We just
+   added some more input handling code to confirm the target and some more
+   rendering code to display the item area if needed.
+
+- Result
+
+  ![part9 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part9_001.png "Part 9 using a fireball scroll")
 
 </details>
 

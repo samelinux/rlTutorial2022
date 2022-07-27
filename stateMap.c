@@ -29,8 +29,8 @@ bool stateMapUpdate(char input)
     mainQuit();
     break;
    case 'x':
-    player.examineMapX=player.x;
-    player.examineMapY=player.y;
+    player.examineX=player.x;
+    player.examineY=player.y;
     player.state=STATE_EXAMINE_MAP;
     break;
    case 'i':
@@ -165,9 +165,10 @@ void stateMapRender(void)
 
  //print player stats
  int8_t statX=MAP_VIEWPORT_WIDTH+1;
- screenPrint(statX,0,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
- screenPrint(statX,1,"Attack: %d",player.attack);
- screenPrint(statX,2,"Defence: %d",player.defence);
+ screenPrint(statX,0,"Turn: %lld",player.turn);
+ screenPrint(statX,1,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
+ screenPrint(statX,2,"Attack: %d",player.attack);
+ screenPrint(statX,3,"Defence: %d",player.defence);
 
  //print the last journal lines
  int8_t maxLines=screenHeight-MAP_VIEWPORT_HEIGHT;

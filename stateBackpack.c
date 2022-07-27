@@ -31,8 +31,7 @@ bool stateBackpackUpdate(char input)
   case 'u':
   case 10:
    //use item
-   playerUseSelectedItem();
-   newTurn=true;
+   newTurn=playerUseSelectedItem();
    break;
   case 'd':
    //drop item

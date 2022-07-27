@@ -1,10 +1,12 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include "monster.h"
 #include "map.h"
 #include "screen.h"
 #include "monsterAIHostile.h"
+#include "monsterAIConfused.h"
 #include "random.h"
 #include "player.h"
 
@@ -30,6 +32,7 @@ void monsterInit(monster_t* monster,monsterType_t type)
  monster->defence=monsterDefence(type);
  monster->attack=monsterAttack(type);
  monster->ai=monsterAI(type);
+ monster->confusionDuration=0;
 }
 
 void monsterRender(monster_t* monster,int16_t fromX,int16_t fromY,
@@ -42,6 +45,16 @@ void monsterRender(monster_t* monster,int16_t fromX,int16_t fromY,
  {
   screenColorPut(screenX,screenY,fgColor,bgColor,monster->glyph);
  }
+}
+
+void monsterCheckDeath(monster_t* monster)
+{
+ if(monster->hitPoints<=0)
+  {
+   //show monster death
+   playerLog("%s dies.",monster->name);
+   monster->type=MONSTER_NONE;
+  }
 }
 
 //return each monsterType_t name
@@ -141,6 +154,22 @@ monsterAI_t monsterAI(monsterType_t type)
  return MONSTER_AI_NONE;
 }
 
+void monsterAttackMonster(monster_t* attacker,monster_t* defender)
+{
+ int16_t damage=MAX(0,attacker->attack-defender->defence);
+ if(damage>0)
+ {
+  playerLog("%s attacks %s for %d damage.",attacker->name,defender->name,
+    damage);
+  defender->hitPoints-=damage;
+  monsterCheckDeath(defender);
+ }
+ else
+ {
+  playerLog("%s attacks %s but does no damage",attacker->name,defender->name);
+ }
+}
+
 //initialize the monsters pool
 void monsterPoolInit(void)
 {
@@ -229,15 +258,26 @@ void monsterPoolHandleTurn(void)
    mapResetDijkstraMap();
    //update the dijkstra map
    playerCalculateDijkstraMap();
-   //use its ai to perform an action
-   switch(monsterPool[i].ai)
+   if(monsterPool[i].confusionDuration>0)
    {
-    case MONSTER_AI_NONE:
-    case MONSTER_AI_MAX:
-     break;
-    case MONSTER_AI_HOSTILE:
-     monsterAIHostileAct(&(monsterPool[i]));
-     break;
+    monsterAIConfusedAct(&(monsterPool[i]));
+    monsterPool[i].confusionDuration--;
+   }
+   else
+   {
+    //use its ai to perform an action
+    switch(monsterPool[i].ai)
+    {
+     case MONSTER_AI_NONE:
+     case MONSTER_AI_MAX:
+      break;
+     case MONSTER_AI_HOSTILE:
+      monsterAIHostileAct(&(monsterPool[i]));
+      break;
+     case MONSTER_AI_CONFUSED:
+      monsterAIConfusedAct(&(monsterPool[i]));
+      break;
+    }
    }
   }
  }

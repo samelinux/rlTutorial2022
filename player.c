@@ -12,6 +12,7 @@
 #include "stateMap.h"
 #include "stateBackpack.h"
 #include "stateExamineMap.h"
+#include "stateChooseTarget.h"
 #include "stateJournal.h"
 #include "stateMainMenu.h"
 #include "stateGameOver.h"
@@ -38,7 +39,8 @@ void playerNewGame(void)
  //setup the player for a new game
  player.x=0;
  player.y=0;
- player.losLength=4;
+ player.turn=0;
+ player.losLength=8;
  player.maxHitPoints=30;
  player.hitPoints=player.maxHitPoints;
  player.defence=2;
@@ -51,8 +53,8 @@ void playerNewGame(void)
  player.backpackStart=0;
  player.nearbyIndex=0;
  player.nearbyStart=0;
- player.examineMapX=0;
- player.examineMapY=0;
+ player.examineX=0;
+ player.examineY=0;
 }
 
 //call the states update function based on the actual player state
@@ -68,6 +70,8 @@ bool playerUpdate(char input)
    return stateBackpackUpdate(input);
   case STATE_EXAMINE_MAP:
    return stateExamineMapUpdate(input);
+  case STATE_CHOOSE_TARGET:
+   return stateChooseTargetUpdate(input);
   case STATE_MAIN_MENU:
    return stateMainMenuUpdate(input);
   case STATE_JOURNAL:
@@ -94,6 +98,9 @@ void playerRender(void)
   case STATE_EXAMINE_MAP:
    stateExamineMapRender();
    break;
+  case STATE_CHOOSE_TARGET:
+   stateChooseTargetRender();
+   break;
   case STATE_MAIN_MENU:
    stateMainMenuRender();
    break;
@@ -116,6 +123,16 @@ void playerRenderPlayer(int16_t fromX,int16_t fromY,
    screenY>=0 && screenY<MAP_VIEWPORT_HEIGHT)
  {
   screenColorPut(screenX,screenY,fgColor,bgColor,'@');
+ }
+}
+
+void playerCheckDeath()
+{
+ if(player.hitPoints<=0)
+ {
+  //show player death
+  playerLog("Your die.");
+  player.state=STATE_GAME_OVER;
  }
 }
 
@@ -155,7 +172,7 @@ void playerCalculateFOV(void)
   {
    //if the tile is valid, is in line of sight "real" distance and we can
    //trace an unobstructed line from the player position to that tile
-   if(mapIsValid(x,y) && distance(player.x,player.y,x,y)<player.losLength &&
+   if(mapIsValid(x,y) && distance(player.x,player.y,x,y)<=player.losLength &&
      bresenhamLos(player.x,player.y,x,y)==true)
    {
     //mark the tile visible
@@ -196,12 +213,7 @@ void playerAttack(monster_t* monster)
   //show the attack action
   playerLog("You attack %s for %d damage.",monster->name,damage);
   monster->hitPoints-=damage;
-  if(monster->hitPoints<=0)
-  {
-   //show monster death
-   playerLog("%s dies.",monster->name);
-   monster->type=MONSTER_NONE;
-  }
+  monsterCheckDeath(monster);
  }
  else
  {
@@ -224,12 +236,7 @@ void playerAttackedBy(monster_t* monster)
    //show the attack action
    playerLog("%s attacks you for %d damage.",monster->name,damage);
    player.hitPoints-=damage;
-   if(player.hitPoints<=0)
-   {
-    //show player death
-    playerLog("Your die.");
-    player.state=STATE_GAME_OVER;
-   }
+   playerCheckDeath();
   }
   else
   {
@@ -296,8 +303,9 @@ void playerPickup(item_t* item)
 }
 
 //use the item currently selected being it in hte player backpack or at his foot
-void playerUseSelectedItem(void)
+bool playerUseSelectedItem(void)
 {
+ bool newTurn=false;
  item_t* item=NULL;
  if(player.backpackSelected==true)
  {
@@ -309,8 +317,9 @@ void playerUseSelectedItem(void)
  }
  if(item!=NULL)
  {
-  itemUse(item,player.x,player.y);
+  newTurn=itemUse(item,player.x,player.y);
  }
+ return newTurn;
 }
 
 //drop backpack selected item to the player foot

@@ -1,10 +1,11 @@
 
 #include <sys/param.h>
+#include "itemHealthPotion.h"
 #include "item.h"
 #include "player.h"
 
 //implement the behaviour of ITEM_HEALTH_POTION
-void itemUseHealthPotion(item_t* item,int16_t x,int16_t y)
+bool itemUseHealthPotion(item_t* item,int16_t x,int16_t y)
 {
  //if the target is the player, heal him and write a log
  if(player.x==x && player.y==y)
@@ -12,13 +13,12 @@ void itemUseHealthPotion(item_t* item,int16_t x,int16_t y)
   if(player.hitPoints==player.maxHitPoints)
   {
    playerLog("Already at full hit points");
-   return;
+   return false;
   }
   int16_t newValue=MIN(player.maxHitPoints,player.hitPoints+4);
   playerLog("You quaff health potion recovering %d hit points",
     newValue-player.hitPoints);
   player.hitPoints=newValue;
-  item->type=ITEM_NONE;
  }
  else
  {
@@ -32,8 +32,13 @@ void itemUseHealthPotion(item_t* item,int16_t x,int16_t y)
    playerLog("%s quaff health potion recovering %d hit points",
      monster->name,newValue-monster->hitPoints);
    monster->hitPoints=newValue;
-   item->type=ITEM_NONE;
+  }
+  else
+  {
+   playerLog("The health potion splash on the ground");
   }
  }
+ itemConsume(item);
+ return true;
 }
 
