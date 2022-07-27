@@ -908,7 +908,7 @@ You can find the code from Week 5, Part 9 [here](https://github.com/samelinux/rl
   We changed all itemUseXXX to return a boolean value to know if the item use
    costs a player turn. This is usefull because some items do not get used
    instantly/if certain conditions are met.
-  We also added [itemConsume]() to ease writing new items.
+  We also added [itemConsume](https://github.com/samelinux/rlTutorial2022/blob/43cdc2eedcefcdf5079fecd9cd8e7f5db9a4f16f/item.c#L216) to ease writing new items.
 
 - [itemHealthPotion.c](itemHealthPotion.c)
 
