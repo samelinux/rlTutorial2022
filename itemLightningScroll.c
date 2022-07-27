@@ -13,6 +13,7 @@ bool itemUseLightningScroll(item_t* item,int16_t x,int16_t y)
  int8_t range=player.losLength;
  int16_t minDistance=range+1;
  monster_t* target=NULL;
+ //search for the nearest mosnter
  for(int8_t dy=-range;dy<=range;dy++)
  {
   for(int8_t dx=-range;dx<=range;dx++)
@@ -20,10 +21,12 @@ bool itemUseLightningScroll(item_t* item,int16_t x,int16_t y)
    int16_t targetX=x+dx;
    int16_t targetY=y+dy;
    int16_t distance=distance(player.x,player.y,targetX,targetY);
+   //distance is in trange and better the the one before
    if(distance<=range && distance<minDistance)
    {
     tile_t* tile=mapTileAt(targetX,targetY);
     monster_t* monster=monsterPoolAt(targetX,targetY);
+    //the player is targeting a visible tile with a monster in it
     if(tile!=NULL && tile->visible && monster!=NULL)
     {
      target=monster;
@@ -32,6 +35,7 @@ bool itemUseLightningScroll(item_t* item,int16_t x,int16_t y)
    }
   }
  }
+ //if we found a valid target damage it
  if(target!=NULL)
  {
   playerLog("A lightning bolt strike %s for 20 damage",target->name);
@@ -42,6 +46,7 @@ bool itemUseLightningScroll(item_t* item,int16_t x,int16_t y)
  }
  else
  {
+  //otherwise inform the player
   playerLog("No monster in sight");
  }
  return false;

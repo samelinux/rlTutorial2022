@@ -126,6 +126,7 @@ void playerRenderPlayer(int16_t fromX,int16_t fromY,
  }
 }
 
+//automate player death check and, if needed, the change to the game over screen
 void playerCheckDeath()
 {
  if(player.hitPoints<=0)
@@ -307,12 +308,14 @@ bool playerUseSelectedItem(void)
 {
  bool newTurn=false;
  item_t* item=NULL;
+ //if the selection is on the backpack, the item is in the backpack
  if(player.backpackSelected==true)
  {
   item=&(player.backpack[player.backpackIndex]);
  }
  else
  {
+  //otherwise is on the ground
   item=itemPoolAt(player.x,player.y,player.nearbyIndex);
  }
  if(item!=NULL)

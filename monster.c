@@ -154,6 +154,7 @@ monsterAI_t monsterAI(monsterType_t type)
  return MONSTER_AI_NONE;
 }
 
+//implements monster to monster combat
 void monsterAttackMonster(monster_t* attacker,monster_t* defender)
 {
  int16_t damage=MAX(0,attacker->attack-defender->defence);

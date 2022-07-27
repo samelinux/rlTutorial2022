@@ -12,15 +12,17 @@
 #include "map.h"
 #include "player.h"
 
-//handle choose target sstate player input
+//handle choose target state player input
 bool stateChooseTargetUpdate(char input)
 {
  tile_t* tile=NULL;
+ //handle target movement and returning to the map
  bool newTurn=stateExamineMapUpdate(input);
  switch(input)
  {
   case 10:
   case 't':
+   //confirm target
    tile=mapTileAt(player.examineX,player.examineY);
    if(tile!=NULL && tile->visible==true)
    {
@@ -28,15 +30,18 @@ bool stateChooseTargetUpdate(char input)
     {
      case ITEM_MAX:
      case ITEM_NONE:
+     //this items use is immediate
      case ITEM_HEALTH_POTION:
      case ITEM_LIGHTNING_SCROLL:
       break;
      case ITEM_CONFUSION_SCROLL:
+      //confusion scrolls need a target which the player just confirmed
       newTurn=itemUseConfusionScroll(player.itemToUse,
         player.examineX,player.examineY);
       player.state=STATE_MAP;
       break;
      case ITEM_FIREBALL_SCROLL:
+      //fireball scrolls need a target which the player just confirmed
       newTurn=itemUseFireballScroll(player.itemToUse,
         player.examineX,player.examineY);
       player.state=STATE_MAP;
@@ -55,7 +60,9 @@ bool stateChooseTargetUpdate(char input)
 //render the choose target screen
 void stateChooseTargetRender(void)
 {
+ //render the map as in the examine map state
  stateExamineMapRender();
+ //get the item range
  int8_t itemRange=0;
  switch(player.itemToUse->type)
  {
@@ -69,6 +76,7 @@ void stateChooseTargetRender(void)
    itemRange=itemRangeFireballScroll();
    break;
  }
+ //render the item range to show it to the player with TARGET_COLOR background
  for(int8_t dy=-itemRange;dy<=itemRange;dy++)
  {
   for(int8_t dx=-itemRange;dx<=itemRange;dx++)

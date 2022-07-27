@@ -29,11 +29,13 @@ bool stateMapUpdate(char input)
     mainQuit();
     break;
    case 'x':
+    //examine the map
     player.examineX=player.x;
     player.examineY=player.y;
     player.state=STATE_EXAMINE_MAP;
     break;
    case 'i':
+    //go to the backpack
     player.backpackSelected=true;
     player.backpackIndex=0;
     player.backpackStart=0;
@@ -43,6 +45,7 @@ bool stateMapUpdate(char input)
     break;
    case ',':
    case 'g':
+    //pickup items
     player.backpackSelected=false;
     player.backpackIndex=0;
     player.backpackStart=0;
@@ -51,6 +54,7 @@ bool stateMapUpdate(char input)
     player.state=STATE_BACKPACK;
    break;
    case 'J':
+    //read the full journal
     player.journalIndex=JOURNAL_LENGTH-screenHeight+1;
     if(player.journalIndex<0)
     {

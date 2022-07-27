@@ -99,14 +99,17 @@ bool itemUse(item_t* item,int16_t x,int16_t y)
   case ITEM_NONE:
   case ITEM_MAX:
    break;
+  //health potion use is immediate
   case ITEM_HEALTH_POTION:
    newTurn=itemUseHealthPotion(item,x,y);
    player.state=STATE_MAP;
    break;
+  //lightning scroll use is immediate
   case ITEM_LIGHTNING_SCROLL:
    newTurn=itemUseLightningScroll(item,x,y);
    player.state=STATE_MAP;
    break;
+  //confusion and fireball scrolls use need a target
   case ITEM_CONFUSION_SCROLL:
   case ITEM_FIREBALL_SCROLL:
    player.itemToUse=item;
