@@ -1019,19 +1019,19 @@ You can find the code from Week 6, Part 10 [here](https://github.com/samelinux/r
 
 - [item.c](item.c)
 
-  We added [itemPoolSave]() and [itemPoolLoad]() to save and load all items to
+  We added [itemPoolSave](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/item.c#L137) and [itemPoolLoad](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/item.c#L148) to save and load all items to
    a specific file. Remember that our item pool is tie to the map, so it must
    be saved inside the same file of the map.
 
 - [monster.c ](monster.c )
 
-  We added [monsterPoolSave]() and [monsterPoolLoad]() to save and load all
+  We added [monsterPoolSave](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/monster.c#L206) and [monsterPoolLoad](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/monster.c#L217) to save and load all
    monsters to a specific file. Remember that our monster pool is tie to the
    map, so it must be saved inside the same file of the map.
 
 - [map.c](map.c)
 
-  We added [mapSave]() and [mapLoad]() to save and load the map to a file. To
+  We added [mapSave](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/map.c#L33) and [mapLoad](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/map.c#L44) to save and load the map to a file. To
    be ready to save multiple levels we made the function take a file as a
    parameter: it allow us to specify a new file for each future dungeon level!
    For now we only have one level (level 0, see player.c below) so we could
@@ -1040,7 +1040,7 @@ You can find the code from Week 6, Part 10 [here](https://github.com/samelinux/r
 
 - [player.c](player.c)
 
-  We added [playerSave]() and [playerLoad]() to save and load the player to a
+  We added [playerSave](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/player.c#L43) and [playerLoad](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/player.c#L54) to save and load the player to a
    file. We use, as in map.c above, a file parameter to know where to save.
    This is not necessary, but it keeps the code coherent and flexible.
   We added mainMenuSelection to the player structure to handle the main menu
@@ -1076,7 +1076,7 @@ You can find the code from Week 6, Part 10 [here](https://github.com/samelinux/r
    [map.c](map.c) and use the standard C I/O library [fread](https://man7.org/linux/man-pages/man3/fread.3.html) and [fclose](https://man7.org/linux/man-pages/man3/fwrite.3p.html).
   We added also some utility functions to save/load the whole game state and to
    check if there exist a loadable game.
-  One particular function is [diskDeleteGame]() which uses [opendir](https://man7.org/linux/man-pages/man3/opendir.3.html) to list all file in the current
+  One particular function is [diskDeleteGame](https://github.com/samelinux/rlTutorial2022/blob/18f824c7b8fd5bfe34d7d7270e9bd94e8fdd6d9b/disk.c#L96) which uses [opendir](https://man7.org/linux/man-pages/man3/opendir.3.html) to list all file in the current
    directory to find all ".save" files and delete the ones containing "player"
    or "level".
 
