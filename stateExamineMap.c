@@ -16,7 +16,7 @@ bool stateExamineMapUpdate(char input)
  switch(input)
  {
   case 27:
-   player.state=STATE_MAP;
+   playerGotoState(STATE_MAP);
    break;
   case '7':
   case 'y':

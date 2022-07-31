@@ -5,6 +5,7 @@
 #include "stateMap.h"
 #include "screen.h"
 #include "player.h"
+#include "disk.h"
 
 //handle the game over screen input
 bool stateGameOverUpdate(char input)
@@ -12,8 +13,10 @@ bool stateGameOverUpdate(char input)
  switch(input)
  {
   case 10:
-   //move the player to the main menu
-   player.state=STATE_MAIN_MENU;
+   //delete the game files
+   diskDeleteGame();
+   //clear player structure and move him to the main menu
+   playerInit();
    break;
  }
  return false;

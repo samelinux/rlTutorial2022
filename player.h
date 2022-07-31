@@ -2,6 +2,7 @@
 #ifndef _player_
 #define _player_
 
+#include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include "item.h"
@@ -14,6 +15,7 @@
 enum state_t
 {
  STATE_MAIN_MENU=0,
+ STATE_CONFIRM_NEW_GAME,
  STATE_MAP,
  STATE_BACKPACK,
  STATE_EXAMINE_MAP,
@@ -27,6 +29,7 @@ typedef enum state_t state_t;
 struct player_t
 {
  state_t state;
+ int16_t mainMenuSelection;
  int16_t x;
  int16_t y;
  int64_t turn;
@@ -46,6 +49,7 @@ struct player_t
  int16_t examineX;
  int16_t examineY;
  item_t* itemToUse;
+ int8_t dungeonLevel;
 };
 typedef struct player_t player_t;
 
@@ -55,7 +59,13 @@ void playerInit(void);
 
 void playerDeinit(void);
 
+bool playerSave(FILE* aFile);
+
+bool playerLoad(FILE* aFile);
+
 void playerNewGame(void);
+
+void playerGotoState(state_t newState);
 
 bool playerUpdate(char input);
 

@@ -5,6 +5,7 @@
 typedef enum itemType_t itemType_t;
 typedef struct item_t item_t;
 
+#include <stdio.h>
 #include <stdbool.h>
 #include <stdint.h>
 
@@ -49,6 +50,10 @@ bool itemUse(item_t* item,int16_t x,int16_t y);
 void itemPoolInit(void);
 
 void itemPoolDeinit(void);
+
+bool itemPoolSave(FILE* aFile);
+
+bool itemPoolLoad(FILE* aFile);
 
 void itemPoolAdd(itemType_t type,int16_t x,int16_t y);
 

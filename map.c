@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "map.h"
@@ -26,6 +27,28 @@ void mapDeinit(void)
 {
  //for now doed nothing, but if we decide to allocate the map dynamically here
  //is the right player do deallocate it
+}
+
+//save the map to a file
+bool mapSave(FILE* aFile)
+{
+ size_t written=fwrite(&map,sizeof(map_t),1,aFile);
+ if(written==1)
+ {
+  return true;
+ }
+ return false;
+}
+
+//load the map from a file
+bool mapLoad(FILE* aFile)
+{
+ size_t readed=fread(&map,sizeof(map_t),1,aFile);
+ if(readed==1)
+ {
+  return true;
+ }
+ return false;
 }
 
 //generate a new level

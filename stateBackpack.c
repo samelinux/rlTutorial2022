@@ -13,7 +13,7 @@ bool stateBackpackUpdate(char input)
  {
   case 27:
    //move the player to the map state
-   player.state=STATE_MAP;
+   playerGotoState(STATE_MAP);
    break;
   case 9:
    //change selection [backpack <-> nearby]

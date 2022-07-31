@@ -2,7 +2,9 @@
 #ifndef _monster_
 #define _monster_
 
+#include <stdio.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define MONSTER_POOL_SIZE (32)
 #define MONSTER_NAME_LENGTH (16)
@@ -69,6 +71,10 @@ void monsterAttackMonster(monster_t* attacker,monster_t* defender);
 void monsterPoolInit(void);
 
 void monsterPoolDeinit(void);
+
+bool monsterPoolSave(FILE* aFile);
+
+bool monsterPoolLoad(FILE* aFile);
 
 void monsterPoolAdd(monsterType_t type);
 

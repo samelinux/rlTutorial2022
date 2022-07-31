@@ -22,6 +22,8 @@ obj/%.o: %.c $(HEADERS)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
+	rm -rf level*.save
+	rm -rf player.save
 	rm -rf obj
 	rm -rf $(TARGET)
 

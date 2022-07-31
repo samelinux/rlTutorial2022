@@ -38,13 +38,13 @@ bool stateChooseTargetUpdate(char input)
       //confusion scrolls need a target which the player just confirmed
       newTurn=itemUseConfusionScroll(player.itemToUse,
         player.examineX,player.examineY);
-      player.state=STATE_MAP;
+      playerGotoState(STATE_MAP);
       break;
      case ITEM_FIREBALL_SCROLL:
       //fireball scrolls need a target which the player just confirmed
       newTurn=itemUseFireballScroll(player.itemToUse,
         player.examineX,player.examineY);
-      player.state=STATE_MAP;
+      playerGotoState(STATE_MAP);
       break;
     }
    }

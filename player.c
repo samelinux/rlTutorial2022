@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
@@ -9,12 +10,14 @@
 #include "macro.h"
 #include "map.h"
 #include "screen.h"
+#include "disk.h"
 #include "stateMap.h"
 #include "stateBackpack.h"
 #include "stateExamineMap.h"
 #include "stateChooseTarget.h"
 #include "stateJournal.h"
 #include "stateMainMenu.h"
+#include "stateConfirmNewGame.h"
 #include "stateGameOver.h"
 
 //declare a player
@@ -23,7 +26,10 @@ player_t player;
 //set the player state to STATE_MAIN_MENU
 void playerInit(void)
 {
- player.state=STATE_MAIN_MENU;
+ //clear the player structure
+ memset(&player,0,sizeof(player_t));
+ //send the player to the main menu
+ playerGotoState(STATE_MAIN_MENU);
 }
 
 //deinitialize the player
@@ -33,10 +39,33 @@ void playerDeinit(void)
  //here is the right place do deallocate it
 }
 
+//save the player to a file
+bool playerSave(FILE* aFile)
+{
+ size_t written=fwrite(&player,sizeof(player_t),1,aFile);
+ if(written==1)
+ {
+  return true;
+ }
+ return false;
+}
+
+//load the player from a file
+bool playerLoad(FILE* aFile)
+{
+ size_t readed=fread(&player,sizeof(player_t),1,aFile);
+ if(readed==1)
+ {
+  return true;
+ }
+ return false;
+}
+
 //setup the player for a new game
 void playerNewGame(void)
 {
  //setup the player for a new game
+ player.mainMenuSelection=0;
  player.x=0;
  player.y=0;
  player.turn=0;
@@ -55,6 +84,56 @@ void playerNewGame(void)
  player.nearbyStart=0;
  player.examineX=0;
  player.examineY=0;
+ player.itemToUse=NULL;
+ player.dungeonLevel=0;
+ playerLog("Welcome to the dungeon!");
+ //generate a new map
+ mapGenerate(MAP_CAVE);
+ //move the player to the map state
+ playerGotoState(STATE_MAP);
+ //save the game
+ diskSaveGame();
+}
+
+//move the player to a new state setting/resetting variables used in the landing
+//state
+void playerGotoState(state_t newState)
+{
+ switch(newState)
+ {
+  case STATE_MAX:
+  case STATE_MAP:
+  case STATE_CONFIRM_NEW_GAME:
+  case STATE_GAME_OVER:
+   break;
+  case STATE_BACKPACK:
+   //reset backpack and nearby selection
+   player.backpackIndex=0;
+   player.backpackStart=0;
+   player.nearbyIndex=0;
+   player.nearbyStart=0;
+   break;
+  case STATE_EXAMINE_MAP:
+  case STATE_CHOOSE_TARGET:
+   //center the selection on the player
+   player.examineX=player.x;
+   player.examineY=player.y;
+   break;
+  case STATE_MAIN_MENU:
+   //reset the selection
+   player.mainMenuSelection=0;
+   break;
+  case STATE_JOURNAL:
+   //move to the last journal log
+   player.journalIndex=JOURNAL_LENGTH-screenHeight+1;
+   if(player.journalIndex<0)
+   {
+    player.journalIndex=0;
+   }
+   break;
+ }
+ //go to the new state
+ player.state=newState;
 }
 
 //call the states update function based on the actual player state
@@ -74,6 +153,8 @@ bool playerUpdate(char input)
    return stateChooseTargetUpdate(input);
   case STATE_MAIN_MENU:
    return stateMainMenuUpdate(input);
+  case STATE_CONFIRM_NEW_GAME:
+   return stateConfirmNewGameUpdate(input);
   case STATE_JOURNAL:
    return stateJournalUpdate(input);
   case STATE_GAME_OVER:
@@ -104,6 +185,9 @@ void playerRender(void)
   case STATE_MAIN_MENU:
    stateMainMenuRender();
    break;
+  case STATE_CONFIRM_NEW_GAME:
+   stateConfirmNewGameRender();
+   break;
   case STATE_JOURNAL:
    stateJournalRender();
    break;
@@ -133,7 +217,7 @@ void playerCheckDeath()
  {
   //show player death
   playerLog("Your die.");
-  player.state=STATE_GAME_OVER;
+  playerGotoState(STATE_GAME_OVER);
  }
 }
 

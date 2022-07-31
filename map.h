@@ -2,6 +2,7 @@
 #ifndef _map_
 #define _map_
 
+#include <stdio.h>
 #include <stdint.h>
 #include "tile.h"
 
@@ -30,6 +31,10 @@ typedef struct map_t map_t;
 void mapInit(void);
 
 void mapDeinit(void);
+
+bool mapSave(FILE* aFile);
+
+bool mapLoad(FILE* aFile);
 
 void mapGenerate(mapType_t type);
 

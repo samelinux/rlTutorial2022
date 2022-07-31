@@ -12,7 +12,7 @@ bool stateJournalUpdate(char input)
  {
   case 27:
    //move the player to the map
-   player.state=STATE_MAP;
+   playerGotoState(STATE_MAP);
    break;
   case '2':
   case 'j':

@@ -1,4 +1,5 @@
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "item.h"
@@ -102,20 +103,18 @@ bool itemUse(item_t* item,int16_t x,int16_t y)
   //health potion use is immediate
   case ITEM_HEALTH_POTION:
    newTurn=itemUseHealthPotion(item,x,y);
-   player.state=STATE_MAP;
+   playerGotoState(STATE_MAP);
    break;
   //lightning scroll use is immediate
   case ITEM_LIGHTNING_SCROLL:
    newTurn=itemUseLightningScroll(item,x,y);
-   player.state=STATE_MAP;
+   playerGotoState(STATE_MAP);
    break;
   //confusion and fireball scrolls use need a target
   case ITEM_CONFUSION_SCROLL:
   case ITEM_FIREBALL_SCROLL:
    player.itemToUse=item;
-   player.examineX=player.x;
-   player.examineY=player.y;
-   player.state=STATE_CHOOSE_TARGET;
+   playerGotoState(STATE_CHOOSE_TARGET);
    break;
  }
  return newTurn;
@@ -132,6 +131,28 @@ void itemPoolDeinit(void)
 {
  //for now doed nothing, but if we decide to allocate the pool dynamically
  //here is the right place do deallocate it
+}
+
+//save the itemPool to a file
+bool itemPoolSave(FILE* aFile)
+{
+ size_t written=fwrite(itemPool,sizeof(item_t)*ITEM_POOL_SIZE,1,aFile);
+ if(written==1)
+ {
+  return true;
+ }
+ return false;
+}
+
+//load the itemPool from a file
+bool itemPoolLoad(FILE* aFile)
+{
+ size_t readed=fread(itemPool,sizeof(item_t)*ITEM_POOL_SIZE,1,aFile);
+ if(readed==1)
+ {
+  return true;
+ }
+ return false;
 }
 
 //add an item to the pool of items

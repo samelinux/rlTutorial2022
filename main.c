@@ -8,6 +8,7 @@
 #include "screen.h"
 #include "signal.h"
 #include "player.h"
+#include "disk.h"
 
 //int main(int argc,char** argv)
 int main(void)
@@ -36,6 +37,9 @@ int main(void)
    player.turn++;
    //handle monsters turn
    monsterPoolHandleTurn();
+   //save the game each turn, you can savescum only by backing up the savefile
+   //when out of the game
+   diskSaveGame();
   }
  }
 

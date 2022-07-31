@@ -998,6 +998,100 @@ You can find the code from Week 5, Part 9 [here](https://github.com/samelinux/rl
 <details>
 <summary> Part 10 - Saving and loading </summary>
 
+You can find the code from Week 6, Part 10 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week6part10).
+
+- General
+
+  We added a utility function in player to change state, this is quite usefull
+   because it allows us to move there all the state initialization code and
+   have it in one place. This generate some changes in most state files.
+  I fixed some minor bug and some player variables i forgot to initialize.
+
+- .gitignore
+
+  We added level\*.save and player.save to the ignore list to prevent git to
+   asking to add them to the project.
+
+- Makefile
+
+  We added the deletion of all level\*.save and player.save when we make clean
+   to easly delete saved game while developing.
+
+- [item.c](item.c)
+
+  We added [itemPoolSave]() and [itemPoolLoad]() to save and load all items to
+   a specific file. Remember that our item pool is tie to the map, so it must
+   be saved inside the same file of the map.
+
+- [monster.c ](monster.c )
+
+  We added [monsterPoolSave]() and [monsterPoolLoad]() to save and load all
+   monsters to a specific file. Remember that our monster pool is tie to the
+   map, so it must be saved inside the same file of the map.
+
+- [map.c](map.c)
+
+  We added [mapSave]() and [mapLoad]() to save and load the map to a file. To
+   be ready to save multiple levels we made the function take a file as a
+   parameter: it allow us to specify a new file for each future dungeon level!
+   For now we only have one level (level 0, see player.c below) so we could
+   save the map to a constant file (like "map.save") but in the future we will
+   have multiple dungeon level.
+
+- [player.c](player.c)
+
+  We added [playerSave]() and [playerLoad]() to save and load the player to a
+   file. We use, as in map.c above, a file parameter to know where to save.
+   This is not necessary, but it keeps the code coherent and flexible.
+  We added mainMenuSelection to the player structure to handle the main menu
+   selection, see stateMainmenu.c below.
+  We added dungeonLevel to the player structure to know where the player is
+   inside a multiple levels dungeon. For now it is not usefull, but we will
+   use it in the next Part to have the player movebetween dungeon levels.
+   This is also usefull to save each dungeon floor map to a separate file so we
+   can have only one level loaded at any time, but all levels (the player has
+   already explored) available on disk.
+
+- [main.c](main.c)
+
+  We added a save game function call after each mosnters turn. We don't need to
+   save each time a player take an action if it does not trigger a new turn.
+   The player can examine the map, but since it does not advance the turn we
+   don't need to save since the game state doesn't change.
+
+- [stateMainMenu.c](stateMainMenu.c)
+
+  We added a menu to start a new game, to load a previous game (if present)
+   and to quit the game. We use the mainMenuSelection variable to keep track of
+   the selection. You can notice that we added a little trick to the load last
+   game menu: we draw if darker and prevent its selection if there's no game
+   to load.
+
+- [disk.c](disk.c)
+
+  This file is responsable of opening and closing files to save/load from. It
+   uses the standard C I/O library [fopen](https://man7.org/linux/man-pages/man3/fopen.3.html) and [fclose](https://man7.org/linux/man-pages/man3/fclose.3.html) functions. I tried to keep it as simple as possible.
+  All the real load/save functions are in the respective files:
+   [item.c](item.c), [player.c](player.c), [monster.c](monster.c),
+   [map.c](map.c) and use the standard C I/O library [fread](https://man7.org/linux/man-pages/man3/fread.3.html) and [fclose](https://man7.org/linux/man-pages/man3/fwrite.3p.html).
+  We added also some utility functions to save/load the whole game state and to
+   check if there exist a loadable game.
+  One particular function is [diskDeleteGame]() which uses [opendir](https://man7.org/linux/man-pages/man3/opendir.3.html) to list all file in the current
+   directory to find all ".save" files and delete the ones containing "player"
+   or "level".
+
+- [stateConfirmNewGame.c](stateConfirmNewGame.c)
+
+  We added this state to show how to implement a confirmation screen. It is
+   quite usefull to prevent the player to delete his own saved games, but it is
+   not strictly necessary. It's just a simple state with a prompt, if the
+   player hit return it confirm the creation of a new game (deleting the old
+   save), if the player hit escape it goes back to the main menu.
+
+- Result
+
+  ![part10 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part10_001.png "Part 10 main menu")
+
 </details>
 
 <details>

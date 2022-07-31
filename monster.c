@@ -1,5 +1,8 @@
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
 #include <string.h>
 #include <sys/param.h>
 #include "monster.h"
@@ -197,6 +200,28 @@ void monsterPoolAdd(monsterType_t type)
    return;
   }
  }
+}
+
+//save the monsterPool to a file
+bool monsterPoolSave(FILE* aFile)
+{
+ size_t written=fwrite(monsterPool,sizeof(monster_t)*MONSTER_POOL_SIZE,1,aFile);
+ if(written==1)
+ {
+  return true;
+ }
+ return false;
+}
+
+//load the monsterPool from a file
+bool monsterPoolLoad(FILE* aFile)
+{
+ size_t readed=fread(monsterPool,sizeof(monster_t)*MONSTER_POOL_SIZE,1,aFile);
+ if(readed==1)
+ {
+  return true;
+ }
+ return false;
 }
 
 //spawn up to maxMonsters monsters in the map
