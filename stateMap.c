@@ -24,6 +24,14 @@ bool stateMapUpdate(char input)
   //just leave newTurn to false
   switch(input)
   {
+   case '>':
+    newTurn=playerDescendStair();
+    return newTurn;
+    break;
+   case '<':
+    newTurn=playerAscendStair();
+    return newTurn;
+    break;
    case 'q':
     //close the program
     mainQuit();
@@ -31,26 +39,30 @@ bool stateMapUpdate(char input)
    case 'x':
     //examine the map
     playerGotoState(STATE_EXAMINE_MAP);
+    return false;
     break;
    case 'i':
     //go to the backpack
     player.backpackSelected=true;
     playerGotoState(STATE_BACKPACK);
+    return false;
     break;
    case ',':
    case 'g':
     //pickup items
     player.backpackSelected=false;
     playerGotoState(STATE_BACKPACK);
+    return false;
    break;
    case 'J':
     //read the full journal
     playerGotoState(STATE_JOURNAL);
+    return false;
     break;
    case '5':
    case '.':
     //wait a turn
-    newTurn=true;
+    return true;
     break;
    case '7':
    case 'y':
@@ -154,10 +166,13 @@ void stateMapRender(void)
 
  //print player stats
  int8_t statX=MAP_VIEWPORT_WIDTH+1;
- screenPrint(statX,0,"Turn: %lld",player.turn);
- screenPrint(statX,1,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
- screenPrint(statX,2,"Attack: %d",player.attack);
- screenPrint(statX,3,"Defence: %d",player.defence);
+ screenPrint(statX,0,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
+ screenPrint(statX,1,"Attack: %d",player.attack);
+ screenPrint(statX,2,"Defence: %d",player.defence);
+ screenPrint(statX,4,"Turn: %lld",player.turn);
+ screenPrint(statX,5,"Floor: %d @ %d,%d",player.dungeonLevel,player.x,player.y);
+ screenPrint(statX,6,"EXP: %d/%d",player.experience,
+   playerExperienceForNextLevel());
 
  //print the last journal lines
  int8_t maxLines=screenHeight-MAP_VIEWPORT_HEIGHT;

@@ -34,6 +34,7 @@ void monsterInit(monster_t* monster,monsterType_t type)
  monster->hitPoints=monster->maxHitPoints;
  monster->defence=monsterDefence(type);
  monster->attack=monsterAttack(type);
+ monster->experienceValue=monsterExperienceValue(type);
  monster->ai=monsterAI(type);
  monster->confusionDuration=0;
 }
@@ -56,6 +57,9 @@ void monsterCheckDeath(monster_t* monster)
   {
    //show monster death
    playerLog("%s dies.",monster->name);
+   //give the player experience
+   player.experience+=monster->experienceValue;
+   //clear the monster
    monster->type=MONSTER_NONE;
   }
 }
@@ -143,6 +147,21 @@ int8_t monsterAttack(monsterType_t type)
  }
  return 0;
 }
+
+//return each monsterType_t experience when killed
+int16_t monsterExperienceValue(monsterType_t type)
+{
+ switch(type)
+ {
+  case MONSTER_MAX:
+  case MONSTER_NONE: return 0;
+  case MONSTER_RAT: return 10;
+  case MONSTER_ORC: return 35;
+  case MONSTER_TROL: return 100;
+ }
+ return 0;
+}
+
 //return each monsterType_t ai
 monsterAI_t monsterAI(monsterType_t type)
 {

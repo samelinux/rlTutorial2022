@@ -177,13 +177,5 @@ void stateExamineMapRender(void)
    }
   }
  }
-
- //print player stats
- int8_t statX=MAP_VIEWPORT_WIDTH+1;
- screenPrint(statX,0,"Turn: %lld",player.turn);
- screenPrint(statX,1,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
- screenPrint(statX,2,"Attack: %d",player.attack);
- screenPrint(statX,3,"Defence: %d",player.defence);
-
 }
 

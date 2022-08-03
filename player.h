@@ -21,7 +21,9 @@ enum state_t
  STATE_EXAMINE_MAP,
  STATE_CHOOSE_TARGET,
  STATE_JOURNAL,
+ STATE_LEVEL_UP,
  STATE_GAME_OVER,
+ STATE_END_GAME,
  STATE_MAX,
 };
 typedef enum state_t state_t;
@@ -29,7 +31,7 @@ typedef enum state_t state_t;
 struct player_t
 {
  state_t state;
- int16_t mainMenuSelection;
+ int16_t menuSelection;
  int16_t x;
  int16_t y;
  int64_t turn;
@@ -49,7 +51,9 @@ struct player_t
  int16_t examineX;
  int16_t examineY;
  item_t* itemToUse;
- int8_t dungeonLevel;
+ int16_t dungeonLevel;
+ int8_t level;
+ int16_t experience;
 };
 typedef struct player_t player_t;
 
@@ -99,6 +103,14 @@ void playerPickup(item_t* item);
 bool playerUseSelectedItem(void);
 
 void playerDropSelectedItem(void);
+
+bool playerDescendStair(void);
+
+bool playerAscendStair(void);
+
+int32_t playerExperienceForNextLevel(void);
+
+void playerCheckLevelUp(void);
 
 #endif
 

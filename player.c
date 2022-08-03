@@ -16,9 +16,11 @@
 #include "stateExamineMap.h"
 #include "stateChooseTarget.h"
 #include "stateJournal.h"
+#include "stateLevelUp.h"
 #include "stateMainMenu.h"
 #include "stateConfirmNewGame.h"
 #include "stateGameOver.h"
+#include "stateEndGame.h"
 
 //declare a player
 player_t player;
@@ -65,7 +67,7 @@ bool playerLoad(FILE* aFile)
 void playerNewGame(void)
 {
  //setup the player for a new game
- player.mainMenuSelection=0;
+ player.menuSelection=0;
  player.x=0;
  player.y=0;
  player.turn=0;
@@ -86,6 +88,7 @@ void playerNewGame(void)
  player.examineY=0;
  player.itemToUse=NULL;
  player.dungeonLevel=0;
+ player.level=1;
  playerLog("Welcome to the dungeon!");
  //generate a new map
  mapGenerate(MAP_CAVE);
@@ -105,6 +108,7 @@ void playerGotoState(state_t newState)
   case STATE_MAP:
   case STATE_CONFIRM_NEW_GAME:
   case STATE_GAME_OVER:
+  case STATE_END_GAME:
    break;
   case STATE_BACKPACK:
    //reset backpack and nearby selection
@@ -119,9 +123,10 @@ void playerGotoState(state_t newState)
    player.examineX=player.x;
    player.examineY=player.y;
    break;
+  case STATE_LEVEL_UP:
   case STATE_MAIN_MENU:
    //reset the selection
-   player.mainMenuSelection=0;
+   player.menuSelection=0;
    break;
   case STATE_JOURNAL:
    //move to the last journal log
@@ -157,8 +162,12 @@ bool playerUpdate(char input)
    return stateConfirmNewGameUpdate(input);
   case STATE_JOURNAL:
    return stateJournalUpdate(input);
+  case STATE_LEVEL_UP:
+   return stateLevelUpUpdate(input);
   case STATE_GAME_OVER:
    return stateGameOverUpdate(input);
+  case STATE_END_GAME:
+   return stateEndGameUpdate(input);
  }
  return false;
 }
@@ -191,8 +200,14 @@ void playerRender(void)
   case STATE_JOURNAL:
    stateJournalRender();
    break;
+  case STATE_LEVEL_UP:
+   stateLevelUpRender();
+   break;
   case STATE_GAME_OVER:
    stateGameOverRender();
+   break;
+  case STATE_END_GAME:
+   stateEndGameRender();
    break;
  }
 }
@@ -418,6 +433,99 @@ void playerDropSelectedItem(void)
   itemPoolAdd(player.backpack[player.backpackIndex].type,player.x,player.y);
   player.backpack[player.backpackIndex].type=ITEM_NONE;
   playerPackBackpack();
+ }
+}
+
+//move the player to the next dungeon level if necessary, return false if
+//the action cannot be performed
+bool playerDescendStair(void)
+{
+ int16_t x=0;
+ int16_t y=0;
+ tile_t* toTile=mapTileAt(player.x,player.y);
+ if(toTile!=NULL && toTile->type==TILE_STAIR_DOWN)
+ {
+  //move the player to the next dungeon level
+  player.dungeonLevel++;
+  if(diskCanLoadMap(player.dungeonLevel)==true)
+  {
+   //if the dungeon level can be loaded, load it and move the player to the
+   //stair up tile
+   diskSavePlayer(PLAYER_SAVE_FILE);
+   diskLoadGame();
+   mapTilePosition(&x,&y,TILE_STAIR_UP);
+   player.x=x;
+   player.y=y;
+   diskSavePlayer(PLAYER_SAVE_FILE);
+  }
+  else
+  {
+   //otherwise generate a new level
+   mapGenerate(MAP_CAVE);
+  }
+  playerLog("You descend the stair...");
+  return true;
+ }
+ return false;
+}
+
+//move the player to the previous dungeon level if necessary, return false if
+//the action cannot be performed
+bool playerAscendStair(void)
+{
+ int16_t x=0;
+ int16_t y=0;
+ tile_t* toTile=mapTileAt(player.x,player.y);
+ if(toTile!=NULL && toTile->type==TILE_STAIR_UP)
+ {
+  if(player.dungeonLevel==0)
+  {
+   //if the previous level is 0, then the player escaped the dungeon
+   playerGotoState(STATE_END_GAME);
+  }
+  else
+  {
+   //move the player to the previous level
+   player.dungeonLevel--;
+   if(diskCanLoadMap(player.dungeonLevel)==true)
+   {
+    //if the dungeon level can be loaded, load it and move the player to the
+    //stair down tile
+    diskSavePlayer(PLAYER_SAVE_FILE);
+    diskLoadGame();
+    mapTilePosition(&x,&y,TILE_STAIR_DOWN);
+    player.x=x;
+    player.y=y;
+    diskSavePlayer(PLAYER_SAVE_FILE);
+   }
+   else
+   {
+    //otherwise generate a new level
+    mapGenerate(MAP_CAVE);
+   }
+   playerLog("You ascend the stair...");
+   return true;
+  }
+  return false;
+ }
+ return false;
+}
+
+//return the required experience to level up
+int32_t playerExperienceForNextLevel(void)
+{
+ return 200+player.level*150;
+}
+
+//check if the player gained a level and if necessary move him to the level up
+//screen
+void playerCheckLevelUp(void)
+{
+ if(player.experience>playerExperienceForNextLevel())
+ {
+  player.experience=0;
+  player.level++;
+  playerGotoState(STATE_LEVEL_UP);
  }
 }
 

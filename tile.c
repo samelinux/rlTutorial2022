@@ -40,6 +40,8 @@ char* tileName(tileType_t type)
   case TILE_NONE: return "no name";
   case TILE_FLOOR: return "floor";
   case TILE_WALL: return "wall";
+  case TILE_STAIR_DOWN: return "stair down";
+  case TILE_STAIR_UP: return "stair up";
  }
  return "no name";
 }
@@ -53,6 +55,8 @@ char tileGlyph(tileType_t type)
   case TILE_NONE: return '?';
   case TILE_FLOOR: return '.';
   case TILE_WALL: return '#';
+  case TILE_STAIR_DOWN: return '>';
+  case TILE_STAIR_UP: return '<';
  }
  return '?';
 }
@@ -66,6 +70,8 @@ int8_t tileFGColor(tileType_t type)
   case TILE_NONE: return BLACK;
   case TILE_FLOOR: return WHITE;
   case TILE_WALL: return WHITE;
+  case TILE_STAIR_DOWN: return WHITE;
+  case TILE_STAIR_UP: return WHITE;
  }
  return BLACK;
 }
@@ -79,6 +85,8 @@ int8_t tileBGColor(tileType_t type)
   case TILE_NONE: return BLACK;
   case TILE_FLOOR: return BLACK;
   case TILE_WALL: return BLACK;
+  case TILE_STAIR_DOWN: return BLACK;
+  case TILE_STAIR_UP: return BLACK;
  }
  return BLACK;
 }
@@ -92,6 +100,8 @@ bool tileWalkable(tileType_t type)
   case TILE_NONE: return false;
   case TILE_FLOOR: return true;
   case TILE_WALL: return false;
+  case TILE_STAIR_DOWN: return true;
+  case TILE_STAIR_UP: return true;
  }
  return false;
 }
@@ -105,6 +115,8 @@ bool tileBlockFOV(tileType_t type)
   case TILE_NONE: return true;
   case TILE_FLOOR: return false;
   case TILE_WALL: return true;
+  case TILE_STAIR_DOWN: return false;
+  case TILE_STAIR_UP: return false;
  }
  return true;
 }
@@ -119,6 +131,8 @@ bool tileRememberViewed(tileType_t type)
   case TILE_NONE: return false;
   case TILE_FLOOR: return false;
   case TILE_WALL: return true;
+  case TILE_STAIR_DOWN: return true;
+  case TILE_STAIR_UP: return true;
  }
  return false;
 }

@@ -5,11 +5,13 @@
 #include <unistd.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include "disk.h"
 #include "map.h"
 #include "item.h"
 #include "monster.h"
 #include "player.h"
 
+//open playerFile and call playerSave
 bool diskSavePlayer(char* playerFile)
 {
  FILE* aPlayerFile=fopen(playerFile,"wb+");
@@ -23,6 +25,7 @@ bool diskSavePlayer(char* playerFile)
  return false;
 }
 
+//open playerFile and call playerLoad
 bool diskLoadPlayer(char* playerFile)
 {
  FILE* aPlayerFile=fopen(playerFile,"rb");
@@ -36,6 +39,7 @@ bool diskLoadPlayer(char* playerFile)
  return false;
 }
 
+//open levelFile and call mapSave,itemPoolSave and monsterPoolSave
 bool diskSaveLevel(char* levelFile)
 {
  FILE* aLevelFile=fopen(levelFile,"wb+");
@@ -51,6 +55,7 @@ bool diskSaveLevel(char* levelFile)
  return false;
 }
 
+//open levelFile and call mapLoad,itemPoolLoad and monsterPoolLoad
 bool diskLoadLevel(char* levelFile)
 {
  FILE* aLevelFile=fopen(levelFile,"rb");
@@ -66,15 +71,26 @@ bool diskLoadLevel(char* levelFile)
  return false;
 }
 
-bool diskCanLoadGame(char* file)
+//return true if file exists
+bool diskCanLoad(char* file)
 {
  return access(file,F_OK)==0;
 }
 
+//return true if the map file of level exists
+bool diskCanLoadMap(int16_t level)
+{
+ char levelFile[16];
+ memset(levelFile,0,sizeof(char)*16);
+ snprintf(levelFile,16,"level%05d.save",level);
+ return diskCanLoad(levelFile);
+}
+
+//save the whole game
 bool diskSaveGame()
 {
  bool saved=true;
- saved&=diskSavePlayer("player.save");
+ saved&=diskSavePlayer(PLAYER_SAVE_FILE);
  char levelFile[16];
  memset(levelFile,0,sizeof(char)*16);
  snprintf(levelFile,16,"level%05d.save",player.dungeonLevel);
@@ -82,10 +98,11 @@ bool diskSaveGame()
  return saved;
 }
 
+//load the whole game
 bool diskLoadGame()
 {
  bool loaded=true;
- loaded&=diskLoadPlayer("player.save");
+ loaded&=diskLoadPlayer(PLAYER_SAVE_FILE);
  char levelFile[16];
  memset(levelFile,0,sizeof(char)*16);
  snprintf(levelFile,16,"level%05d.save",player.dungeonLevel);
@@ -93,6 +110,7 @@ bool diskLoadGame()
  return loaded;
 }
 
+//delete all game related files (player and levels)
 void diskDeleteGame()
 {
  DIR *aFolder=opendir(".");

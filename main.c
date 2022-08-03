@@ -41,6 +41,8 @@ int main(void)
    //when out of the game
    diskSaveGame();
   }
+  //check for player level up
+  playerCheckLevelUp();
  }
 
  //return

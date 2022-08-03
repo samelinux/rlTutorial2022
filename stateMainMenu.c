@@ -15,11 +15,11 @@ bool stateMainMenuUpdate(char input)
  {
   case 10:
    //return pressed
-   switch(player.mainMenuSelection)
+   switch(player.menuSelection)
    {
     case 0:
      //new game selected
-     if(diskCanLoadGame("player.save"))
+     if(diskCanLoad(PLAYER_SAVE_FILE))
      {
       //confirm the creation of a new game since we already have an ongoing game
       playerGotoState(STATE_CONFIRM_NEW_GAME);
@@ -31,7 +31,7 @@ bool stateMainMenuUpdate(char input)
      }
      break;
     case 1:
-     if(diskCanLoadGame("player.save") && diskLoadGame()==true)
+     if(diskCanLoad(PLAYER_SAVE_FILE) && diskLoadGame()==true)
      {
       //move the player to the map state if we manage to load the game
       playerGotoState(STATE_MAP);
@@ -46,19 +46,19 @@ bool stateMainMenuUpdate(char input)
   case '8':
   case 'k':
    //up
-   player.mainMenuSelection=abs((player.mainMenuSelection+2)%3);
-   if(player.mainMenuSelection==1 && diskCanLoadGame("player.save")==false)
+   player.menuSelection=abs((player.menuSelection+2)%3);
+   if(player.menuSelection==1 && diskCanLoad(PLAYER_SAVE_FILE)==false)
    {
-    player.mainMenuSelection--;
+    player.menuSelection--;
    }
    break;
   case '2':
   case 'j':
    //down
-   player.mainMenuSelection=(player.mainMenuSelection+1)%3;
-   if(player.mainMenuSelection==1 && diskCanLoadGame("player.save")==false)
+   player.menuSelection=(player.menuSelection+1)%3;
+   if(player.menuSelection==1 && diskCanLoad(PLAYER_SAVE_FILE)==false)
    {
-    player.mainMenuSelection++;
+    player.menuSelection++;
    }
    break;
  }
@@ -76,7 +76,7 @@ void stateMainMenuRender(void)
  int16_t fgColor=WHITE_BRIGHT;
  int16_t bgColor=BLACK;
 
- if(player.mainMenuSelection==0)
+ if(player.menuSelection==0)
  {
   //new game selected, print with inverted color
   screenColorPrint((screenWidth-strlen("New game"))/2,screenHeight/2+2,
@@ -89,9 +89,9 @@ void stateMainMenuRender(void)
     fgColor,bgColor,"New game");
  }
 
- if(diskCanLoadGame("player.save"))
+ if(diskCanLoad(PLAYER_SAVE_FILE))
  {
-  if(player.mainMenuSelection==1)
+  if(player.menuSelection==1)
   {
    //game to load found, load last game selected, print with inverted color
    screenColorPrint((screenWidth-strlen("Load last game"))/2,screenHeight/2+3,
@@ -111,7 +111,7 @@ void stateMainMenuRender(void)
     WHITE,bgColor,"Load last game");
  }
 
- if(player.mainMenuSelection==2)
+ if(player.menuSelection==2)
  {
   //quit selected, print with inverted color
   screenColorPrint((screenWidth-strlen("Quit"))/2,screenHeight/2+4,

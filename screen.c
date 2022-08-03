@@ -97,6 +97,36 @@ void screenColorPrint(int8_t x,int8_t y,int8_t fg,int8_t bg,char* format,...)
  va_end(argumentList);
 }
 
+//draw a box from x0,y0 to x1,y1 with fg and bg colors
+void screenBox(int8_t x0,int8_t y0,int8_t x1,int8_t y1,int8_t fg,int8_t bg)
+{
+ //draw all four corner
+ screenColorPut(x0,y0,fg,bg,'+');
+ screenColorPut(x1,y0,fg,bg,'+');
+ screenColorPut(x0,y1,fg,bg,'+');
+ screenColorPut(x1,y1,fg,bg,'+');
+ //draw 2 horizontal line
+ for(int8_t dx=x0+1;dx<x1;dx++)
+ {
+  screenColorPut(dx,y0,fg,bg,'-');
+  screenColorPut(dx,y1,fg,bg,'-');
+ }
+ //draw two vertical line
+ for(int8_t dy=y0+1;dy<y1;dy++)
+ {
+  screenColorPut(x0,dy,fg,bg,'|');
+  screenColorPut(x1,dy,fg,bg,'|');
+ }
+ //fill the box
+ for(int8_t dy=y0+1;dy<y1-1;dy++)
+ {
+  for(int8_t dx=x0+1;dx<x1-1;dx++)
+  {
+   screenColorPut(dx,dy,fg,bg,' ');
+  }
+ }
+}
+
 //change foreground and background colors attribute
 void screenColor(int8_t fg,int8_t bg)
 {

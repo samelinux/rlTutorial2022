@@ -42,6 +42,8 @@ bool mapIsValid(int16_t x,int16_t y);
 
 void mapRandomWalkablePosition(int16_t* x,int16_t* y);
 
+void mapTilePosition(int16_t* x,int16_t* y,tileType_t type);
+
 bool mapIsConnected(void);
 
 void mapRender(int16_t fromX,int16_t fromY);

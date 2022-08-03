@@ -28,8 +28,10 @@ void stateGameOverRender(void)
  //this is an hack to have the map screen updated to the last action
  stateMapRender();
  //for now lets just print a "Dark Souls style" death screen
- screenPrint((screenWidth-strlen("You died"))/2,screenHeight/2,"You died");
- screenPrint(screenWidth-strlen("Press enter to continue")-1,screenHeight,
-   "Press enter to continue");
+ screenBox((screenWidth-8)/2-2,screenHeight/2-2,
+   (screenWidth-8)/2+8+1,screenHeight/2+2,
+   WHITE,BLACK);
+ screenPrint((screenWidth-8)/2,screenHeight/2,"You died");
+ screenPrint(screenWidth-23-1,screenHeight,"Press enter to continue");
 }
 

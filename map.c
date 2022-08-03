@@ -9,6 +9,7 @@
 #include "monster.h"
 #include "player.h"
 #include "random.h"
+#include "macro.h"
 
 //declare a map
 map_t map;
@@ -56,6 +57,8 @@ void mapGenerate(mapType_t type)
 {
  int16_t x=0;
  int16_t y=0;
+ int16_t playerX=0;
+ int16_t playerY=0;
  memset(&(map),0,sizeof(map));
  map.type=type;
  for(int i=0;i<MAP_WIDTH*MAP_HEIGHT;i++)
@@ -78,8 +81,17 @@ void mapGenerate(mapType_t type)
  itemPoolInit();
  itemPoolSpawn(10);
  //get a random walkable tile and teleport the player there
- mapRandomWalkablePosition(&x,&y);
- playerTeleportTo(x,y);
+ mapRandomWalkablePosition(&playerX,&playerY);
+ playerTeleportTo(playerX,playerY);
+ //set a stair up at the player position
+ tileInit(mapTileAt(playerX,playerY),TILE_STAIR_UP);
+ //search for a place at last 10 tile away from the player to place the stair
+ //to the next level and place them
+ do
+ {
+  mapRandomWalkablePosition(&x,&y);
+ } while(distance(playerX,playerY,x,y)<10);
+ tileInit(mapTileAt(x,y),TILE_STAIR_DOWN);
 }
 
 //return true if x,y are in the map boundaries
@@ -94,13 +106,32 @@ void mapRandomWalkablePosition(int16_t* x,int16_t* y)
  do
  {
   //randomize an x,y coordinate
-  *x=randomGet(0,MAP_WIDTH);
-  *y=randomGet(0,MAP_HEIGHT);
+  *x=randomGet(0,MAP_WIDTH-1);
+  *y=randomGet(0,MAP_HEIGHT-1);
   //until the tile is not valid or the tile in not walkable or there is a
   //monster at that coordinate
  }while(mapIsValid(*x,*y)==false ||
+   mapTileAt(*x,*y)==NULL ||
    mapTileAt(*x,*y)->walkable==false ||
    monsterPoolAt(*x,*y)!=NULL);
+}
+
+//fill x,y with the position of the first tile of a certain type
+void mapTilePosition(int16_t* x,int16_t* y,tileType_t type)
+{
+ for(int16_t dy=0;dy<MAP_HEIGHT;dy++)
+ {
+  for(int16_t dx=0;dx<MAP_WIDTH;dx++)
+  {
+   tile_t* tile=mapTileAt(dx,dy);
+   if(tile->type==type)
+   {
+    *x=dx;
+    *y=dy;
+    return;
+   }
+  }
+ }
 }
 
 //recursively calculate the map connection "mask" in connectionMap

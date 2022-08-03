@@ -12,6 +12,8 @@ enum tileType_t
  TILE_NONE=0,
  TILE_FLOOR,
  TILE_WALL,
+ TILE_STAIR_DOWN,
+ TILE_STAIR_UP,
  TILE_MAX,
 };
 typedef enum tileType_t tileType_t;

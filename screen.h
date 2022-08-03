@@ -40,6 +40,8 @@ void screenPrint(int8_t x,int8_t y,char* format,...);
 
 void screenColorPrint(int8_t x,int8_t y,int8_t fg,int8_t bg,char* format,...);
 
+void screenBox(int8_t x0,int8_t y0,int8_t x1,int8_t y1,int8_t fg,int8_t bg);
+
 void screenColor(int8_t fg,int8_t bg);
 
 #endif

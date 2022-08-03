@@ -40,6 +40,7 @@ struct monster_t
  int8_t hitPoints;
  int8_t defence;
  int8_t attack;
+ int16_t experienceValue;
  monsterAI_t ai;
  int8_t confusionDuration;
 };
@@ -63,6 +64,8 @@ int8_t monsterMaxHitPoints(monsterType_t type);
 int8_t monsterDefence(monsterType_t type);
 
 int8_t monsterAttack(monsterType_t type);
+
+int16_t monsterExperienceValue(monsterType_t type);
 
 monsterAI_t monsterAI(monsterType_t type);
 

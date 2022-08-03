@@ -1100,6 +1100,104 @@ You can find the code from Week 6, Part 10 [here](https://github.com/samelinux/r
 <details>
 <summary> Part 11 - Delving into the Dungeon </summary>
 
+You can find the code from Week 6, Part 11 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week6part11).
+
+
+- disk.c
+
+  I added some comments to the file since i forgot to do it when we created it.
+  We added an utility function to check if a level can be loaded: this will be
+   usefull when goung up/down dungeon levels (basically to check if we already
+   have a level to load)
+  We also added a constant for the player save file name.
+
+- main.c
+
+  We added a call, after every player input even if no turns passed, to check
+   if the player gained a level. It's quite usefull to add it here so we don't 
+   have to check everywhere in the code.
+
+- map.c
+
+  We added stairs placement in the map generation. We added it here so we don't
+   have to write the same code in eache mapXXX file (each map must have a stair
+   up and a stair down for now).
+  We also added an utility function: [mapTilePosition]() to search for the
+   coordinate of a give tile type.
+
+- monster.c
+
+  We added a new monster_t field to specify how much experience is awarded to
+   the player when he kill a monster of a give type.
+  We also added the experience award to the player in [monsterCheckDeath]().
+
+- player.c
+
+  We changed the field mainMenuSelection to menuSelection to be able to reuse
+   it in any menu (for now mainly in stateLevelUp.c).
+  We added some field to the player_t:
+   1. level, which indicate the level of the player character
+   2. experience, which indicate how much experience toward the next level the
+    player has accumulated
+  We added a two new states:
+   1. STATE_LEVEL_UP, which is used to show the player a popup to choose his
+    bonus for levelling up
+   2. STATE_END_GAME, which is used when the player escape the dungeon
+  We also added some utility functions:
+   1. [playerDescendStair](), which is used to check if the player can go to the
+    next dungeon floor (and also return the newTurn value to stateMap.c)
+   2. [playerAscendStair](), which is the same as the one above but for ascending
+    to a previous dungeon floor
+   3. [playerExperienceForNextLevel](), which return the ammount of experience to
+    gain a level
+   4. [playerCheckLevelUp](), which is used to move the player to the level up
+    screen if he gained a level
+
+- screen.c
+
+  We added [screenBox]() to draw box to the screen. This is just an example of
+   how you can improve the screen library to support more fancy drawings. The
+   box is used in the death screen and in the level up popup.
+
+- stateExamineMap.c
+
+  We removed the player info from the examine map state to let the player focus
+   more on what he is doing.
+
+- stateMap.c
+
+  We added two new keybinding: '<' to ascend stairs and '>' to descend stairs.
+  We also added some more info to the info section in the map and reorganized
+   them to be more readable.
+
+- tile.c
+
+  We added two new tiles: TILE_STAIR_UP and TILE_STAIR_DOWN which are used to
+   implement movemets between dungeon floors. They are placed in couple on each
+   dungeon floor so the player can move freely between floors.
+
+- stateEndGame.c
+
+  This state is just a placeholder for a victory condition: think of it as the
+   screen to be presented to the player if he menage to beat the game. For now
+   beating the game is basically exiting the dungeon alive after fulfilling
+   his quest (which you can do right from the start since you spawn in the
+   first stair up of the dungeon which is its entrance!).
+
+- stateLevelUp.c
+
+  In this state we implemented a popup over the map to ask the user which bonus
+   he wants while levelling up. As the game is quite simple right now, the
+   player can only choose to increase his hit points, attack or defence.
+
+- Result: changing dungeon floors
+
+  ![part11 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part11_001.png "Part 11 changing dungeon floor")
+
+- Result: levelling
+
+  ![part11 002](https://github.com/samelinux/rlTutorial2022/raw/main/images/part11_002.png "Part 11 levelling")
+
 </details>
 
 </details>
