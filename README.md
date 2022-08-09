@@ -1310,13 +1310,13 @@ You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/r
     and implement a second weapon/shield or two hands weapons!
    2. we added the relevan wariables to handle STATE_EQUIPMENT since the player
     can equip item we must show his equipment in a separate screen.
-   3. [playerEquipmentName]() is a function used in STATE_EQUIPMENT to write
+   3. [playerEquipmentName](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L236) is a function used in STATE_EQUIPMENT to write
     equpment location: "Weapon" and "Armor" based on the slot.
    4. we added three new function to handle equipment action:
-    [playerEquipSelectedBackpackItem]() to equip an item from the backpack,
-    [playerUnequipSelectedEquipmentItem]() to unequip an item from an equipment slot, and
-    [playerDropSelectedEquipmentItem]() to drop an item from an equipped slot.
-   5. last but not least, we adde two new function []() and []() which are just
+    [playerEquipSelectedBackpackItem](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L498) to equip an item from the backpack,
+    [playerUnequipSelectedEquipmentItem](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L534) to unequip an item from an equipment slot, and
+    [playerDropSelectedEquipmentItem](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L567) to drop an item from an equipped slot.
+   5. last but not least, we adde two new function [playerActualAttack](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L262) and [playerActualDefence](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L275) which are just
     utility to calculate the real player attack and defence taking into account
     te currently equipped items.
    I fixed a silly bug, i forgot to check for null pointer in playerPickup
@@ -1324,7 +1324,7 @@ You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/r
     a backpackIndex lesser than zero or greater than BACKPACK_LENGTH.
    I changed some function return value to be bool since picking up, dropping
     and using items is not guaranteed to succed.
-   I also fixed a bug in [playerPackBackpack]() which cause the selection to
+   I also fixed a bug in [playerPackBackpack](https://github.com/samelinux/rlTutorial2022/blob/f4701c5fa2a5f115d9b5c487e3913d179eec7509/player.c#L428) which cause the selection to
     not update when equipping the last item in the backpack.
 
 - [stateBackpack.c ](stateBackpack.c )
