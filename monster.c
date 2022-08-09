@@ -127,9 +127,9 @@ int8_t monsterDefence(monsterType_t type)
  {
   case MONSTER_MAX:
   case MONSTER_NONE: return 0;
-  case MONSTER_RAT: return 0;
-  case MONSTER_ORC: return 1;
-  case MONSTER_TROL: return 2;
+  case MONSTER_RAT: return 1;
+  case MONSTER_ORC: return 2;
+  case MONSTER_TROL: return 3;
  }
  return 0;
 }
@@ -141,9 +141,9 @@ int8_t monsterAttack(monsterType_t type)
  {
   case MONSTER_MAX:
   case MONSTER_NONE: return 0;
-  case MONSTER_RAT: return 1;
-  case MONSTER_ORC: return 3;
-  case MONSTER_TROL: return 4;
+  case MONSTER_RAT: return 2;
+  case MONSTER_ORC: return 4;
+  case MONSTER_TROL: return 6;
  }
  return 0;
 }
@@ -179,11 +179,11 @@ monsterAI_t monsterAI(monsterType_t type)
 int16_t monsterMaxAtDepth(int16_t depth)
 {
  int8_t maxMonsterPerDepth[7]={
-   4,
-   5,
    6,
    7,
    8,
+   9,
+  10,
    9,
   10,
  };

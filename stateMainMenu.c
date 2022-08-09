@@ -46,7 +46,7 @@ bool stateMainMenuUpdate(char input)
   case '8':
   case 'k':
    //up
-   player.menuSelection=abs((player.menuSelection+2)%3);
+   player.menuSelection=(player.menuSelection+2)%3;
    if(player.menuSelection==1 && diskCanLoad(PLAYER_SAVE_FILE)==false)
    {
     player.menuSelection--;

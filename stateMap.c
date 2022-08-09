@@ -32,7 +32,7 @@ bool stateMapUpdate(char input)
     newTurn=playerAscendStair();
     return newTurn;
     break;
-   case 'q':
+   case 'Q':
     //close the program
     mainQuit();
     break;
@@ -46,6 +46,9 @@ bool stateMapUpdate(char input)
     player.backpackSelected=true;
     playerGotoState(STATE_BACKPACK);
     return false;
+    break;
+   case 'e':
+    playerGotoState(STATE_EQUIPMENT);
     break;
    case ',':
    case 'g':
@@ -167,10 +170,10 @@ void stateMapRender(void)
  //print player stats
  int8_t statX=MAP_VIEWPORT_WIDTH+1;
  screenPrint(statX,0,"HP: %d/%d",player.hitPoints,player.maxHitPoints);
- screenPrint(statX,1,"Attack: %d",player.attack);
- screenPrint(statX,2,"Defence: %d",player.defence);
+ screenPrint(statX,1,"Attack: %d",playerActualAttack());
+ screenPrint(statX,2,"Defence: %d",playerActualDefence());
  screenPrint(statX,4,"Turn: %lld",player.turn);
- screenPrint(statX,5,"Floor: %d @ %d,%d",player.dungeonLevel,player.x,player.y);
+ screenPrint(statX,5,"Depth: %d @ %d,%d",player.dungeonLevel,player.x,player.y);
  screenPrint(statX,6,"EXP: %d/%d",player.experience,
    playerExperienceForNextLevel());
 

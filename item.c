@@ -17,12 +17,15 @@ item_t itemPool[ITEM_POOL_SIZE];
 void itemInit(item_t* item,itemType_t type,int16_t x,int16_t y)
 {
  item->type=type;
+ item->equipmentType=itemEquipmentType(type);
  item->x=x;
  item->y=y;
  memset(item->name,0,sizeof(char)*ITEM_NAME_LENGTH);
  strncpy(item->name,itemName(type),ITEM_NAME_LENGTH);
  item->glyph=itemGlyph(type);
  item->color=itemColor(type);
+ item->attackBonus=itemAttackBonus(type);
+ item->defenceBonus=itemDefenceBonus(type);
 }
 
 //render an item from fromX,fromY point of view
@@ -47,6 +50,27 @@ void itemRender(item_t* item,int16_t fromX,int16_t fromY,
  }
 }
 
+equipmentType_t itemEquipmentType(itemType_t type)
+{
+ switch(type)
+ {
+  case ITEM_MAX:
+  case ITEM_NONE:
+  case ITEM_HEALTH_POTION:
+  case ITEM_LIGHTNING_SCROLL:
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL:
+   return EQUIPMENT_NONE;
+  case ITEM_DAGGER:
+  case ITEM_SWORD:
+   return EQUIPMENT_WEAPON;
+  case ITEM_LEATHER_ARMOR:
+  case ITEM_CHAIN_MAIL:
+   return EQUIPMENT_ARMOR;
+ }
+ return EQUIPMENT_NONE;
+}
+
 //return each itemType_t name
 char* itemName(itemType_t type)
 {
@@ -58,6 +82,10 @@ char* itemName(itemType_t type)
   case ITEM_LIGHTNING_SCROLL: return "lightning scroll";
   case ITEM_CONFUSION_SCROLL: return "confusion scroll";
   case ITEM_FIREBALL_SCROLL: return "fireball scroll";
+  case ITEM_DAGGER: return "dagger";
+  case ITEM_SWORD: return "sword";
+  case ITEM_LEATHER_ARMOR: return "leather armor";
+  case ITEM_CHAIN_MAIL: return "chain mail";
  }
  return "no name";
 }
@@ -73,6 +101,10 @@ char itemGlyph(itemType_t type)
   case ITEM_LIGHTNING_SCROLL:
   case ITEM_CONFUSION_SCROLL:
   case ITEM_FIREBALL_SCROLL: return '~';
+  case ITEM_DAGGER: return '/';
+  case ITEM_SWORD: return '/';
+  case ITEM_LEATHER_ARMOR: return '[';
+  case ITEM_CHAIN_MAIL: return '[';
  }
  return '?';
 }
@@ -88,20 +120,62 @@ int8_t itemColor(itemType_t type)
   case ITEM_LIGHTNING_SCROLL:
   case ITEM_CONFUSION_SCROLL:
   case ITEM_FIREBALL_SCROLL: return MAGENTA;
+  case ITEM_DAGGER:
+  case ITEM_SWORD: return CYAN;
+  case ITEM_LEATHER_ARMOR:
+  case ITEM_CHAIN_MAIL: return RED;
  }
  return BLACK;
+}
+
+int8_t itemAttackBonus(itemType_t type)
+{
+ switch(type)
+ {
+  case ITEM_MAX:
+  case ITEM_NONE:
+  case ITEM_HEALTH_POTION:
+  case ITEM_LIGHTNING_SCROLL:
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL:
+  case ITEM_LEATHER_ARMOR:
+  case ITEM_CHAIN_MAIL:
+   return 0;
+  case ITEM_DAGGER: return 2;
+  case ITEM_SWORD: return 4;
+ }
+ return 0;
+}
+
+int8_t itemDefenceBonus(itemType_t type)
+{
+ switch(type)
+ {
+  case ITEM_MAX:
+  case ITEM_NONE:
+  case ITEM_HEALTH_POTION:
+  case ITEM_LIGHTNING_SCROLL:
+  case ITEM_CONFUSION_SCROLL:
+  case ITEM_FIREBALL_SCROLL:
+  case ITEM_DAGGER:
+  case ITEM_SWORD:
+   return 0;
+  case ITEM_LEATHER_ARMOR: return 1;
+  case ITEM_CHAIN_MAIL: return 3;
+ }
+ return 0;
 }
 
 int16_t itemMaxAtDepth(int16_t depth)
 {
  int8_t maxItemPerDepth[7]={
-   4,
-   4,
-   4,
    6,
    6,
    6,
-  10,
+   8,
+   8,
+   8,
+  12,
  };
  depth=MIN(depth,6);
  return maxItemPerDepth[MIN(depth,6)];
@@ -111,13 +185,21 @@ itemType_t itemRandomAtDepth(int16_t depth)
 {
  int16_t chances[7][ITEM_MAX-1]={
   //HEALTH_POTION, LIGHTNING_SCROLL, CONFUSION_SCROLL, FIREBALL_SCROLL
-  {           100,                0,                0,               0},
-  {            80,                0,               80,               0},
-  {            60,                0,              100,              60},
-  {             0,              100,                0,               0},
-  {           100,               80,               60,               0},
-  {            80,               60,               80,              80},
-  {             0,                0,                0,             100},
+  //DAGGER, SWORD, LEATHER_ARMOR, CHAIN_MAIL
+  {           100,                0,                0,               0,
+         0,     0,             0,          0},
+  {            80,                0,               80,               0,
+         0,     0,             0,          0},
+  {            60,                0,              100,              60,
+         0,     0,             0,          0},
+  {             0,              100,                0,               0,
+         0,     0,             0,          0},
+  {            60,                0,                0,               0,
+         0,    50,             0,         50},
+  {            80,               60,               80,              80,
+         0,     0,             0,          0},
+  {             0,                0,                0,             100,
+         0,    80,             0,         80},
  };
  depth=MIN(depth,6);
  uint64_t maxCance=0;
@@ -165,6 +247,12 @@ bool itemUse(item_t* item,int16_t x,int16_t y)
   case ITEM_FIREBALL_SCROLL:
    player.itemToUse=item;
    playerGotoState(STATE_CHOOSE_TARGET);
+   break;
+  //these item are not usable
+  case ITEM_DAGGER:
+  case ITEM_SWORD:
+  case ITEM_LEATHER_ARMOR:
+  case ITEM_CHAIN_MAIL:
    break;
  }
  return newTurn;

@@ -1269,6 +1269,95 @@ You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/r
 <details>
 <summary> Part 13 - Gearing up </summary>
 
+You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week7part12).
+
+
+- [item.c](item.c)
+
+  We added equipmentType to the item structure to identify items that are
+   equipable. Items now can be of two main euqipment type:
+   1. EQUIPMENT_NONE, those are just usable/readable
+   2. EQUIPMENT_WEAPON/EQUIPMENT_ARMOR, those item can be weared/wielded
+  We added four new items:
+   1. ITEM_DAGGER, a small sword (https://en.wikipedia.org/wiki/Dagger)
+   2. ITEM_SWORD, a standard melee weapon (https://en.wikipedia.org/wiki/Sword)
+   3. ITEM_LEATHER_ARMOR, a light armor (https://en.wikipedia.org/wiki/Armour)
+   4. ITEM_CHAIN_MAIL, a heavy armor (https://en.wikipedia.org/wiki/Chain_mail)
+  We added attackBonus and defenceBonus to the item structure to handle
+   equipment modifier to to the player basic attack and defence stats.
+  We added the relative functions to fill the items information in [itemInit]()
+   1. itemEquipmentType
+   2. itemAttackBonus
+   3. itemDefenceBonus
+   and modified all other itemXXX info function to add the new items.
+  I changed how many item can spawn per dungeon level and also the weigth to
+   accomodate for the new items.
+
+- [monster.c](monster.c)
+
+  I tryed to balance a little bit more the monsters stats based on the new
+   items and added some monster to the first few levels of the dungeon to spice
+   things up ... be carefull!
+
+- [player.c](player.c)
+
+  Equipment handling: wear/wield/take off/unequip has introduced quite a lot of
+   code to [player.c](player.c):
+   1. the player structure has now an array of item_t which is the player
+    equipment. For now the game only has weapon and armor, but you can easly
+    add other equipment like helmet, belt, ... and you can also differentiate
+    armor location: chest, leg, arm, ... or even add two arms to the player
+    and implement a second weapon/shield or two hands weapons!
+   2. we added the relevan wariables to handle STATE_EQUIPMENT since the player
+    can equip item we must show his equipment in a separate screen.
+   3. [playerEquipmentName]() is a function used in STATE_EQUIPMENT to write
+    equpment location: "Weapon" and "Armor" based on the slot.
+   4. we added three new function to handle equipment action:
+    [playerEquipSelectedBackpackItem]() to equip an item from the backpack,
+    [playerUnequipSelectedEquipmentItem]() to unequip an item from an equipment slot, and
+    [playerDropSelectedEquipmentItem]() to drop an item from an equipped slot.
+   5. last but not least, we adde two new function []() and []() which are just
+    utility to calculate the real player attack and defence taking into account
+    te currently equipped items.
+   I fixed a silly bug, i forgot to check for null pointer in playerPickup
+    which caused the game to crash if the player managed to pickup items with
+    a backpackIndex lesser than zero or greater than BACKPACK_LENGTH.
+   I changed some function return value to be bool since picking up, dropping
+    and using items is not guaranteed to succed.
+   I also fixed a bug in [playerPackBackpack]() which cause the selection to
+    not update when equipping the last item in the backpack.
+
+- [stateBackpack.c ](stateBackpack.c )
+
+  We added the command 'w' to wield/wear item from the backpack and adjusted
+   the code to take into account picking up, dropping and using item not always
+   requiring a turn (if you can't pickup/drop/use the item!).
+   The player can equip any equippable item, even if he has already the
+   relative slot equipped, the two items will automatically swap place.
+
+- [stateMainMenu.c](stateMainMenu.c)
+
+  I remove a useless abs call ... i don't know what i was thinking when i added
+   it 8p
+
+- [stateMap.c](stateMap.c)
+
+  We added the command 'e' to go to the equipment screen and changed the attack
+   and defence info printed on the right side to use the new player functions
+   which take into account the equipment.
+
+- [stateEquipment.c](stateEquipment.c)
+
+  In this state we present to the player his equipment, for now just two line:
+   "Weapon:" with the currenty equipped weapon and "Armour:" with the currently
+   weared armor. In this state the player can unequip items and evend drop them
+   (you can also equip an item from the backpack and have it replace the one
+   currently equipped).
+
+- Result:
+
+  ![part13 001](https://github.com/samelinux/rlTutorial2022/raw/main/images/part13_001.png "Part 13 OH LOOK, A SWORD!")
+
 </details>
 
 </details>

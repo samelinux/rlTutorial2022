@@ -13,6 +13,7 @@
 #include "disk.h"
 #include "stateMap.h"
 #include "stateBackpack.h"
+#include "stateEquipment.h"
 #include "stateExamineMap.h"
 #include "stateChooseTarget.h"
 #include "stateJournal.h"
@@ -74,11 +75,16 @@ void playerNewGame(void)
  player.losLength=8;
  player.maxHitPoints=30;
  player.hitPoints=player.maxHitPoints;
- player.defence=2;
- player.attack=5;
+ player.defence=1;
+ player.attack=3;
  memset(player.journal,0,sizeof(char)*JOURNAL_LENGTH*JOURNAL_LINE_LENGTH);
  player.journalIndex=0;
- memset(player.backpack,0,sizeof(item_t)*BACKPACK_LENGTH);
+ for(int i=0;i<BACKPACK_LENGTH;i++)
+ {
+  itemInit(&(player.backpack[i]),ITEM_NONE,0,0);
+ }
+ itemInit(&(player.backpack[0]),ITEM_DAGGER,0,0);
+ itemInit(&(player.backpack[1]),ITEM_LEATHER_ARMOR,0,0);
  player.backpackSelected=true;
  player.backpackIndex=0;
  player.backpackStart=0;
@@ -89,6 +95,12 @@ void playerNewGame(void)
  player.itemToUse=NULL;
  player.dungeonLevel=0;
  player.level=1;
+ for(int i=0;i<EQUIPMENT_MAX;i++)
+ {
+  itemInit(&(player.equipment[i]),ITEM_NONE,0,0);
+ }
+ player.equipmentIndex=0;
+ player.equipmentStart=0;
  playerLog("Welcome to the dungeon!");
  //generate a new map
  mapGenerate(MAP_CAVE,0);
@@ -116,6 +128,10 @@ void playerGotoState(state_t newState)
    player.backpackStart=0;
    player.nearbyIndex=0;
    player.nearbyStart=0;
+   break;
+  case STATE_EQUIPMENT:
+   player.equipmentIndex=0;
+   player.equipmentStart=0;
    break;
   case STATE_EXAMINE_MAP:
   case STATE_CHOOSE_TARGET:
@@ -152,6 +168,8 @@ bool playerUpdate(char input)
    return stateMapUpdate(input);
   case STATE_BACKPACK:
    return stateBackpackUpdate(input);
+  case STATE_EQUIPMENT:
+   return stateEquipmentUpdate(input);
   case STATE_EXAMINE_MAP:
    return stateExamineMapUpdate(input);
   case STATE_CHOOSE_TARGET:
@@ -185,6 +203,9 @@ void playerRender(void)
   case STATE_BACKPACK:
    stateBackpackRender();
    break;
+  case STATE_EQUIPMENT:
+   stateEquipmentRender();
+   break;
   case STATE_EXAMINE_MAP:
    stateExamineMapRender();
    break;
@@ -212,6 +233,19 @@ void playerRender(void)
  }
 }
 
+char* playerEquipmentName(equipmentType_t type)
+{
+ switch(type)
+ {
+  case EQUIPMENT_MAX:
+  case EQUIPMENT_NONE:
+   return "no name";
+  case EQUIPMENT_WEAPON: return "Weapon";
+  case EQUIPMENT_ARMOR: return "Armor";
+ }
+ return "no name";
+}
+
 //render the player form fromX,fromY point of view
 void playerRenderPlayer(int16_t fromX,int16_t fromY,
   int16_t fgColor,int16_t bgColor)
@@ -223,6 +257,32 @@ void playerRenderPlayer(int16_t fromX,int16_t fromY,
  {
   screenColorPut(screenX,screenY,fgColor,bgColor,'@');
  }
+}
+
+int16_t playerActualAttack(void)
+{
+ int16_t attack=player.attack;
+ for(int i=0;i<EQUIPMENT_MAX;i++)
+ {
+  if(player.equipment[i].type!=ITEM_NONE)
+  {
+   attack+=player.equipment[i].attackBonus;
+  }
+ }
+ return attack;
+}
+
+int16_t playerActualDefence(void)
+{
+ int16_t defence=player.defence;
+ for(int i=0;i<EQUIPMENT_MAX;i++)
+ {
+  if(player.equipment[i].type!=ITEM_NONE)
+  {
+   defence+=player.equipment[i].defenceBonus;
+  }
+ }
+ return defence;
 }
 
 //automate player death check and, if needed, the change to the game over screen
@@ -306,8 +366,9 @@ bool playerIsInAttackRange(monster_t* monster,int16_t range)
 //handle an attack from the player to a monster
 void playerAttack(monster_t* monster)
 {
+ int16_t playerAttack=playerActualAttack();
  //simple damage formula
- int16_t damage=MAX(0,player.attack-monster->defence);
+ int16_t damage=MAX(0,playerAttack-monster->defence);
  if(damage>0)
  {
   //show the attack action
@@ -329,8 +390,9 @@ void playerAttackedBy(monster_t* monster)
  //player"
  if(player.hitPoints>0)
  {
+  int16_t playerDefence=playerActualDefence();
   //simple damage formula
-  int16_t damage=MAX(0,monster->attack-player.defence);
+  int16_t damage=MAX(0,monster->attack-playerDefence);
   if(damage>0)
   {
    //show the attack action
@@ -365,6 +427,7 @@ int16_t playerBackpackCount(void)
 //backpackpacked, we just have to find the only empty spot that we might have
 void playerPackBackpack(void)
 {
+ int lastItemIndex=-1;
  int firstEmpty=0;
  //search the first free spot
  while(player.backpack[firstEmpty].type!=ITEM_NONE)
@@ -375,11 +438,15 @@ void playerPackBackpack(void)
  for(int16_t i=firstEmpty;i<BACKPACK_LENGTH-1;i++)
  {
   player.backpack[i]=player.backpack[i+1];
+  if(lastItemIndex<0 && player.backpack[i].type==ITEM_NONE)
+  {
+   lastItemIndex=i;
+  }
  }
  //remove the last item
- player.backpack[BACKPACK_LENGTH-1].type=ITEM_NONE;
+ itemInit(&(player.backpack[BACKPACK_LENGTH-1]),ITEM_NONE,0,0);
  //if the player had his selection at the end, move it one back
- if(player.backpackIndex==BACKPACK_LENGTH-1)
+ if(player.backpackIndex>=lastItemIndex && player.backpackIndex>0)
  {
   player.backpackIndex--;
  }
@@ -387,23 +454,27 @@ void playerPackBackpack(void)
 
 //pickup an item: copy it to the player backpack first free spot and mark the
 //original one as not an item [ITEM_NONE]
-void playerPickup(item_t* item)
+bool playerPickup(item_t* item)
 {
- for(int16_t i=0;i<BACKPACK_LENGTH;i++)
+ if(item!=NULL)
  {
-  if(player.backpack[i].type==ITEM_NONE)
+  for(int16_t i=0;i<BACKPACK_LENGTH;i++)
   {
-   player.backpack[i]=*item;
-   item->type=ITEM_NONE;
-   playerLog("You pick up %s",item->name);
-   return;
+   if(player.backpack[i].type==ITEM_NONE)
+   {
+    player.backpack[i]=*item;
+    itemInit(item,ITEM_NONE,0,0);
+    playerLog("You pick up %s",item->name);
+    return true;
+   }
   }
+  playerLog("Cannot pick up %s, backpack full",item->name);
  }
- playerLog("Cannot pick up %s, backpack full",item->name);
+ return false;
 }
 
 //use the item currently selected being it in hte player backpack or at his foot
-bool playerUseSelectedItem(void)
+bool playerUseSelectedBackpackItem(void)
 {
  bool newTurn=false;
  item_t* item=NULL;
@@ -424,16 +495,85 @@ bool playerUseSelectedItem(void)
  return newTurn;
 }
 
+bool playerEquipSelectedBackpackItem(void)
+{
+ equipmentType_t slot=player.backpack[player.backpackIndex].equipmentType;
+ if(slot!=EQUIPMENT_NONE)
+ {
+  item_t equippedItem;
+  itemInit(&equippedItem,ITEM_NONE,0,0);
+  if(player.equipment[slot].type!=ITEM_NONE)
+  {
+   equippedItem=player.equipment[slot];
+  }
+  player.equipment[slot]=player.backpack[player.backpackIndex];
+  if(equippedItem.type!=ITEM_NONE)
+  {
+   playerLog("You take off/unequip %s",equippedItem.name);
+   player.backpack[player.backpackIndex]=equippedItem;
+  }
+  else
+  {
+   itemInit(&(player.backpack[player.backpackIndex]),ITEM_NONE,0,0);
+   playerPackBackpack();
+  }
+  playerLog("You wear/wield %s",player.equipment[slot].name);
+  return true;
+ }
+ else
+ {
+  if(player.backpack[player.backpackIndex].type!=ITEM_NONE)
+  {
+   playerLog("You can't wear/wield %s",
+     player.backpack[player.backpackIndex].name);
+  }
+ }
+ return false;
+}
+
+bool playerUnequipSelectedEquipmentItem(void)
+{
+ if(player.equipment[player.equipmentIndex].type!=ITEM_NONE)
+ {
+  for(int16_t i=0;i<BACKPACK_LENGTH;i++)
+  {
+   if(player.backpack[i].type==ITEM_NONE)
+   {
+    player.backpack[i]=player.equipment[player.equipmentIndex];
+    itemInit(&(player.equipment[player.equipmentIndex]),ITEM_NONE,0,0);
+    playerLog("You take off/unequip %s",player.backpack[i].name);
+    return true;
+   }
+  }
+  playerDropSelectedEquipmentItem();
+ }
+ return false;
+}
+
 //drop backpack selected item to the player foot
-void playerDropSelectedItem(void)
+bool playerDropSelectedBackpackItem(void)
 {
  if(player.backpackSelected==true)
  {
   playerLog("You drop %s",player.backpack[player.backpackIndex].name);
   itemPoolAdd(player.backpack[player.backpackIndex].type,player.x,player.y);
-  player.backpack[player.backpackIndex].type=ITEM_NONE;
+  itemInit(&(player.backpack[player.backpackIndex]),ITEM_NONE,0,0);
   playerPackBackpack();
+  return true;
  }
+ return false;
+}
+
+bool playerDropSelectedEquipmentItem(void)
+{
+ if(player.equipment[player.equipmentIndex].type!=ITEM_NONE)
+ {
+  playerLog("You drop %s",player.equipment[player.equipmentIndex].name);
+  itemPoolAdd(player.equipment[player.equipmentIndex].type,player.x,player.y);
+  itemInit(&(player.equipment[player.equipmentIndex]),ITEM_NONE,0,0);
+  return true;
+ }
+ return false;
 }
 
 //move the player to the next dungeon level if necessary, return false if

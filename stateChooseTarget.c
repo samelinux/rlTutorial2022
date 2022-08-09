@@ -46,6 +46,12 @@ bool stateChooseTargetUpdate(char input)
         player.examineX,player.examineY);
       playerGotoState(STATE_MAP);
       break;
+     //this items are equipment and are not usable
+     case ITEM_DAGGER:
+     case ITEM_SWORD:
+     case ITEM_LEATHER_ARMOR:
+     case ITEM_CHAIN_MAIL:
+      break;
     }
    }
    else
@@ -68,9 +74,14 @@ void stateChooseTargetRender(void)
  {
   case ITEM_NONE:
   case ITEM_MAX:
+  //these items have no range/are instant to use/are not usable
   case ITEM_HEALTH_POTION:
   case ITEM_LIGHTNING_SCROLL:
   case ITEM_CONFUSION_SCROLL:
+  case ITEM_DAGGER:
+  case ITEM_SWORD:
+  case ITEM_LEATHER_ARMOR:
+  case ITEM_CHAIN_MAIL:
    break;
   case ITEM_FIREBALL_SCROLL:
    itemRange=itemRangeFireballScroll();

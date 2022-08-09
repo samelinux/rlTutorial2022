@@ -24,18 +24,21 @@ bool stateBackpackUpdate(char input)
    //pickup items
    if(player.backpackSelected==false)
    {
-    playerPickup(itemPoolAt(player.x,player.y,player.nearbyIndex));
-    newTurn=true;
+    newTurn=playerPickup(itemPoolAt(player.x,player.y,player.nearbyIndex));
    }
    break;
   case 'u':
   case 10:
    //use item
-   newTurn=playerUseSelectedItem();
+   newTurn=playerUseSelectedBackpackItem();
+   break;
+  case 'w':
+   //wield/wear item
+   newTurn=playerEquipSelectedBackpackItem();
    break;
   case 'd':
    //drop item
-   playerDropSelectedItem();
+   playerDropSelectedBackpackItem();
    newTurn=true;
    break;
   case '4':

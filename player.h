@@ -18,6 +18,7 @@ enum state_t
  STATE_CONFIRM_NEW_GAME,
  STATE_MAP,
  STATE_BACKPACK,
+ STATE_EQUIPMENT,
  STATE_EXAMINE_MAP,
  STATE_CHOOSE_TARGET,
  STATE_JOURNAL,
@@ -54,6 +55,9 @@ struct player_t
  int16_t dungeonLevel;
  int8_t level;
  int16_t experience;
+ item_t equipment[EQUIPMENT_MAX];
+ int16_t equipmentIndex;
+ int16_t equipmentStart;
 };
 typedef struct player_t player_t;
 
@@ -73,10 +77,16 @@ void playerGotoState(state_t newState);
 
 bool playerUpdate(char input);
 
+char* playerEquipmentName(equipmentType_t type);
+
 void playerRender(void);
 
 void playerRenderPlayer(int16_t fromX,int16_t fromY,
   int16_t fgColor,int16_t bgColor);
+
+int16_t playerActualAttack(void);
+
+int16_t playerActualDefence(void);
 
 void playerCheckDeath();
 
@@ -98,11 +108,17 @@ int16_t playerBackpackCount(void);
 
 void playerPackBackpack(void);
 
-void playerPickup(item_t* item);
+bool playerPickup(item_t* item);
 
-bool playerUseSelectedItem(void);
+bool playerUseSelectedBackpackItem(void);
 
-void playerDropSelectedItem(void);
+bool playerEquipSelectedBackpackItem(void);
+
+bool playerUnequipSelectedEquipmentItem(void);
+
+bool playerDropSelectedBackpackItem(void);
+
+bool playerDropSelectedEquipmentItem(void);
 
 bool playerDescendStair(void);
 
