@@ -1269,7 +1269,7 @@ You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/r
 <details>
 <summary> Part 13 - Gearing up </summary>
 
-You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week7part12).
+You can find the code from Week 7, Part 13 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week7part13).
 
 
 - [item.c](item.c)
