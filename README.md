@@ -1285,7 +1285,7 @@ You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/r
    4. ITEM_CHAIN_MAIL, a heavy armor (https://en.wikipedia.org/wiki/Chain_mail)
   We added attackBonus and defenceBonus to the item structure to handle
    equipment modifier to to the player basic attack and defence stats.
-  We added the relative functions to fill the items information in [itemInit]()
+  We added the relative functions to fill the items information in [itemInit](https://github.com/samelinux/rlTutorial2022/blob/97fd2911674f78790146c40d437c7173aa5e8ed7/item.c#L17)
    1. itemEquipmentType
    2. itemAttackBonus
    3. itemDefenceBonus
