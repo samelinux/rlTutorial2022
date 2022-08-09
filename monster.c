@@ -176,6 +176,55 @@ monsterAI_t monsterAI(monsterType_t type)
  return MONSTER_AI_NONE;
 }
 
+int16_t monsterMaxAtDepth(int16_t depth)
+{
+ int8_t maxMonsterPerDepth[7]={
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+  10,
+ };
+ depth=MIN(depth,6);
+ return maxMonsterPerDepth[MIN(depth,6)];
+}
+
+monsterType_t monsterRandomAtDepth(int16_t depth)
+{
+ int16_t chances[7][MONSTER_MAX-1]={
+  //RAT, ORC, TROL
+  { 100,   0,   0},
+  {  66,  34,   0},
+  {  34,  66,   0},
+  {   0, 100,   0},
+  {   0,  66,  34},
+  {   0,  34,  66},
+  {   0,   0, 100},
+ };
+ depth=MIN(depth,6);
+ uint64_t maxCance=0;
+ uint64_t cumulativeChance=0;
+ for(int i=1;i<MONSTER_MAX;i++)
+ {
+  maxCance+=chances[depth][i-1];
+ }
+ uint64_t pick=randomGet(0,maxCance);
+ for(int i=1;i<MONSTER_MAX;i++)
+ {
+  if(chances[depth][i-1]>0)
+  {
+   cumulativeChance+=chances[depth][i-1];
+   if(pick<cumulativeChance)
+   {
+    return i;
+   }
+  }
+ }
+ return MONSTER_NONE;
+}
+
 //implements monster to monster combat
 void monsterAttackMonster(monster_t* attacker,monster_t* defender)
 {
@@ -244,15 +293,14 @@ bool monsterPoolLoad(FILE* aFile)
 }
 
 //spawn up to maxMonsters monsters in the map
-void monsterPoolSpawn(int16_t maxMonsters)
+void monsterPoolSpawn()
 {
  //randomize the number of monsters
- int16_t count=randomGet(0,maxMonsters);
+ int16_t count=randomGet(0,monsterMaxAtDepth(mapDepth()));
  while(count>0)
  {
   //generate a random monster type and add it to the pool
-  monsterType_t type=randomGet(MONSTER_NONE+1,MONSTER_MAX-1);
-  monsterPoolAdd(type);
+  monsterPoolAdd(monsterRandomAtDepth(mapDepth()));
   count--;
  }
 }

@@ -57,7 +57,7 @@ bool itemPoolLoad(FILE* aFile);
 
 void itemPoolAdd(itemType_t type,int16_t x,int16_t y);
 
-void itemPoolSpawn(int16_t maxItems);
+void itemPoolSpawn(void);
 
 int16_t itemPoolCountAt(int16_t x,int16_t y);
 

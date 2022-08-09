@@ -53,7 +53,7 @@ bool mapLoad(FILE* aFile)
 }
 
 //generate a new level
-void mapGenerate(mapType_t type)
+void mapGenerate(mapType_t type,int16_t depth)
 {
  int16_t x=0;
  int16_t y=0;
@@ -61,6 +61,7 @@ void mapGenerate(mapType_t type)
  int16_t playerY=0;
  memset(&(map),0,sizeof(map));
  map.type=type;
+ map.depth=depth;
  for(int i=0;i<MAP_WIDTH*MAP_HEIGHT;i++)
  {
   tileInit(&(map.tiles[i]),TILE_FLOOR);
@@ -71,15 +72,19 @@ void mapGenerate(mapType_t type)
   case MAP_MAX:
   case MAP_NONE:
   case MAP_EMPTY: break;
-  case MAP_SAMPLE: mapSampleBuild(); break;
-  case MAP_CAVE: mapCaveBuild(); break;
+  case MAP_SAMPLE:
+   mapSampleBuild();
+   break;
+  case MAP_CAVE:
+   mapCaveBuild();
+   break;
  }
  //generate some monsters
  monsterPoolInit();
- monsterPoolSpawn(10);
+ monsterPoolSpawn();
  //generate some items
  itemPoolInit();
- itemPoolSpawn(10);
+ itemPoolSpawn();
  //get a random walkable tile and teleport the player there
  mapRandomWalkablePosition(&playerX,&playerY);
  playerTeleportTo(playerX,playerY);
@@ -92,6 +97,11 @@ void mapGenerate(mapType_t type)
   mapRandomWalkablePosition(&x,&y);
  } while(distance(playerX,playerY,x,y)<10);
  tileInit(mapTileAt(x,y),TILE_STAIR_DOWN);
+}
+
+int16_t mapDepth(void)
+{
+ return map.depth;
 }
 
 //return true if x,y are in the map boundaries

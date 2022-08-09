@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/param.h>
 #include "item.h"
 #include "itemHealthPotion.h"
 #include "itemLightningScroll.h"
@@ -91,6 +92,55 @@ int8_t itemColor(itemType_t type)
  return BLACK;
 }
 
+int16_t itemMaxAtDepth(int16_t depth)
+{
+ int8_t maxItemPerDepth[7]={
+   4,
+   4,
+   4,
+   6,
+   6,
+   6,
+  10,
+ };
+ depth=MIN(depth,6);
+ return maxItemPerDepth[MIN(depth,6)];
+}
+
+itemType_t itemRandomAtDepth(int16_t depth)
+{
+ int16_t chances[7][ITEM_MAX-1]={
+  //HEALTH_POTION, LIGHTNING_SCROLL, CONFUSION_SCROLL, FIREBALL_SCROLL
+  {           100,                0,                0,               0},
+  {            80,                0,               80,               0},
+  {            60,                0,              100,              60},
+  {             0,              100,                0,               0},
+  {           100,               80,               60,               0},
+  {            80,               60,               80,              80},
+  {             0,                0,                0,             100},
+ };
+ depth=MIN(depth,6);
+ uint64_t maxCance=0;
+ uint64_t cumulativeChance=0;
+ for(int i=1;i<ITEM_MAX;i++)
+ {
+  maxCance+=chances[depth][i-1];
+ }
+ uint64_t pick=randomGet(0,maxCance);
+ for(int i=1;i<ITEM_MAX;i++)
+ {
+  if(chances[depth][i-1]>0)
+  {
+   cumulativeChance+=chances[depth][i-1];
+   if(pick<cumulativeChance)
+   {
+    return i;
+   }
+  }
+ }
+ return ITEM_NONE;
+}
+
 //wrapper to implement item usage since every items has its own functionality
 bool itemUse(item_t* item,int16_t x,int16_t y)
 {
@@ -170,16 +220,16 @@ void itemPoolAdd(itemType_t type,int16_t x,int16_t y)
 }
 
 //spawn up t maxItems item in the map
-void itemPoolSpawn(int16_t maxItems)
+void itemPoolSpawn(void)
 {
  int16_t x;
  int16_t y;
  //randomize the number of items
- int16_t count=randomGet(0,maxItems);
+ int16_t count=randomGet(0,itemMaxAtDepth(mapDepth()));
  while(count>0)
  {
   //generate a random item type and add it to the pool
-  itemType_t type=randomGet(ITEM_NONE+1,ITEM_MAX-1);
+  itemType_t type=itemRandomAtDepth(mapDepth());
   mapRandomWalkablePosition(&x,&y);
   itemPoolAdd(type,x,y);
   count--;

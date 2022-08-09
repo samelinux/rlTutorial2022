@@ -69,6 +69,10 @@ int16_t monsterExperienceValue(monsterType_t type);
 
 monsterAI_t monsterAI(monsterType_t type);
 
+int16_t monsterMaxAtDepth(int16_t depth);
+
+monsterType_t monsterRandomAtDepth(int16_t depth);
+
 void monsterAttackMonster(monster_t* attacker,monster_t* defender);
 
 void monsterPoolInit(void);
@@ -81,7 +85,7 @@ bool monsterPoolLoad(FILE* aFile);
 
 void monsterPoolAdd(monsterType_t type);
 
-void monsterPoolSpawn(int16_t maxMonsters);
+void monsterPoolSpawn(void);
 
 monster_t* monsterPoolAt(int16_t x,int16_t y);
 

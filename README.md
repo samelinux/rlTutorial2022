@@ -1212,6 +1212,58 @@ You can find the code from Week 6, Part 11 [here](https://github.com/samelinux/r
 <details>
 <summary> Part 12 - Increasing Difficulty </summary>
 
+You can find the code from Week 7, Part 12 [here](https://github.com/samelinux/rlTutorial2022/releases/tag/week7part12).
+
+- item.c
+
+  We added two new functions to change how items are generated. We want to add
+   complexity to the game by reducing the options the player has to face
+   monsters and one way to do it is by generating items in the dungeon levels
+   based on some predefined table/tables.
+
+   1. [itemMaxAtDepth]() this function return the maximum number of items the
+    map generator is allowed to spawn in each dungeon level. This is quite
+    simple: just pick the maximum number of objects from an array indexed by
+    the depth. We had just to keep in mind that this array has a finite number
+    of items, 7 for depth 0 to 6, so we had to limit the depth using the MIN
+    function.
+
+   2. [itemRandomAtDepth]() this function return a random item based on the
+    dungeon level and the specific items weight. We don't use percentage so we
+    can add any ammount of items: an item with double the weight of another is
+    twice likely to spawn.
+
+- map.c
+
+  We added the depth of the current map to the map structure so we can view it
+   at any time we need but also we have this inforamtion saved in the map file.
+   This is usefull for the new items and monsters spawning algorithm which is
+   heavly based on the dungeon depth.
+
+- monster.c
+
+  We added two new functions to change how monster are generated. We want to
+   add complexity to the game by increasing monsters number/strength as the
+   player delve down in the dungeon.
+   One way to do it is by generating more tought monsters as the dungeon level
+   increase based on some predefined table/tables.
+
+   1. [monsterMaxAtDepth]() this function return the maximum number of monsters
+    the map generator is allowed to spawn in each dungeon level. This is quite
+    simple: just pick the maximum number of objects from an array indexed by
+    the depth. We had just to keep in mind that this array has a finite number
+    of items, 7 for depth 0 to 6, so we had to limit the depth using the MIN
+    function.
+
+   2. [monsterRandomAtDepth]() this function return a random monster based on
+    the dungeon level and the specific monsters weight. We don't use percentage
+    so we can add any ammount of monsters: a monster with double the weight of
+    another is twice likely to spawn.
+
+- player.c
+
+  The last thing to add is the dungeon depth to each call to [mapGenerate]()
+
 </details>
 
 <details>

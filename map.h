@@ -24,6 +24,7 @@ typedef enum mapType_t mapType_t;
 struct map_t
 {
  mapType_t type;
+ int16_t depth;
  tile_t tiles[MAP_WIDTH*MAP_HEIGHT];
 };
 typedef struct map_t map_t;
@@ -36,7 +37,9 @@ bool mapSave(FILE* aFile);
 
 bool mapLoad(FILE* aFile);
 
-void mapGenerate(mapType_t type);
+void mapGenerate(mapType_t type,int16_t depth);
+
+int16_t mapDepth(void);
 
 bool mapIsValid(int16_t x,int16_t y);
 

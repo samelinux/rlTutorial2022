@@ -91,7 +91,7 @@ void playerNewGame(void)
  player.level=1;
  playerLog("Welcome to the dungeon!");
  //generate a new map
- mapGenerate(MAP_CAVE);
+ mapGenerate(MAP_CAVE,0);
  //move the player to the map state
  playerGotoState(STATE_MAP);
  //save the game
@@ -461,7 +461,7 @@ bool playerDescendStair(void)
   else
   {
    //otherwise generate a new level
-   mapGenerate(MAP_CAVE);
+   mapGenerate(MAP_CAVE,player.dungeonLevel);
   }
   playerLog("You descend the stair...");
   return true;
@@ -501,7 +501,7 @@ bool playerAscendStair(void)
    else
    {
     //otherwise generate a new level
-    mapGenerate(MAP_CAVE);
+    mapGenerate(MAP_CAVE,player.dungeonLevel);
    }
    playerLog("You ascend the stair...");
    return true;
